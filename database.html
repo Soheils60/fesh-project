@@ -22,53 +22,56 @@
   </style>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="form.html">Submit Data</a></li>
-      <li><a href="database.html">Database</a></li>
-      <li><a href="approve.html">Approve</a></li>
-      <li><a href="research.html">Research Access</a></li>
-    </ul>
-  </nav>
 
-  <main>
-    <h1>Stored Soil Data</h1>
-    <div id="tableContainer">Loading data...</div>
-  </main>
-
-  <script>
-    const data = JSON.parse(localStorage.getItem("soilData")) || [];
-
-    function generateTable(data) {
-      if (data.length === 0) return "<p>No data available.</p>";
-
-      const keys = Object.keys(data[0]);
-      let html = "<table><thead><tr>";
-      keys.forEach(key => {
-        html += `<th>${key}</th>`;
-      });
-      html += "</tr></thead><tbody>";
-
-      data.forEach(entry => {
-        html += "<tr>";
-        keys.forEach(key => {
-          html += `<td>${entry[key]}</td>`;
-        });
-        html += "</tr>";
-      });
-
-      html += "</tbody></table>";
-      return html;
-    }
-
-    document.getElementById("tableContainer").innerHTML = generateTable(data);
-  </script>
-</body>
-</html>
 <script>
   const password = prompt("🔒 Please enter the project access code:");
   if (password !== "9438") {
     document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
   }
 </script>
+
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="form.html">Submit Data</a></li>
+    <li><a href="database.html">Database</a></li>
+    <li><a href="approve.html">Approve</a></li>
+    <li><a href="research.html">Research Access</a></li>
+  </ul>
+</nav>
+
+<main>
+  <h1>Stored Soil Data</h1>
+  <div id="tableContainer">Loading data...</div>
+</main>
+
+<script>
+  const data = JSON.parse(localStorage.getItem("soilData")) || [];
+
+  function generateTable(data) {
+    if (data.length === 0) return "<p>No data available.</p>";
+
+    const keys = Object.keys(data[0]);
+    let html = "<table><thead><tr>";
+    keys.forEach(key => {
+      html += `<th>${key}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    data.forEach(entry => {
+      html += "<tr>";
+      keys.forEach(key => {
+        html += `<td>${entry[key]}</td>`;
+      });
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
+    return html;
+  }
+
+  document.getElementById("tableContainer").innerHTML = generateTable(data);
+</script>
+
+</body>
+</html>

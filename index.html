@@ -1,3 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FESH Project - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+  const password = prompt("🔒 Please enter the project access code:");
+  if (password !== "9438") {
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
+  }
+</script>
+
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="form.html">Submit Data</a></li>
+    <li><a href="database.html">Database</a></li>
+    <li><a href="approve.html">Approve</a></li>
+    <li><a href="research.html">Research</a></li>
+  </ul>
+</nav>
+
 <main>
   <h1>Welcome to the FESH Project</h1>
   <p><strong>Field Evaluation of Soil Health (FESH)</strong> is a 3-year research project conducted in New Brunswick, Canada. The goal is to collect, review, and analyze soil health data to support sustainable agriculture.</p>
@@ -17,23 +43,6 @@
   <h2>Partners</h2>
   <p>Department of Agriculture, Research Institutions, Local Farmers</p>
 </main>
-<script>
-  const password = prompt("🔒 Please enter the project access code:");
-  if (password !== "9438") {
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
-  }
-</script>
-<head>
-  <meta charset="UTF-8">
-  <title>FESH Project - Home</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<nav>
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="form.html">Submit Data</a></li>
-    <li><a href="database.html">Database</a></li>
-    <li><a href="approve.html">Approve</a></li>
-    <li><a href="research.html">Research</a></li>
-  </ul>
-</nav>
+
+</body>
+</html>

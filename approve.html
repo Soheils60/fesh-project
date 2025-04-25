@@ -38,78 +38,81 @@
   </style>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="form.html">Submit Data</a></li>
-      <li><a href="database.html">Database</a></li>
-      <li><a href="approve.html">Approve</a></li>
-      <li><a href="research.html">Research Access</a></li>
-    </ul>
-  </nav>
 
-  <main>
-    <h1>Approve or Reject Soil Data</h1>
-    <div id="approvalTable">Loading data...</div>
-  </main>
-
-  <script>
-    let data = JSON.parse(localStorage.getItem("soilData")) || [];
-    let approvedData = JSON.parse(localStorage.getItem("approvedData")) || [];
-
-    function saveApprovedData() {
-      localStorage.setItem("approvedData", JSON.stringify(approvedData));
-    }
-
-    function approve(index) {
-      approvedData.push(data[index]);
-      data.splice(index, 1);
-      localStorage.setItem("soilData", JSON.stringify(data));
-      saveApprovedData();
-      renderTable();
-    }
-
-    function reject(index) {
-      data.splice(index, 1);
-      localStorage.setItem("soilData", JSON.stringify(data));
-      renderTable();
-    }
-
-    function renderTable() {
-      if (data.length === 0) {
-        document.getElementById("approvalTable").innerHTML = "<p>No data pending approval.</p>";
-        return;
-      }
-
-      const keys = Object.keys(data[0]);
-      let html = "<table><thead><tr>";
-      keys.forEach(key => {
-        html += `<th>${key}</th>`;
-      });
-      html += "<th>Action</th></tr></thead><tbody>";
-
-      data.forEach((entry, index) => {
-        html += "<tr>";
-        keys.forEach(key => {
-          html += `<td>${entry[key]}</td>`;
-        });
-        html += `<td>
-          <button class="approve-btn" onclick="approve(${index})">Approve</button>
-          <button class="reject-btn" onclick="reject(${index})">Reject</button>
-        </td></tr>`;
-      });
-
-      html += "</tbody></table>";
-      document.getElementById("approvalTable").innerHTML = html;
-    }
-
-    renderTable();
-  </script>
-</body>
-</html>
 <script>
   const password = prompt("🔒 Please enter the project access code:");
   if (password !== "9438") {
     document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
   }
 </script>
+
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="form.html">Submit Data</a></li>
+    <li><a href="database.html">Database</a></li>
+    <li><a href="approve.html">Approve</a></li>
+    <li><a href="research.html">Research Access</a></li>
+  </ul>
+</nav>
+
+<main>
+  <h1>Approve or Reject Soil Data</h1>
+  <div id="approvalTable">Loading data...</div>
+</main>
+
+<script>
+  let data = JSON.parse(localStorage.getItem("soilData")) || [];
+  let approvedData = JSON.parse(localStorage.getItem("approvedData")) || [];
+
+  function saveApprovedData() {
+    localStorage.setItem("approvedData", JSON.stringify(approvedData));
+  }
+
+  function approve(index) {
+    approvedData.push(data[index]);
+    data.splice(index, 1);
+    localStorage.setItem("soilData", JSON.stringify(data));
+    saveApprovedData();
+    renderTable();
+  }
+
+  function reject(index) {
+    data.splice(index, 1);
+    localStorage.setItem("soilData", JSON.stringify(data));
+    renderTable();
+  }
+
+  function renderTable() {
+    if (data.length === 0) {
+      document.getElementById("approvalTable").innerHTML = "<p>No data pending approval.</p>";
+      return;
+    }
+
+    const keys = Object.keys(data[0]);
+    let html = "<table><thead><tr>";
+    keys.forEach(key => {
+      html += `<th>${key}</th>`;
+    });
+    html += "<th>Action</th></tr></thead><tbody>";
+
+    data.forEach((entry, index) => {
+      html += "<tr>";
+      keys.forEach(key => {
+        html += `<td>${entry[key]}</td>`;
+      });
+      html += `<td>
+        <button class="approve-btn" onclick="approve(${index})">Approve</button>
+        <button class="reject-btn" onclick="reject(${index})">Reject</button>
+      </td></tr>`;
+    });
+
+    html += "</tbody></table>";
+    document.getElementById("approvalTable").innerHTML = html;
+  }
+
+  renderTable();
+</script>
+
+</body>
+</html>

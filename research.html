@@ -1,9 +1,3 @@
-<script>
-  const password = prompt("🔒 Please enter the project access code:");
-  if (password !== "9438") {
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,48 +22,56 @@
   </style>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="form.html">Submit Data</a></li>
-      <li><a href="database.html">Database</a></li>
-      <li><a href="approve.html">Approve</a></li>
-      <li><a href="research.html">Research Access</a></li>
-    </ul>
-  </nav>
 
-  <main>
-    <h1>Approved Soil Data for Research</h1>
-    <div id="researchTable">Loading approved data...</div>
-  </main>
+<script>
+  const password = prompt("🔒 Please enter the project access code:");
+  if (password !== "9438") {
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>❌ Access Denied</h2>";
+  }
+</script>
 
-  <script>
-    const approvedData = JSON.parse(localStorage.getItem("approvedData")) || [];
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="form.html">Submit Data</a></li>
+    <li><a href="database.html">Database</a></li>
+    <li><a href="approve.html">Approve</a></li>
+    <li><a href="research.html">Research Access</a></li>
+  </ul>
+</nav>
 
-    function generateTable(data) {
-      if (data.length === 0) return "<p>No approved data available.</p>";
+<main>
+  <h1>Approved Soil Data for Research</h1>
+  <div id="researchTable">Loading approved data...</div>
+</main>
 
-      const keys = Object.keys(data[0]);
-      let html = "<table><thead><tr>";
+<script>
+  const approvedData = JSON.parse(localStorage.getItem("approvedData")) || [];
+
+  function generateTable(data) {
+    if (data.length === 0) return "<p>No approved data available.</p>";
+
+    const keys = Object.keys(data[0]);
+    let html = "<table><thead><tr>";
+    keys.forEach(key => {
+      html += `<th>${key}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    data.forEach(entry => {
+      html += "<tr>";
       keys.forEach(key => {
-        html += `<th>${key}</th>`;
+        html += `<td>${entry[key]}</td>`;
       });
-      html += "</tr></thead><tbody>";
+      html += "</tr>";
+    });
 
-      data.forEach(entry => {
-        html += "<tr>";
-        keys.forEach(key => {
-          html += `<td>${entry[key]}</td>`;
-        });
-        html += "</tr>";
-      });
+    html += "</tbody></table>";
+    return html;
+  }
 
-      html += "</tbody></table>";
-      return html;
-    }
+  document.getElementById("researchTable").innerHTML = generateTable(approvedData);
+</script>
 
-    document.getElementById("researchTable").innerHTML = generateTable(approvedData);
-  </script>
 </body>
 </html>
-``
