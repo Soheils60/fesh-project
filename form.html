@@ -19,7 +19,6 @@
       padding: 8px 16px;
       margin-top: 10px;
       border-radius: 6px;
-      cursor: pointer;
     }
     .mic-button {
       margin-right: 10px;
@@ -271,7 +270,6 @@
     <h3>Step 6: Biological Soil Properties</h3>
 
     <label for="plantEmergenceRate">Plant Emergence Rate:</label>
-    <button type="button" class="mic-button" onclick="startDictation('plantEmergenceRate')">🎤</button>
     <select id="plantEmergenceRate" name="plantEmergenceRate" required>
       <option value="">-- Select --</option>
       <option>Low</option>
@@ -280,7 +278,6 @@
     </select><br /><br />
 
     <label for="rootDevelopment">Root Development:</label>
-    <button type="button" class="mic-button" onclick="startDictation('rootDevelopment')">🎤</button>
     <select id="rootDevelopment" name="rootDevelopment" required>
       <option value="">-- Select --</option>
       <option>Poor</option>
@@ -290,7 +287,6 @@
     </select><br /><br />
 
     <label for="rootCoating">Root Coating:</label>
-    <button type="button" class="mic-button" onclick="startDictation('rootCoating')">🎤</button>
     <select id="rootCoating" name="rootCoating" required>
       <option value="">-- Select --</option>
       <option>None</option>
@@ -300,7 +296,6 @@
     </select><br /><br />
 
     <label for="earthwormActivity">Earthworm Activity:</label>
-    <button type="button" class="mic-button" onclick="startDictation('earthwormActivity')">🎤</button>
     <select id="earthwormActivity" name="earthwormActivity" required>
       <option value="">-- Select --</option>
       <option>Low</option>
@@ -309,7 +304,6 @@
     </select><br /><br />
 
     <label for="myceliumDevelopment">Mycelium Development:</label>
-    <button type="button" class="mic-button" onclick="startDictation('myceliumDevelopment')">🎤</button>
     <select id="myceliumDevelopment" name="myceliumDevelopment" required>
       <option value="">-- Select --</option>
       <option>Low</option>
@@ -457,9 +451,10 @@
       return;
     }
     alert("Form submitted successfully!");
+    // اینجا می‌تونی کد ذخیره‌سازی یا ارسال فرم به سرور را اضافه کنی
   }
 
-  // تغییر نمایش دیگر کشت‌ها در مرحله 2
+  // نمایش یا مخفی کردن فیلد Other Crop در مرحله 2
   function toggleOtherCrop() {
     if (document.getElementById("crop").value === "Other") {
       document.getElementById("otherCropContainer").style.display = "block";
@@ -468,15 +463,14 @@
     }
   }
 
-  // گرفتن موقعیت جغرافیایی
+  // دریافت موقعیت جغرافیایی
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function (position) {
           document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
           document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
-          // ارتفاع تقریبی
-          document.getElementById("elevation").value = "N/A";
+          document.getElementById("elevation").value = "N/A"; // ارتفاع تقریبی
         },
         function (error) {
           alert("Error getting location: " + error.message);
@@ -487,7 +481,33 @@
     }
   }
 
-  // شروع دیکته صوتی
+  // قابلیت تبدیل شیب بین درجه و درصد
+  const slopeValueInput = document.getElementById("slopeValue");
+  const slopeUnitSelect = document.getElementById("slopeUnit");
+  const slopeConvertedInput = document.getElementById("slopeConverted");
+
+  if (slopeValueInput && slopeUnitSelect && slopeConvertedInput) {
+    function convertSlope() {
+      const value = parseFloat(slopeValueInput.value);
+      const unit = slopeUnitSelect.value;
+
+      if (!isNaN(value)) {
+        if (unit === "deg") {
+          const percent = Math.tan((value * Math.PI) / 180) * 100;
+          slopeConvertedInput.value = percent.toFixed(1) + " %";
+        } else {
+          const degrees = Math.atan(value / 100) * (180 / Math.PI);
+          slopeConvertedInput.value = degrees.toFixed(1) + " °";
+        }
+      } else {
+        slopeConvertedInput.value = "";
+      }
+    }
+    slopeValueInput.addEventListener("input", convertSlope);
+    slopeUnitSelect.addEventListener("change", convertSlope);
+  }
+
+  // دکمه میکروفون برای تبدیل گفتار به متن
   function startDictation(fieldId) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -495,15 +515,15 @@
       return;
     }
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
+    recognition.lang = "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognition.start();
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
       const result = event.results[0][0].transcript;
       document.getElementById(fieldId).value = result;
     };
-    recognition.onerror = function(event) {
+    recognition.onerror = function (event) {
       alert("Voice input error: " + event.error);
     };
   }
