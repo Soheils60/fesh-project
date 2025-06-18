@@ -1,9 +1,24 @@
-/* Global Style */
+/* Global Background Image via ::before */
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right, #e0f7fa, #ffffff);
+  position: relative;
+  z-index: 1;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('images/canada.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08; /* 👈 تصویر خیلی محو */
+  z-index: -1;
 }
 
 /* Navigation */
@@ -23,6 +38,7 @@ nav ul li a {
   color: white;
   text-decoration: none;
   font-weight: bold;
+  font-size: 1.1rem;
 }
 nav ul li a:hover {
   text-decoration: underline;
@@ -31,66 +47,38 @@ nav ul li a:hover {
 /* Main Section */
 main {
   max-width: 1000px;
-  margin: auto;
+  margin: 2rem auto;
   padding: 2rem;
 }
 
-/* Form Layout */
-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-label {
-  font-weight: 600;
-  margin-top: 1rem;
-  display: block;
-  color: #333;
-}
-input, select, textarea {
-  width: 100%;
-  margin: 0.4rem 0 1rem 0;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-button {
-  width: 100%;
-  padding: 0.9rem;
-  background: #00796b;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 1rem;
-}
-button:hover {
-  background: #004d40;
-}
-#success {
-  color: green;
-  font-weight: bold;
-  display: none;
-  margin-top: 1rem;
+/* Title (Welcome) */
+.main-heading {
   text-align: center;
+  font-size: 44px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #111;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Table Style */
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* Section Titles (h2) */
+h2 {
+  font-size: 28px;
+  font-weight: 700;
   margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #004d40;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
-th, td {
-  padding: 0.7rem;
-  border: 1px solid #ccc;
-  text-align: left;
+
+/* Paragraphs & Lists */
+p, li {
+  font-size: 1.2rem;
+  color: #111;
+  line-height: 1.8;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
-th {
-  background-color: #00796b;
-  color: white;
+
+ul {
+  padding-left: 2rem;
 }
