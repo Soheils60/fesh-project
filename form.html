@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FESH Multi-Step Form with LocalStorage Save</title>
+  <title>FESH Soil Health Assessment Form (Voice Enabled)</title>
   <style>
     .step {
       display: none;
@@ -19,7 +19,6 @@
       padding: 8px 16px;
       margin-top: 10px;
       border-radius: 6px;
-      cursor: pointer;
     }
     .mic-button {
       margin-right: 10px;
@@ -41,8 +40,8 @@
       background-color: #e0e0e0;
       border-radius: 10px;
       font-weight: bold;
+      cursor: pointer;
       transition: background-color 0.3s ease;
-      user-select: none;
     }
     .step-box.active {
       background-color: #4caf50;
@@ -51,6 +50,7 @@
     .step-arrow {
       font-size: 20px;
       color: #333;
+      margin: 0 5px;
       user-select: none;
     }
   </style>
@@ -59,48 +59,51 @@
   <h2>FESH Soil Health Assessment Form (Voice Enabled)</h2>
 
   <div class="step-header">
-    <div class="step-box active" id="header-step1">Step 1: General Info</div>
+    <div class="step-box active" id="header-step1" onclick="goToStep(1)">Step 1: General Info</div>
     <div class="step-arrow">→</div>
-    <div class="step-box" id="header-step2">Step 2: Crop Info</div>
+    <div class="step-box" id="header-step2" onclick="goToStep(2)">Step 2: Crop Info</div>
     <div class="step-arrow">→</div>
-    <div class="step-box" id="header-step3">Step 3: Topography</div>
+    <div class="step-box" id="header-step3" onclick="goToStep(3)">Step 3: Topography</div>
     <div class="step-arrow">→</div>
-    <div class="step-box" id="header-step4">Step 4: Physical Soil</div>
+    <div class="step-box" id="header-step4" onclick="goToStep(4)">Step 4: Physical Soil</div>
     <div class="step-arrow">→</div>
-    <div class="step-box" id="header-step5">Step 5: Chemical Soil</div>
+    <div class="step-box" id="header-step5" onclick="goToStep(5)">Step 5: Chemical Soil</div>
+    <div class="step-arrow">→</div>
+    <div class="step-box" id="header-step6" onclick="goToStep(6)">Step 6: Biological Soil</div>
   </div>
 
-  <form id="feshForm" onsubmit="return false;">
+  <form id="feshForm">
+
     <!-- Step 1 -->
     <div class="step active" id="step1">
       <h3>Step 1: General Information</h3>
       <label for="farmId">Farm ID:</label>
-      <input type="text" id="farmId" name="farmId" readonly /><br /><br />
+      <input type="text" id="farmId" name="farmId" required><br><br>
 
       <label>Farmer Name:</label>
       <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-      <input type="text" id="farmerName" name="farmerName" required /><br /><br />
+      <input type="text" id="farmerName" name="farmerName" required><br><br>
 
       <label>Date:</label>
-      <input type="date" id="date" name="date" required /><br /><br />
+      <input type="date" id="date" name="date" required><br><br>
 
       <label>Phone Number:</label>
       <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-      <input type="tel" id="contact" name="contact" required /><br /><br />
+      <input type="tel" id="contact" name="contact" required><br><br>
 
       <h4>Farm Location (GPS):</h4>
-      <button type="button" onclick="getLocation()">📍 Get Current Location</button><br /><br />
+      <button type="button" onclick="getLocation()">📍 Get Current Location</button><br><br>
 
       <label>Latitude:</label>
-      <input type="text" id="latitude" name="latitude" readonly required /><br /><br />
+      <input type="text" id="latitude" name="latitude" readonly required><br><br>
 
       <label>Longitude:</label>
-      <input type="text" id="longitude" name="longitude" readonly required /><br /><br />
+      <input type="text" id="longitude" name="longitude" readonly required><br><br>
 
       <label>Elevation (m):</label>
-      <input type="text" id="elevation" name="elevation" readonly /><br /><br />
+      <input type="text" id="elevation" name="elevation" readonly><br><br>
 
-      <button type="button" onclick="validateStep1()">✔ Confirm and Continue</button>
+      <button type="button" onclick="validateStep(1)">✔ Confirm and Continue</button>
     </div>
 
     <!-- Step 2 -->
@@ -129,24 +132,25 @@
         <option value="Peas">Peas</option>
         <option value="Beets">Beets</option>
         <option value="Other">Other</option>
-      </select><br /><br />
+      </select><br><br>
 
       <div id="otherCropContainer" class="hidden">
         <label>Specify Other Crop:</label>
         <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
-        <input type="text" id="otherCrop" name="otherCrop" /><br /><br />
+        <input type="text" id="otherCrop" name="otherCrop"><br><br>
       </div>
 
       <label>Land Area (hectares):</label>
       <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
-      <input type="number" id="area" name="area" required /><br /><br />
+      <input type="number" id="area" name="area" required><br><br>
 
-      <button type="button" onclick="validateStep2()">✔ Confirm and Continue</button>
+      <button type="button" onclick="validateStep(2)">✔ Confirm and Continue</button>
     </div>
 
     <!-- Step 3 -->
     <div class="step" id="step3">
       <h3>Step 3: Topography Information</h3>
+
       <label for="slopeValue">Slope:</label>
       <button type="button" class="mic-button" onclick="startDictation('slopeValue')">🎤</button>
       <input type="number" id="slopeValue" name="slopeValue" required />
@@ -184,7 +188,7 @@
         <option value="Convex">Convex</option>
       </select><br /><br />
 
-      <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
+      <button type="button" onclick="validateStep(3)">✔ Confirm and Continue</button>
     </div>
 
     <!-- Step 4 -->
@@ -218,7 +222,7 @@
       <button type="button" class="mic-button" onclick="startDictation('infiltration')">🎤</button>
       <input type="text" id="infiltration" placeholder="e.g., 2:30" required /><br /><br />
 
-      <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
+      <button type="button" onclick="validateStep(4)">✔ Confirm and Continue</button>
     </div>
 
     <!-- Step 5 -->
@@ -260,250 +264,146 @@
       </select>
       <br /><br />
 
-      <img src="images/color-soil.jpg" alt="Soil Color Guide" style="max-width: 100%; height: auto;" /><br /><br />
+      <img src="images/color soil.jpg" alt="Soil Color Guide" style="max-width: 100%; height: auto;" /><br /><br />
 
-      <button type="button" id="finalSubmitButton">🚀 Submit and Save</button>
+      <button type="button" onclick="validateStep(5)">✔ Confirm and Continue</button>
     </div>
+
+    <!-- Step 6 -->
+    <div class="step" id="step6">
+      <h3>Step 6: Biological Soil Properties</h3>
+
+      <label for="emergenceRate">Plant Emergence Rate (%):</label>
+      <button type="button" class="mic-button" onclick="startDictation('emergenceRate')">🎤</button>
+      <input type="number" id="emergenceRate" name="emergenceRate" min="0" max="100" step="0.1" required /><br /><br />
+
+      <label for="rootDevelopment">Root Development:</label>
+      <select id="rootDevelopment" name="rootDevelopment" required>
+        <option value="">-- Select --</option>
+        <option>None</option>
+        <option>Weak</option>
+        <option>Moderate</option>
+        <option>Strong</option>
+      </select><br /><br />
+
+      <label for="rootCoating">Root Coating:</label>
+      <select id="rootCoating" name="rootCoating" required>
+        <option value="">-- Select --</option>
+        <option>None</option>
+        <option>Light</option>
+        <option>Moderate</option>
+        <option>Heavy</option>
+      </select><br /><br />
+
+      <label for="earthwormActivity">Earthworm Activity:</label>
+      <select id="earthwormActivity" name="earthwormActivity" required>
+        <option value="">-- Select --</option>
+        <option>No activity</option>
+        <option>Low</option>
+        <option>Moderate</option>
+        <option>High</option>
+      </select><br /><br />
+
+      <label for="myceliumDevelopment">Mycelium Development:</label>
+      <select id="myceliumDevelopment" name="myceliumDevelopment" required>
+        <option value="">-- Select --</option>
+        <option>None</option>
+        <option>Light</option>
+        <option>Moderate</option>
+        <option>Heavy</option>
+      </select><br /><br />
+
+      <button type="submit">🚀 Submit Final Form</button>
+    </div>
+
   </form>
 
-  <script>
-    // Step navigation helpers
-    function setActiveStep(stepNum) {
-      for (let i = 1; i <= 5; i++) {
-        document.getElementById('header-step' + i).classList.remove('active');
-        document.getElementById('step' + i).classList.remove('active');
-      }
-      document.getElementById('header-step' + stepNum).classList.add('active');
-      document.getElementById('step' + stepNum).classList.add('active');
+<script>
+  function startDictation(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser does not support voice input.");
+      return;
     }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+    recognition.onresult = function(event) {
+      const result = event.results[0][0].transcript;
+      document.getElementById(fieldId).value = result;
+    };
+    recognition.onerror = function(event) {
+      alert("Voice input error: " + event.error);
+    };
+  }
 
-    // Step 1 validation and next
-    function validateStep1() {
-      const requiredIds = ['farmerName', 'date', 'contact', 'latitude', 'longitude'];
-      if (!validateRequiredFields(requiredIds)) return;
-      setActiveStep(2);
+  function toggleOtherCrop() {
+    const crop = document.getElementById('crop').value;
+    const container = document.getElementById('otherCropContainer');
+    if (crop === 'Other') {
+      container.classList.remove('hidden');
+      document.getElementById('otherCrop').required = true;
+    } else {
+      container.classList.add('hidden');
+      document.getElementById('otherCrop').required = false;
     }
+  }
 
-    // Step 2 validation and next
-    function validateStep2() {
-      const crop = document.getElementById('crop').value;
-      const otherCrop = document.getElementById('otherCrop').value;
-      const area = document.getElementById('area').value;
-      if (!crop) {
-        alert('Please select crop type.');
-        return;
-      }
-      if (crop === 'Other' && !otherCrop.trim()) {
-        alert('Please specify the other crop.');
-        return;
-      }
-      if (!area) {
-        alert('Please enter land area.');
-        return;
-      }
-      setActiveStep(3);
+  function getLocation() {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
     }
-
-    // Step 3 validation and next
-    function validateStep3() {
-      const requiredIds = ['slopeValue', 'slopeDirection', 'landscapePosition', 'surfaceForm'];
-      if (!validateRequiredFields(requiredIds)) return;
-      setActiveStep(4);
-    }
-
-    // Step 4 validation and next
-    function validateStep4() {
-      const requiredIds = ['tillageDepth', 'strength', 'vess', 'infiltration'];
-      if (!validateRequiredFields(requiredIds)) return;
-      setActiveStep(5);
-    }
-
-    // Validate required fields helper
-    function validateRequiredFields(ids) {
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (!el.value || !el.value.trim()) {
-          alert('Please fill all required fields.');
-          el.focus();
-          return false;
-        }
-      }
-      return true;
-    }
-
-    // Voice input function
-    function startDictation(fieldId) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert('Your browser does not support voice input.');
-        return;
-      }
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      recognition.start();
-      recognition.onresult = function(event) {
-        const result = event.results[0][0].transcript;
-        document.getElementById(fieldId).value = result;
-      };
-      recognition.onerror = function(event) {
-        alert('Voice input error: ' + event.error);
-      };
-    }
-
-    // Geolocation
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-          enableHighAccuracy: true
-        });
-      } else {
-        alert('Your browser does not support geolocation.');
-      }
-    }
-    function successCallback(position) {
+    navigator.geolocation.getCurrentPosition(position => {
       document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
       document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
-      if (position.coords.altitude !== null) {
-        document.getElementById('elevation').value = position.coords.altitude.toFixed(2);
-      } else {
-        document.getElementById('elevation').value = '—';
-      }
-    }
-    function errorCallback(error) {
-      alert('Location error: ' + error.message);
-    }
+      document.getElementById('elevation').value = position.coords.altitude ? position.coords.altitude.toFixed(2) : "N/A";
+    }, () => {
+      alert("Unable to retrieve your location.");
+    });
+  }
 
-    // Toggle Other Crop field
-    function toggleOtherCrop() {
-      const cropSelect = document.getElementById('crop');
-      const otherContainer = document.getElementById('otherCropContainer');
-      if (cropSelect.value === 'Other') {
-        otherContainer.classList.remove('hidden');
-      } else {
-        otherContainer.classList.add('hidden');
-        document.getElementById('otherCrop').value = '';
-      }
-    }
-
-    // Slope conversion
-    function convertSlope() {
-      const value = parseFloat(document.getElementById('slopeValue').value);
-      const unit = document.getElementById('slopeUnit').value;
-      const output = document.getElementById('slopeConverted');
-
-      if (!isNaN(value)) {
-        if (unit === 'deg') {
-          const percent = Math.tan(value * Math.PI / 180) * 100;
-          output.value = percent.toFixed(1) + ' %';
-        } else {
-          const degrees = Math.atan(value / 100) * (180 / Math.PI);
-          output.value = degrees.toFixed(1) + ' °';
-        }
-      } else {
-        output.value = '';
-      }
-    }
-    document.getElementById('slopeValue').addEventListener('input', convertSlope);
-    document.getElementById('slopeUnit').addEventListener('change', convertSlope);
-
-    // Save form data to localStorage and redirect
-    function saveFormDataToLocalStorage() {
-      const formData = {
-        farmId: document.getElementById('farmId').value,
-        farmerName: document.getElementById('farmerName').value,
-        date: document.getElementById('date').value,
-        contact: document.getElementById('contact').value,
-        latitude: document.getElementById('latitude').value,
-        longitude: document.getElementById('longitude').value,
-        elevation: document.getElementById('elevation').value,
-        crop: document.getElementById('crop').value,
-        otherCrop: document.getElementById('otherCrop') ? document.getElementById('otherCrop').value : '',
-        area: document.getElementById('area').value,
-        slopeValue: document.getElementById('slopeValue').value,
-        slopeUnit: document.getElementById('slopeUnit').value,
-        slopeDirection: document.getElementById('slopeDirection').value,
-        landscapePosition: document.getElementById('landscapePosition').value,
-        surfaceForm: document.getElementById('surfaceForm').value,
-        tillageDepth: document.getElementById('tillageDepth').value,
-        strength: document.getElementById('strength').value,
-        strengthUnit: document.getElementById('strengthUnit').value,
-        vess: document.getElementById('vess').value,
-        infiltration: document.getElementById('infiltration').value,
-        ph: document.getElementById('ph').value,
-        soilColor: document.getElementById('soilColor').value
-      };
-
-      const existingData = JSON.parse(localStorage.getItem('soilData')) || [];
-      existingData.push(formData);
-      localStorage.setItem('soilData', JSON.stringify(existingData));
-
-      alert('Data saved successfully! Your tracking code is: ' + formData.farmId);
-      window.location.href = 'database.html'; // تغییر به صفحه دیتابیس
-    }
-
-    document.getElementById('finalSubmitButton').addEventListener('click', () => {
-      // Validate all steps before saving
-      if (
-        validateRequiredFields(['farmerName','date','contact','latitude','longitude']) &&
-        validateStep2Fields() &&
-        validateStep3Fields() &&
-        validateStep4Fields() &&
-        validateStep5Fields()
-      ) {
-        saveFormDataToLocalStorage();
-      } else {
-        alert('Please fill all required fields in all steps.');
+  function validateStep(step) {
+    const stepDiv = document.getElementById(`step${step}`);
+    const inputs = stepDiv.querySelectorAll("input, select");
+    let valid = true;
+    inputs.forEach(input => {
+      if (!input.checkValidity()) {
+        valid = false;
+        input.reportValidity();
       }
     });
+    if (valid) {
+      setActiveStep(step + 1);
+    }
+  }
 
-    // Helpers to validate each step (for final check)
-    function validateStep2Fields() {
-      const crop = document.getElementById('crop').value;
-      const otherCrop = document.getElementById('otherCrop').value;
-      const area = document.getElementById('area').value;
-      if (!crop) return false;
-      if (crop === 'Other' && !otherCrop.trim()) return false;
-      if (!area) return false;
-      return true;
-    }
-    function validateStep3Fields() {
-      const requiredIds = ['slopeValue', 'slopeDirection', 'landscapePosition', 'surfaceForm'];
-      for (const id of requiredIds) {
-        const el = document.getElementById(id);
-        if (!el.value || !el.value.trim()) return false;
+  function setActiveStep(step) {
+    for (let i = 1; i <= 6; i++) {
+      const div = document.getElementById(`step${i}`);
+      const header = document.getElementById(`header-step${i}`);
+      if (i === step) {
+        div.classList.add('active');
+        header.classList.add('active');
+      } else {
+        div.classList.remove('active');
+        header.classList.remove('active');
       }
-      return true;
     }
-    function validateStep4Fields() {
-      const requiredIds = ['tillageDepth', 'strength', 'vess', 'infiltration'];
-      for (const id of requiredIds) {
-        const el = document.getElementById(id);
-        if (!el.value || !el.value.trim()) return false;
-      }
-      return true;
-    }
-    function validateStep5Fields() {
-      const requiredIds = ['ph', 'soilColor'];
-      for (const id of requiredIds) {
-        const el = document.getElementById(id);
-        if (!el.value || !el.value.trim()) return false;
-      }
-      return true;
-    }
+  }
 
-    // Generate farmId on load
-    window.addEventListener('DOMContentLoaded', () => {
-      const now = new Date();
-      const year = now.getFullYear().toString().slice(-2);
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const rand = String(Math.floor(1 + Math.random() * 9999)).padStart(4, '0');
-      document.getElementById('farmId').value = `${year}${month}${day}-${rand}`;
+  function goToStep(step) {
+    // فقط اجازه رفتن به مرحله‌ای که قبلاً تکمیل شده بدیم
+    // (می‌تونی این شرط رو بعدا فعال کنی)
+    setActiveStep(step);
+  }
 
-      setActiveStep(1);
-    });
-  </script>
+  function showVessModal() {
+    alert("VESS scores:\n\nSq1 – Excellent\nSq2 – Good\nSq3 – Moderate\nSq4 – Poor\nSq5 – Very Poor");
+  }
+</script>
+
 </body>
 </html>
