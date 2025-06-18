@@ -4,13 +4,19 @@
   <meta charset="UTF-8" />
   <title>FESH (Field Evaluation of Soil Health) Soil Health Assessment Form</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f0f0f0;
+    }
     .step {
       display: none;
       border: 1px solid #ccc;
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 10px;
-      background-color: #f9f9f9;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
     .step.active {
       display: block;
@@ -19,10 +25,15 @@
       padding: 8px 16px;
       margin-top: 10px;
       border-radius: 6px;
+      cursor: pointer;
     }
     .mic-button {
-      margin-right: 10px;
+      margin-left: 10px;
       cursor: pointer;
+      vertical-align: middle;
+      font-size: 20px;
+      background: none;
+      border: none;
     }
     .step-header {
       display: flex;
@@ -30,16 +41,16 @@
       align-items: center;
       margin: 20px 0;
       flex-wrap: wrap;
+      gap: 10px;
     }
     .step-box {
-      display: inline-block;
       padding: 10px 15px;
-      margin: 0 10px;
-      background-color: #4caf50; /* همه سبز */
+      background-color: #4caf50;
       border-radius: 10px;
       font-weight: bold;
       color: white;
       cursor: pointer;
+      user-select: none;
       transition: background-color 0.3s ease;
     }
     .step-box:hover {
@@ -51,6 +62,15 @@
     }
     label {
       font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="tel"], input[type="date"], select {
+      padding: 6px 8px;
+      width: 250px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -72,35 +92,37 @@
   <div class="step-box" id="header-step6" onclick="setActiveStep(6)">Step 6: Biological Soil</div>
 </div>
 
-<form id="feshForm">
+<form id="feshForm" onsubmit="return false;">
   <!-- Step 1 -->
   <div class="step active" id="step1">
     <h3>Step 1: General Information</h3>
     <label for="farmId">Farm ID:</label>
-    <input type="text" id="farmId" name="farmId" readonly /><br /><br />
+    <input type="text" id="farmId" name="farmId" readonly /><br />
 
-    <label>Farmer Name:</label>
-    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-    <input type="text" id="farmerName" name="farmerName" required /><br /><br />
+    <label>Farmer Name:
+      <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
+    </label>
+    <input type="text" id="farmerName" name="farmerName" required /><br />
 
     <label>Date:</label>
-    <input type="date" id="date" name="date" required /><br /><br />
+    <input type="date" id="date" name="date" required /><br />
 
-    <label>Phone Number:</label>
-    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-    <input type="tel" id="contact" name="contact" required /><br /><br />
+    <label>Phone Number:
+      <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
+    </label>
+    <input type="tel" id="contact" name="contact" required /><br />
 
     <h4>Farm Location (GPS):</h4>
     <button type="button" onclick="getLocation()">📍 Get Current Location</button><br /><br />
 
     <label>Latitude:</label>
-    <input type="text" id="latitude" name="latitude" readonly required /><br /><br />
+    <input type="text" id="latitude" name="latitude" readonly required /><br />
 
     <label>Longitude:</label>
-    <input type="text" id="longitude" name="longitude" readonly required /><br /><br />
+    <input type="text" id="longitude" name="longitude" readonly required /><br />
 
     <label>Elevation (m):</label>
-    <input type="text" id="elevation" name="elevation" readonly /><br /><br />
+    <input type="text" id="elevation" name="elevation" readonly /><br />
 
     <button type="button" onclick="validateStep1()">✔ Confirm and Continue</button>
   </div>
@@ -131,17 +153,19 @@
       <option value="Peas">Peas</option>
       <option value="Beets">Beets</option>
       <option value="Other">Other</option>
-    </select><br /><br />
+    </select><br />
 
     <div id="otherCropContainer" style="display:none;">
-      <label>Specify Other Crop:</label>
-      <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
-      <input type="text" id="otherCrop" name="otherCrop" /><br /><br />
+      <label>Specify Other Crop:
+        <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
+      </label>
+      <input type="text" id="otherCrop" name="otherCrop" /><br />
     </div>
 
-    <label>Land Area (hectares):</label>
-    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
-    <input type="number" id="area" name="area" required /><br /><br />
+    <label>Land Area (hectares):
+      <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+    </label>
+    <input type="number" id="area" name="area" required /><br />
 
     <button type="button" onclick="validateStep2()">✔ Confirm and Continue</button>
   </div>
@@ -149,16 +173,17 @@
   <!-- Step 3 -->
   <div class="step" id="step3">
     <h3>Step 3: Topography Information</h3>
-    <label for="slopeValue">Slope:</label>
-    <button type="button" class="mic-button" onclick="startDictation('slopeValue')">🎤</button>
-    <input type="number" id="slopeValue" name="slopeValue" required />
+    <label for="slopeValue">Slope:
+      <button type="button" class="mic-button" onclick="startDictation('slopeValue')">🎤</button>
+    </label>
+    <input type="number" id="slopeValue" name="slopeValue" required style="width:80px;" />
     <select id="slopeUnit">
       <option value="deg">Degrees (°)</option>
       <option value="percent">Percent (%)</option>
-    </select><br /><br />
+    </select><br />
 
     <label>Converted:</label>
-    <input type="text" id="slopeConverted" readonly /><br /><br />
+    <input type="text" id="slopeConverted" readonly style="width:120px;" /><br />
 
     <label for="slopeDirection">Slope Direction:</label>
     <select id="slopeDirection" required>
@@ -168,7 +193,7 @@
       <option value="East">East</option>
       <option value="West">West</option>
       <option value="Flat">Flat</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="landscapePosition">Landscape Position:</label>
     <select id="landscapePosition" required>
@@ -176,7 +201,7 @@
       <option value="Hilltop">Hilltop</option>
       <option value="Valley">Valley</option>
       <option value="Flatland">Flatland</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="surfaceForm">Surface Form:</label>
     <select id="surfaceForm" required>
@@ -184,7 +209,7 @@
       <option value="Flat">Flat</option>
       <option value="Concave">Concave</option>
       <option value="Convex">Convex</option>
-    </select><br /><br />
+    </select><br />
 
     <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
   </div>
@@ -193,17 +218,19 @@
   <div class="step" id="step4">
     <h3>Step 4: Physical Soil Properties</h3>
 
-    <label for="tillageDepth">Tillage Layer Depth (cm):</label>
-    <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
-    <input type="number" id="tillageDepth" name="tillageDepth" required /><br /><br />
+    <label for="tillageDepth">Tillage Layer Depth (cm):
+      <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
+    </label>
+    <input type="number" id="tillageDepth" name="tillageDepth" required /><br />
 
-    <label for="strength">Soil Strength:</label>
-    <button type="button" class="mic-button" onclick="startDictation('strength')">🎤</button>
-    <input type="number" id="strength" name="strength" required />
+    <label for="strength">Soil Strength:
+      <button type="button" class="mic-button" onclick="startDictation('strength')">🎤</button>
+    </label>
+    <input type="number" id="strength" name="strength" required style="width:80px;" />
     <select id="strengthUnit">
       <option value="kg/cm²">kg/cm²</option>
       <option value="psi">psi</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="vess">VESS Score:</label>
     <select id="vess" name="vess" required>
@@ -213,11 +240,12 @@
       <option value="Sq3">Sq3 – Moderate</option>
       <option value="Sq4">Sq4 – Poor</option>
       <option value="Sq5">Sq5 – Very Poor</option>
-    </select><br /><br />
+    </select><br />
 
-    <label for="infiltration">Water Infiltration Time (min:sec):</label>
-    <button type="button" class="mic-button" onclick="startDictation('infiltration')">🎤</button>
-    <input type="text" id="infiltration" name="infiltration" placeholder="e.g., 2:30" required /><br /><br />
+    <label for="infiltration">Water Infiltration Time (min:sec):
+      <button type="button" class="mic-button" onclick="startDictation('infiltration')">🎤</button>
+    </label>
+    <input type="text" id="infiltration" name="infiltration" placeholder="e.g., 2:30" required /><br />
 
     <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
   </div>
@@ -226,12 +254,14 @@
   <div class="step" id="step5">
     <h3>Step 5: Chemical Soil Properties</h3>
 
-    <label for="ph">Soil pH:</label>
-    <button type="button" class="mic-button" onclick="startDictation('ph')">🎤</button>
-    <input type="number" id="ph" name="ph" min="3.5" max="9.5" step="0.1" required /><br /><br />
+    <label for="ph">Soil pH:
+      <button type="button" class="mic-button" onclick="startDictation('ph')">🎤</button>
+    </label>
+    <input type="number" id="ph" name="ph" min="3.5" max="9.5" step="0.1" required /><br />
 
-    <label for="soilColor">Soil Color:</label>
-    <button type="button" class="mic-button" onclick="startDictation('soilColor')">🎤</button>
+    <label for="soilColor">Soil Color:
+      <button type="button" class="mic-button" onclick="startDictation('soilColor')">🎤</button>
+    </label>
     <select id="soilColor" name="soilColor" required>
       <option value="">-- Select Color --</option>
       <option>Very Dark Gray</option>
@@ -258,9 +288,9 @@
       <option>Light Reddish Brown</option>
       <option>Orange Brown</option>
       <option>Dark Grayish Brown</option>
-    </select><br /><br />
+    </select><br />
 
-    <img src="images/color soil.jpg" alt="Soil Color Guide" style="max-width: 100%; height: auto;" /><br /><br />
+    <img src="images/color soil.jpg" alt="Soil Color Guide" style="max-width: 100%; height: auto;" /><br />
 
     <button type="button" onclick="validateStep5()">✔ Confirm and Continue</button>
   </div>
@@ -275,7 +305,7 @@
       <option>Low</option>
       <option>Medium</option>
       <option>High</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="rootDevelopment">Root Development:</label>
     <select id="rootDevelopment" name="rootDevelopment" required>
@@ -284,7 +314,7 @@
       <option>Moderate</option>
       <option>Good</option>
       <option>Excellent</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="rootCoating">Root Coating:</label>
     <select id="rootCoating" name="rootCoating" required>
@@ -293,7 +323,7 @@
       <option>Some</option>
       <option>Good</option>
       <option>Excellent</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="earthwormActivity">Earthworm Activity:</label>
     <select id="earthwormActivity" name="earthwormActivity" required>
@@ -301,7 +331,7 @@
       <option>Low</option>
       <option>Medium</option>
       <option>High</option>
-    </select><br /><br />
+    </select><br />
 
     <label for="myceliumDevelopment">Mycelium Development:</label>
     <select id="myceliumDevelopment" name="myceliumDevelopment" required>
@@ -309,9 +339,9 @@
       <option>Low</option>
       <option>Medium</option>
       <option>High</option>
-    </select><br /><br />
+    </select><br />
 
-    <button type="submit">🚀 Submit Final Form</button>
+    <button type="submit" onclick="validateStep6()">🚀 Submit Final Form</button>
   </div>
 </form>
 
