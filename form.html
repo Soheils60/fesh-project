@@ -2,256 +2,256 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FESH - Soil Health Evaluation</title>
+  <title>FESH - Full 7-Step Soil Health Form</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #e8f5e9, #ffffff);
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #2e7d32;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 20px;
     }
     .step-header {
       display: flex;
-      justify-content: space-between;
-      gap: 8px;
       flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
     }
     .step-box {
-      flex: 1;
-      text-align: center;
-      padding: 12px;
+      padding: 10px 15px;
       border-radius: 8px;
-      background-color: #c62828;
+      margin: 5px;
       color: white;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
+      background-color: crimson;
     }
-    .step-box.active {
-      background-color: #2e7d32;
+    .step-box.completed {
+      background-color: green;
     }
     .step {
       display: none;
-      background: #ffffff;
-      border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-top: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
     .step.active {
       display: block;
     }
     label {
+      font-weight: bold;
       display: block;
-      margin-top: 15px;
-      font-weight: 600;
+      margin-top: 10px;
     }
     input, select, textarea {
-      width: calc(100% - 36px);
-      padding: 10px;
+      width: 100%;
+      padding: 8px;
       margin-top: 5px;
-      border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 16px;
+      border-radius: 5px;
     }
-    .mic-btn {
-      background: transparent;
-      border: none;
+    .mic-button {
+      margin-left: 10px;
       font-size: 18px;
-      margin-left: 6px;
       cursor: pointer;
-      color: #388e3c;
+      background: none;
+      border: none;
     }
     button {
-      background-color: #2e7d32;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #28a745;
       color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 6px;
-      margin-top: 20px;
+      border-radius: 5px;
       cursor: pointer;
+    }
+    img {
+      max-width: 100%;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>FESH - Field Evaluation of Soil Health</h2>
-    <div class="step-header" id="stepNav"></div>
-    <form id="feshForm"></form>
-  </div>
-  <script>
-    const totalSteps = 7;
-    let currentStep = 1;
 
-    const steps = [
-      "General Info", "Crop Info", "Topography", "Physical Soil", "Chemical Soil", "Biological Soil", "Crop Yield"
-    ];
+<h2>FESH (Field Evaluation of Soil Health) - Full Form</h2>
+<div class="step-header" id="stepHeader"></div>
+<form id="feshForm" onsubmit="return false;">
+  <div id="formSteps"></div>
+</form>
 
-    const stepFields = [
-      [
-        { label: 'Farm ID', id: 'farmId', type: 'text', readonly: true },
-        { label: 'Farmer Name', id: 'farmerName', required: true },
-        { label: 'Date', id: 'date', type: 'date', required: true },
-        { label: 'Phone Number', id: 'phone', type: 'tel', required: true },
-        { label: 'Latitude', id: 'latitude', readonly: true, required: true },
-        { label: 'Longitude', id: 'longitude', readonly: true, required: true },
-        { label: 'Elevation (m)', id: 'elevation', readonly: true }
-      ],
-      [
-        { label: 'Crop Type', id: 'cropType', type: 'select', options: ['Wheat', 'Corn', 'Other'], required: true },
-        { label: 'Specify Other Crop', id: 'otherCrop' },
-        { label: 'Land Area (ha)', id: 'landArea', type: 'number', required: true }
-      ],
-      [
-        { label: 'Slope Value', id: 'slopeValue', type: 'number', required: true },
-        { label: 'Slope Unit', id: 'slopeUnit', type: 'select', options: ['Degrees', 'Percent'], required: true },
-        { label: 'Slope Direction', id: 'slopeDirection', type: 'select', options: ['North', 'South'], required: true },
-        { label: 'Landscape Position', id: 'landscapePosition', type: 'select', options: ['Hilltop', 'Valley'], required: true },
-        { label: 'Surface Form', id: 'surfaceForm', type: 'select', options: ['Flat', 'Concave'], required: true }
-      ],
-      [
-        { label: 'Tillage Layer Depth (cm)', id: 'tillageDepth', type: 'number', required: true },
-        { label: 'Soil Strength', id: 'soilStrength', type: 'number', required: true },
-        { label: 'VESS Score', id: 'vessScore', type: 'select', options: ['Sq1', 'Sq2', 'Sq3'], required: true },
-        { label: 'Water Infiltration Time (min)', id: 'infiltrationMin', type: 'number', required: true },
-        { label: 'Water Infiltration Time (sec)', id: 'infiltrationSec', type: 'number', required: true }
-      ],
-      [
-        { label: 'Soil pH', id: 'soilPh', type: 'number', required: true },
-        { label: 'Soil Color', id: 'soilColor', type: 'select', options: ['Brown', 'Gray', 'Dark Brown'], required: true }
-      ],
-      [
-        { label: 'Plant Emergence Rate', id: 'plantEmergence', type: 'select', options: ['Low', 'Medium', 'High'], required: true },
-        { label: 'Root Development', id: 'rootDev', type: 'select', options: ['Poor', 'Good'], required: true },
-        { label: 'Earthworm Count (per block)', id: 'earthworms', type: 'number', required: true },
-        { label: 'Mycelium Development', id: 'mycelium', type: 'select', options: ['Low', 'High'], required: true }
-      ],
-      [
-        { label: 'Crop Type', id: 'yieldCropType', type: 'select', options: ['Wheat', 'Corn', 'Other'], required: true },
-        { label: 'Specify Other', id: 'otherYieldCrop' },
-        { label: 'Yield Value', id: 'yieldValue', type: 'number', required: true },
-        { label: 'Unit', id: 'yieldUnit', type: 'select', options: ['t/ha', 'kg/ha'], required: true },
-        { label: 'Note', id: 'yieldNote', type: 'textarea' }
-      ]
-    ];
+<script>
+const stepTitles = [
+  "General Info", "Crop Info", "Topography", "Physical Soil",
+  "Chemical Soil", "Biological Soil", "Crop Yield"
+];
 
-    const form = document.getElementById("feshForm");
-    const nav = document.getElementById("stepNav");
+const soilColors = [
+  "Very Dark Gray", "Dark Gray", "Gray", "Light Gray", "Very Pale Brown",
+  "Pale Brown", "Brown", "Dark Brown", "Yellowish Brown", "Strong Brown",
+  "Reddish Brown", "Dark Reddish Brown", "Light Yellowish Brown", "Dark Yellowish Brown",
+  "Yellow", "Strong Yellow", "Grayish Yellow", "Light Olive", "Olive", "Dark Olive",
+  "Greenish Brown", "Light Reddish Brown", "Orange Brown", "Dark Grayish Brown"
+];
 
-    function createStepHeader() {
-      steps.forEach((title, index) => {
-        const div = document.createElement("div");
-        div.className = "step-box";
-        div.id = `step-tab-${index + 1}`;
-        div.innerText = `Step ${index + 1}: ${title}`;
-        div.onclick = () => changeStep(index + 1);
-        nav.appendChild(div);
-      });
-    }
+const cropOptions = [
+  "Wheat", "Barley", "Corn", "Soybeans", "Oats", "Canola", "Potatoes", "Blueberries",
+  "Carrots", "Cabbage", "Strawberries", "Turnip", "Apples", "Raspberries", "Pumpkins",
+  "Maple (syrup trees)", "Green Beans", "Peas", "Beets", "Other"
+];
 
-    function changeStep(step) {
-      if (!validateStep(currentStep)) return;
-      document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
-      document.querySelectorAll(".step-box").forEach(t => t.classList.remove("active"));
-      document.getElementById(`step-${step}`).classList.add("active");
-      document.getElementById(`step-tab-${step}`).classList.add("active");
-      currentStep = step;
-    }
+function createStepHeader() {
+  const header = document.getElementById("stepHeader");
+  stepTitles.forEach((title, idx) => {
+    const div = document.createElement("div");
+    div.className = "step-box";
+    div.textContent = `Step ${idx + 1}: ${title}`;
+    div.id = `header-step${idx + 1}`;
+    div.onclick = () => activateStep(idx + 1);
+    header.appendChild(div);
+  });
+}
 
-    function validateStep(stepNum) {
-      const step = document.getElementById(`step-${stepNum}`);
-      if (!step) return true;
-      const inputs = step.querySelectorAll("input, select, textarea");
-      for (let input of inputs) {
-        if (input.hasAttribute("required") && !input.value.trim()) {
-          alert("Please complete all required fields in Step " + stepNum);
-          return false;
-        }
-      }
-      document.getElementById(`step-tab-${stepNum}`).style.backgroundColor = '#2e7d32';
-      return true;
-    }
+function createFormSteps() {
+  const container = document.getElementById("formSteps");
+  for (let i = 1; i <= 7; i++) {
+    const stepDiv = document.createElement("div");
+    stepDiv.className = `step${i === 1 ? ' active' : ''}`;
+    stepDiv.id = `step${i}`;
+    stepDiv.innerHTML = `<h3>Step ${i}: ${stepTitles[i-1]}</h3>` + getStepContent(i);
+    container.appendChild(stepDiv);
+  }
+}
 
-    function startDictation(id) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) return alert("Speech recognition not supported.");
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.onresult = e => document.getElementById(id).value = e.results[0][0].transcript;
-      recognition.start();
-    }
+function getStepContent(step) {
+  switch(step) {
+    case 1:
+      return `
+        <label>Farmer Name <button class="mic-button" onclick="startDictation('farmerName')">🎤</button></label>
+        <input type="text" id="farmerName" required>
+        <label>Date</label>
+        <input type="date" id="date" required>
+        <label>Phone</label>
+        <input type="tel" id="phone" required>
+        <label>Latitude</label>
+        <input type="text" id="latitude" readonly>
+        <label>Longitude</label>
+        <input type="text" id="longitude" readonly>
+        <label>Elevation (m)</label>
+        <input type="text" id="elevation" readonly>
+        <button onclick="getLocation()">📍 Get GPS</button>
+      `;
+    case 2:
+      return `
+        <label>Crop Type</label>
+        <select id="cropType" onchange="toggleOther('cropType','otherCrop')" required>
+          ${cropOptions.map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+        <div id="otherCrop" style="display:none;">
+          <label>Other:</label>
+          <input type="text">
+        </div>
+        <label>Land Area (ha)</label>
+        <input type="number" required>
+      `;
+    case 3:
+      return `
+        <label>Slope (deg or %)</label>
+        <input type="number" id="slopeValue" required>
+        <select id="slopeUnit"><option>deg</option><option>percent</option></select>
+        <label>Converted:</label>
+        <input type="text" id="slopeConverted" readonly>
+        <label>Slope Direction</label>
+        <select required><option>North</option><option>South</option><option>East</option><option>West</option></select>
+        <label>Landscape Position</label>
+        <select required><option>Hilltop</option><option>Valley</option><option>Flatland</option></select>
+        <label>Surface Form</label>
+        <select required><option>Flat</option><option>Concave</option><option>Convex</option></select>
+      `;
+    case 4:
+      return `
+        <label>Tillage Layer Depth (cm)</label><input type="number" required>
+        <label>Soil Strength</label><input type="number" required>
+        <label>VESS Score</label>
+        <select required><option>Sq1</option><option>Sq2</option><option>Sq3</option><option>Sq4</option><option>Sq5</option></select>
+        <label>Water Infiltration Time</label><input type="text" placeholder="min:sec" required>
+        <img src="images/vess_guide.png" alt="VESS Guide">
+      `;
+    case 5:
+      return `
+        <label>Soil pH</label><input type="number" step="0.1" required>
+        <label>Soil Color</label>
+        <select required>
+          ${soilColors.map(c => `<option>${c}</option>`).join('')}
+        </select>
+        <img src="images/color_soil.jpg" alt="Soil Color Guide">
+      `;
+    case 6:
+      return `
+        <label>Plant Emergence Rate</label><select required><option>Low</option><option>Medium</option><option>High</option></select>
+        <label>Root Development</label><select required><option>Poor</option><option>Moderate</option><option>Good</option><option>Excellent</option></select>
+        <label>Earthworm Count</label><input type="number" required>
+        <label>Mycelium Development</label><select required><option>Low</option><option>Medium</option><option>High</option></select>
+      `;
+    case 7:
+      return `
+        <label>Crop Type</label>
+        <select onchange="toggleOther('yieldCrop','otherYield')" required>
+          ${cropOptions.map(c => `<option>${c}</option>`).join('')}
+        </select>
+        <div id="otherYield" style="display:none;">
+          <label>Specify Other:</label><input type="text">
+        </div>
+        <label>Yield Value</label><input type="number" required>
+        <label>Unit</label><select required><option>t/ha</option><option>kg/ha</option></select>
+        <label>Note</label><textarea></textarea>
+      `;
+  }
+}
 
-    function createMicField(field) {
-      const wrapper = document.createElement('div');
-      const label = document.createElement('label');
-      label.innerHTML = `${field.label}: ${!field.readonly ? '<button type="button" class="mic-btn" onclick="startDictation(\'' + field.id + '\')">🎤</button>' : ''}`;
-      let input;
-      if (field.type === 'select') {
-        input = document.createElement('select');
-        field.options.forEach(opt => {
-          const option = document.createElement('option');
-          option.value = opt;
-          option.innerText = opt;
-          input.appendChild(option);
-        });
-      } else if (field.type === 'textarea') {
-        input = document.createElement('textarea');
-        input.rows = 3;
-      } else {
-        input = document.createElement('input');
-        input.type = field.type || 'text';
-      }
-      input.id = field.id;
-      if (field.required) input.required = true;
-      if (field.readonly) {
-        input.readOnly = true;
-        input.style.background = '#f0f0f0';
-      }
-      label.appendChild(input);
-      wrapper.appendChild(label);
-      return wrapper;
-    }
+function activateStep(step) {
+  for (let i = 1; i <= 7; i++) {
+    document.getElementById("step" + i).classList.remove("active");
+  }
+  document.getElementById("step" + step).classList.add("active");
+}
 
-    function generateSteps() {
-      for (let i = 1; i <= totalSteps; i++) {
-        const div = document.createElement("div");
-        div.className = "step";
-        div.id = `step-${i}`;
-        const h = document.createElement("h3");
-        h.innerText = `Step ${i}: ${steps[i - 1]}`;
-        div.appendChild(h);
-        stepFields[i - 1].forEach(f => div.appendChild(createMicField(f)));
-        form.appendChild(div);
-      }
-      changeStep(1);
-    }
+function toggleOther(selectId, containerId) {
+  const value = document.getElementById(selectId).value;
+  document.getElementById(containerId).style.display = value === "Other" ? "block" : "none";
+}
 
-    window.onload = function () {
-      createStepHeader();
-      generateSteps();
-      const now = new Date();
-      const id = now.toISOString().slice(0,10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
-      document.getElementById("farmId").value = id;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
-          document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
-          document.getElementById("elevation").value = (100 + Math.random()*50).toFixed(2);
-        });
-      }
-    }
-  </script>
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
+      document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
+      document.getElementById("elevation").value = (100 + Math.random() * 50).toFixed(2);
+    });
+  }
+}
+
+function startDictation(fieldId) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech recognition not supported."); return;
+  }
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.onresult = function (event) {
+    document.getElementById(fieldId).value = event.results[0][0].transcript;
+  };
+  recognition.onerror = function () {
+    alert("Microphone error");
+  };
+  recognition.start();
+}
+
+window.onload = function () {
+  createStepHeader();
+  createFormSteps();
+};
+</script>
+
 </body>
 </html>
