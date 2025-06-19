@@ -316,38 +316,39 @@
   <label for="bulkDensity">Bulk Density (g/cm³):
     <button type="button" class="mic-button" onclick="startDictation('bulkDensity')">🎤</button>
   </label>
-  <input type="number" id="bulkDensity" name="bulkDensity" min="0" step="any" required />
+  <input type="number" id="bulkDensity" name="bulkDensity" min="0" step="any" required /><br />
 
   <label for="penetrationResistance">Penetration Resistance (kg/cm²):
     <button type="button" class="mic-button" onclick="startDictation('penetrationResistance')">🎤</button>
   </label>
-  <input type="number" id="penetrationResistance" name="penetrationResistance" min="0" step="any" required />
+  <input type="number" id="penetrationResistance" name="penetrationResistance" min="0" step="any" required /><br />
 
   <label>Water Infiltration Time (min : sec):
     <button type="button" class="mic-button" onclick="startDictation('waterInfiltration')">🎤</button>
-  </label>
-  <select id="infiltrationMin" required>
+  </label><br />
+  <select id="infiltrationMin" required style="width: 100px;">
     <option value="">Min</option>
+    <!-- اعداد 1 تا 59 -->
     ${[...Array(59).keys()].map(i => `<option value="${i + 1}">${i + 1}</option>`).join('')}
   </select>
   :
-  <select id="infiltrationSec" required>
+  <select id="infiltrationSec" required style="width: 100px;">
     <option value="">Sec</option>
     ${[...Array(59).keys()].map(i => `<option value="${i + 1}">${i + 1}</option>`).join('')}
-  </select>
+  </select><br />
 
   <label for="vessScore">VESS Score:
     <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
     <button type="button" onclick="toggleVessTable()">❓</button>
   </label>
-  <select id="vessScore" name="vessScore" required>
+  <select id="vessScore" name="vessScore" required style="width: 200px;">
     <option value="">-- Select --</option>
     <option value="Sq1">Sq1 – Excellent</option>
     <option value="Sq2">Sq2 – Good</option>
     <option value="Sq3">Sq3 – Moderate</option>
     <option value="Sq4">Sq4 – Poor</option>
     <option value="Sq5">Sq5 – Very Poor</option>
-  </select>
+  </select><br />
 
   <div id="vessTable" style="display:none; margin-top:10px;">
     <img src="vess-table.jpg" alt="VESS Table" style="max-width: 400px;" />
@@ -392,7 +393,6 @@ function startDictation(fieldId) {
   };
 }
 </script>
-
 
   <!-- Step 5 -->
   <div class="step" id="step5">
