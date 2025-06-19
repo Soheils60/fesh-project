@@ -313,56 +313,48 @@
 <div class="step" id="step4">
   <h3>Step 4: Physical Soil Properties</h3>
 
-  <!-- Tillage Layer Depth -->
-  <label for="tillageDepth">Tillage Layer Depth (cm): 
-    <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
+  <label for="bulkDensity">Bulk Density (g/cm³):
+    <button type="button" class="mic-button" onclick="startDictation('bulkDensity')">🎤</button>
   </label>
-  <input type="number" id="tillageDepth" name="tillageDepth" min="0" required /><br>
+  <input type="number" id="bulkDensity" name="bulkDensity" min="0" step="0.01" required /><br>
 
-  <!-- Soil Strength Upper -->
-  <label for="soilStrengthUpper">Soil Strength – Upper Layer (kg/cm²): 
-    <button type="button" class="mic-button" onclick="startDictation('soilStrengthUpper')">🎤</button>
+  <label for="penetrationResistance">Penetration Resistance (kg/cm²):
+    <button type="button" class="mic-button" onclick="startDictation('penetrationResistance')">🎤</button>
   </label>
-  <input type="number" id="soilStrengthUpper" name="soilStrengthUpper" min="0" required /><br>
+  <input type="number" id="penetrationResistance" name="penetrationResistance" min="0" step="0.1" required /><br>
 
-  <!-- Soil Strength Lower -->
-  <label for="soilStrengthLower">Soil Strength – Lower Layer (kg/cm²): 
-    <button type="button" class="mic-button" onclick="startDictation('soilStrengthLower')">🎤</button>
-  </label>
-  <input type="number" id="soilStrengthLower" name="soilStrengthLower" min="0" required /><br>
-
-  <!-- Infiltration Time -->
-  <label>Water Infiltration Time (min : sec): 
+  <label>Water Infiltration Time (min : sec):
     <button type="button" class="mic-button" onclick="startDictation('infiltrationMin')">🎤</button>
   </label><br>
+
   <select id="infiltrationMin" required>
     <option value="">Min</option>
-    ${[...Array(60).keys()].slice(1).map(i => `<option value="${i}">${i}</option>`).join('')}
+    <!-- 1 to 59 -->
+    ${[...Array(59).keys()].map(i => `<option>${i+1}</option>`).join('')}
   </select>
   :
   <select id="infiltrationSec" required>
     <option value="">Sec</option>
-    ${[...Array(60).keys()].slice(1).map(i => `<option value="${i}">${i}</option>`).join('')}
+    <!-- 1 to 59 -->
+    ${[...Array(59).keys()].map(i => `<option>${i+1}</option>`).join('')}
   </select><br>
 
-  <!-- VESS Score -->
-  <label for="vessScore">VESS Score:
-    <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
-    <button type="button" onclick="toggleVESSImage()">❓</button>
+  <label for="vess">VESS Score:
+    <button type="button" class="mic-button" onclick="startDictation('vess')">🎤</button>
+    <button type="button" onclick="toggleVESSInfo()">❓</button>
   </label>
-  <select id="vessScore" name="vessScore" required>
+  <select id="vess" name="vess" required>
     <option value="">-- Select --</option>
-    <option value="Sq1">Sq1 – Excellent</option>
-    <option value="Sq2">Sq2 – Good</option>
-    <option value="Sq3">Sq3 – Moderate</option>
-    <option value="Sq4">Sq4 – Poor</option>
-    <option value="Sq5">Sq5 – Very Poor</option>
+    <option value="1">Sq1 – Excellent</option>
+    <option value="2">Sq2 – Good</option>
+    <option value="3">Sq3 – Moderate</option>
+    <option value="4">Sq4 – Poor</option>
+    <option value="5">Sq5 – Very Poor</option>
   </select>
 
-  <!-- VESS Table Image -->
-  <div id="vessImageContainer" style="display:none; margin-top:10px;">
-    <img src="vess-table.jpg" alt="VESS Table" style="max-width: 100%; max-height: 300px;">
-    <button type="button" onclick="toggleVESSImage()">Close</button>
+  <div id="vessInfo" style="display:none; margin-top:10px;">
+    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width:100%; height:auto; border:1px solid #ccc; border-radius:6px;">
+    <br><button type="button" onclick="toggleVESSInfo()">✖ Close</button>
   </div>
 
   <br><br>
@@ -370,43 +362,59 @@
 </div>
 
 <script>
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return alert("Your browser doesn't support voice input.");
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
-    recognition.onresult = (event) => {
-      document.getElementById(fieldId).value = event.results[0][0].transcript;
-    };
-  }
-
-  function toggleVESSImage() {
-    const imgDiv = document.getElementById("vessImageContainer");
-    imgDiv.style.display = imgDiv.style.display === "none" ? "block" : "none";
+  function toggleVESSInfo() {
+    const info = document.getElementById("vessInfo");
+    info.style.display = (info.style.display === "none") ? "block" : "none";
   }
 
   function validateStep4() {
-    const fields = ["tillageDepth", "soilStrengthUpper", "soilStrengthLower", "vessScore"];
-    for (let id of fields) {
-      const val = document.getElementById(id).value.trim();
-      if (!val || Number(val) < 0) {
-        alert("Please complete all numeric fields with non-negative values.");
-        return;
-      }
-    }
-
+    const density = document.getElementById("bulkDensity").value.trim();
+    const resistance = document.getElementById("penetrationResistance").value.trim();
     const min = document.getElementById("infiltrationMin").value;
     const sec = document.getElementById("infiltrationSec").value;
-    if (!min || !sec) {
-      alert("Please select both minute and second for water infiltration time.");
+    const vess = document.getElementById("vess").value;
+
+    if (!density || !resistance || !min || !sec || !vess) {
+      alert("Please fill in all required fields.");
       return;
     }
 
-    alert("Step 4 completed successfully!");
+    document.getElementById("step4").classList.remove("active");
+    document.getElementById("step5").classList.add("active");
+    setActiveStep(5);
+  }
+
+  function startDictation(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser doesn't support voice input.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.start();
+    recognition.onresult = function (event) {
+      document.getElementById(fieldId).value = event.results[0][0].transcript;
+    };
+    recognition.onerror = function (event) {
+      alert("Voice input error: " + event.error);
+    };
+  }
+
+  // Populate dropdowns (for plain HTML, use this if no JS template)
+  window.onload = function() {
+    const minSelect = document.getElementById("infiltrationMin");
+    const secSelect = document.getElementById("infiltrationSec");
+    for (let i = 1; i <= 59; i++) {
+      const optionMin = document.createElement("option");
+      optionMin.text = i;
+      minSelect.add(optionMin);
+      const optionSec = document.createElement("option");
+      optionSec.text = i;
+      secSelect.add(optionSec);
+    }
   }
 </script>
-
 
   <!-- Step 5 -->
   <div class="step" id="step5">
