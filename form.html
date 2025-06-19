@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FESH - 7 Step Soil Health Assessment Form</title>
+  <title>FESH - Field Evaluation of Soil Health</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
       display: none;
       background: #fff;
       padding: 20px;
-      margin-bottom: 20px;
+      margin-top: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -23,6 +23,7 @@
     label {
       display: block;
       margin-top: 10px;
+      font-weight: bold;
     }
     input, select, textarea {
       width: 100%;
@@ -40,51 +41,77 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    .step-header {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .step-box {
+      padding: 10px 15px;
+      background-color: #4caf50;
+      border-radius: 10px;
+      font-weight: bold;
+      color: white;
+      cursor: default;
+    }
+    .step-box.active {
+      background-color: #388e3c;
+    }
   </style>
 </head>
 <body>
   <h2>FESH - Field Evaluation of Soil Health</h2>
-  <form id="feshForm">
+  <div class="step-header">
+    <div class="step-box active" id="header-step1">Step 1: General Info</div>
+    <div class="step-box" id="header-step2">Step 2: Crop Info</div>
+    <div class="step-box" id="header-step3">Step 3: Topography</div>
+    <div class="step-box" id="header-step4">Step 4: Physical Soil</div>
+    <div class="step-box" id="header-step5">Step 5: Chemical Soil</div>
+    <div class="step-box" id="header-step6">Step 6: Biological Soil</div>
+    <div class="step-box" id="header-step7">Step 7: Crop Yield</div>
+  </div>
 
-    <!-- Step 1: General Info -->
+  <form id="feshForm">
     <div class="step active" id="step1">
       <h3>Step 1: General Information</h3>
-      <label>Farm ID:</label>
+      <label for="farmId">Farm ID:</label>
       <input type="text" id="farmId" readonly />
-      <label>Farmer Name:</label>
-      <input type="text" required />
-      <label>Date:</label>
-      <input type="date" required />
-      <label>Phone Number:</label>
-      <input type="tel" required />
-      <label>Latitude:</label>
+      <label for="farmerName">Farmer Name:</label>
+      <input type="text" id="farmerName" required />
+      <label for="date">Date:</label>
+      <input type="date" id="date" required />
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" required />
+      <label for="latitude">Latitude:</label>
       <input type="text" id="latitude" readonly required />
-      <label>Longitude:</label>
+      <label for="longitude">Longitude:</label>
       <input type="text" id="longitude" readonly required />
-      <label>Elevation (m):</label>
+      <label for="elevation">Elevation (m):</label>
       <input type="text" id="elevation" readonly />
-      <button type="button" onclick="openGoogleMap()">View on Google Map</button><br>
+      <button type="button" onclick="openGoogleMap()">View on Google Map</button>
       <button type="button" onclick="nextStep(1)">Next</button>
     </div>
 
-    <!-- Step 2: Crop Info -->
     <div class="step" id="step2">
       <h3>Step 2: Crop Information</h3>
       <label>Crop Type:</label>
-      <select required>
+      <select id="crop" onchange="toggleOther('crop','otherCropContainer')" required>
+        <option value="">-- Select --</option>
         <option>Wheat</option>
         <option>Corn</option>
         <option>Other</option>
       </select>
-      <label>Specify Other (if applicable):</label>
-      <input type="text" />
+      <div id="otherCropContainer" style="display:none;">
+        <label>Specify Other:</label>
+        <input type="text" id="otherCrop" />
+      </div>
       <label>Land Area (ha):</label>
       <input type="number" required />
       <button type="button" onclick="prevStep(2)">Back</button>
       <button type="button" onclick="nextStep(2)">Next</button>
     </div>
 
-    <!-- Step 3: Topography -->
     <div class="step" id="step3">
       <h3>Step 3: Topography</h3>
       <label>Slope Value:</label>
@@ -101,7 +128,6 @@
       <button type="button" onclick="nextStep(3)">Next</button>
     </div>
 
-    <!-- Step 4: Physical Soil -->
     <div class="step" id="step4">
       <h3>Step 4: Physical Soil Properties</h3>
       <label>Tillage Layer Depth (cm):</label>
@@ -118,7 +144,6 @@
       <button type="button" onclick="nextStep(4)">Next</button>
     </div>
 
-    <!-- Step 5: Chemical Soil -->
     <div class="step" id="step5">
       <h3>Step 5: Chemical Soil Properties</h3>
       <label>Soil pH:</label>
@@ -129,7 +154,6 @@
       <button type="button" onclick="nextStep(5)">Next</button>
     </div>
 
-    <!-- Step 6: Biological Soil -->
     <div class="step" id="step6">
       <h3>Step 6: Biological Soil Properties</h3>
       <label>Plant Emergence Rate:</label>
@@ -144,13 +168,17 @@
       <button type="button" onclick="nextStep(6)">Next</button>
     </div>
 
-    <!-- Step 7: Crop Yield -->
     <div class="step" id="step7">
       <h3>Step 7: Crop Yield</h3>
       <label>Crop Type:</label>
-      <select required><option>Wheat</option><option>Corn</option><option>Other</option></select>
-      <label>Specify Other:</label>
-      <input type="text" />
+      <select id="yieldCrop" onchange="toggleOther('yieldCrop','otherYieldCropContainer')" required>
+        <option value="">-- Select --</option>
+        <option>Wheat</option><option>Corn</option><option>Other</option>
+      </select>
+      <div id="otherYieldCropContainer" style="display:none;">
+        <label>Specify Other:</label>
+        <input type="text" id="otherYieldCrop" />
+      </div>
       <label>Yield Value:</label>
       <input type="number" required />
       <label>Unit:</label>
@@ -163,33 +191,42 @@
   </form>
 
   <script>
-    // Auto-generate Farm ID
-    document.getElementById("farmId").value = new Date().toISOString().slice(0,10).replace(/-/g,"") + "-" + Math.floor(Math.random()*10000);
-
-    // Navigation functions
-    function nextStep(n) {
-      document.getElementById("step" + n).classList.remove("active");
-      document.getElementById("step" + (n + 1)).classList.add("active");
+    function nextStep(current) {
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current + 1)).classList.add('active');
+      updateHeader(current + 1);
     }
-    function prevStep(n) {
-      document.getElementById("step" + n).classList.remove("active");
-      document.getElementById("step" + (n - 1)).classList.add("active");
+    function prevStep(current) {
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current - 1)).classList.add('active');
+      updateHeader(current - 1);
     }
-
-    // Geolocation (mock elevation)
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
-        document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
-        document.getElementById("elevation").value = (50 + Math.random()*100).toFixed(2); // simulated
-      });
+    function updateHeader(activeStep) {
+      for (let i = 1; i <= 7; i++) {
+        document.getElementById('header-step' + i).classList.remove('active');
+      }
+      document.getElementById('header-step' + activeStep).classList.add('active');
     }
-
-    // Google Maps button
+    function toggleOther(selectId, containerId) {
+      const value = document.getElementById(selectId).value;
+      document.getElementById(containerId).style.display = (value === 'Other') ? 'block' : 'none';
+    }
     function openGoogleMap() {
       const lat = document.getElementById("latitude").value;
       const lon = document.getElementById("longitude").value;
       window.open(`https://www.google.com/maps?q=${lat},${lon}`);
+    }
+    window.onload = function () {
+      const now = new Date();
+      const id = now.toISOString().slice(0,10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("farmId").value = id;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
+          document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
+          document.getElementById("elevation").value = (100 + Math.random()*50).toFixed(2);
+        });
+      }
     }
   </script>
 </body>
