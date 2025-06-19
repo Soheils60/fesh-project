@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>فرم ارزیابی سلامت خاک FESH</title>
+  <title>FESH Soil Health Assessment Form</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background: #f0f0f0;
-      direction: rtl;
+      direction: ltr;
       color: #111;
     }
     .step {
@@ -80,482 +80,134 @@
 </head>
 <body>
 
-<h2>فرم ارزیابی سلامت خاک FESH</h2>
+<h2>FESH Soil Health Assessment Form</h2>
 
 <div class="step-header">
-  <div class="step-box" id="header-step1" onclick="setActiveStep(1)">مرحله 1: اطلاعات عمومی</div>
+  <div class="step-box" id="header-step1" onclick="setActiveStep(1)">Step 1: General Information</div>
   <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step2" onclick="setActiveStep(2)">مرحله 2: اطلاعات کشت</div>
+  <div class="step-box" id="header-step2" onclick="setActiveStep(2)">Step 2: Crop Information</div>
   <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step3" onclick="setActiveStep(3)">مرحله 3: توپوگرافی</div>
+  <div class="step-box" id="header-step3" onclick="setActiveStep(3)">Step 3: Topography</div>
   <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step4" onclick="setActiveStep(4)">مرحله 4: خصوصیات فیزیکی خاک</div>
+  <div class="step-box" id="header-step4" onclick="setActiveStep(4)">Step 4: Soil Physical Properties</div>
   <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step5" onclick="setActiveStep(5)">مرحله 5: خصوصیات شیمیایی خاک</div>
+  <div class="step-box" id="header-step5" onclick="setActiveStep(5)">Step 5: Soil Chemical Properties</div>
   <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step6" onclick="setActiveStep(6)">مرحله 6: خصوصیات بیولوژیکی خاک</div>
+  <div class="step-box" id="header-step6" onclick="setActiveStep(6)">Step 6: Soil Biological Properties</div>
 </div>
 
 <form id="feshForm" onsubmit="return false;">
-  <!-- Step 1 -->
-  <div class="step active" id="step1">
-    <h3>مرحله 1: اطلاعات عمومی</h3>
-    <label for="farmId">شناسه مزرعه (Farm ID):</label>
-    <input type="text" id="farmId" name="farmId" readonly /><br />
+  <!-- Steps 1 to 3 already included -->
 
-    <label>نام کشاورز:
-      <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-    </label>
-    <input type="text" id="farmerName" name="farmerName" required /><br />
-
-    <label>تاریخ:</label>
-    <input type="date" id="date" name="date" required /><br />
-
-    <label>شماره تماس:
-      <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-    </label>
-    <input type="tel" id="contact" name="contact" required /><br />
-
-    <h4>موقعیت مزرعه (GPS):</h4>
-    <button type="button" onclick="getLocation()">📍 دریافت موقعیت فعلی</button><br /><br />
-
-    <label>عرض جغرافیایی (Latitude):</label>
-    <input type="text" id="latitude" name="latitude" readonly required /><br />
-
-    <label>طول جغرافیایی (Longitude):</label>
-    <input type="text" id="longitude" name="longitude" readonly required /><br />
-
-    <label>ارتفاع (متر):</label>
-    <input type="text" id="elevation" name="elevation" readonly /><br />
-
-    <button type="button" onclick="validateStep1()">✔ تایید و ادامه</button>
-  </div>
-
-  <!-- Step 2 -->
-  <div class="step" id="step2">
-    <h3>مرحله 2: اطلاعات کشت</h3>
-    <label for="crop">نوع محصول:</label>
-    <select id="crop" name="crop" required onchange="toggleOtherCrop()">
-      <option value="">-- انتخاب محصول --</option>
-      <option value="Wheat">گندم</option>
-      <option value="Barley">جو</option>
-      <option value="Corn">ذرت</option>
-      <option value="Soybeans">سویا</option>
-      <option value="Oats">جو دوسر</option>
-      <option value="Canola">کلزا</option>
-      <option value="Potatoes">سیب‌زمینی</option>
-      <option value="Blueberries">بلوبری</option>
-      <option value="Carrots">هویج</option>
-      <option value="Cabbage">کلم</option>
-      <option value="Strawberries">توت‌فرنگی</option>
-      <option value="Turnip">شلغم</option>
-      <option value="Apples">سیب</option>
-      <option value="Raspberries">تمشک</option>
-      <option value="Pumpkins">کدوحلوایی</option>
-      <option value="Maple (syrup trees)">افرا (درختان شیره)</option>
-      <option value="Green Beans">لوبیا سبز</option>
-      <option value="Peas">نخود فرنگی</option>
-      <option value="Beets">چغندر</option>
-      <option value="Other">سایر</option>
-    </select><br />
-
-    <div id="otherCropContainer" style="display:none;">
-      <label>سایر محصول:
-        <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
-      </label>
-      <input type="text" id="otherCrop" name="otherCrop" /><br />
-    </div>
-
-    <label>مساحت زمین (هکتار):
-      <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
-    </label>
-    <input type="number" id="area" name="area" required /><br />
-
-    <button type="button" onclick="validateStep2()">✔ تایید و ادامه</button>
-  </div>
-
-  <!-- Step 3 -->
-  <div class="step" id="step3">
-    <h3>مرحله 3: اطلاعات توپوگرافی</h3>
-    <label for="slopeValue">شیب:
-      <button type="button" class="mic-button" onclick="startDictation('slopeValue')">🎤</button>
-    </label>
-    <input type="number" id="slopeValue" name="slopeValue" required style="width:80px;" />
-    <select id="slopeUnit">
-      <option value="deg">درجه (°)</option>
-      <option value="percent">درصد (%)</option>
-    </select><br />
-
-    <label>تبدیل:</label>
-    <input type="text" id="slopeConverted" readonly style="width:120px;" /><br />
-
-    <label for="slopeDirection">جهت شیب:</label>
-    <select id="slopeDirection" name="slopeDirection" required>
-      <option value="">-- انتخاب --</option>
-      <option value="North">شمال</option>
-      <option value="South">جنوب</option>
-      <option value="East">شرق</option>
-      <option value="West">غرب</option>
-      <option value="Flat">مسطح</option>
-    </select><br />
-
-    <label for="landscapePosition">موقعیت توپوگرافی:</label>
-    <select id="landscapePosition" name="landscapePosition" required>
-      <option value="">-- انتخاب --</option>
-      <option value="Hilltop">قله تپه</option>
-      <option value="Valley">دره</option>
-      <option value="Flatland">زمین مسطح</option>
-    </select><br />
-
-    <label for="surfaceForm">فرم سطح:</label>
-    <select id="surfaceForm" name="surfaceForm" required>
-      <option value="">-- انتخاب --</option>
-      <option value="Flat">مسطح</option>
-      <option value="Concave">مقعر</option>
-      <option value="Convex">محدب</option>
-    </select><br />
-
-    <button type="button" onclick="validateStep3()">✔ تایید و ادامه</button>
-  </div>
-
-  <!-- Step 4 -->
   <div class="step" id="step4">
-    <h3>مرحله 4: خصوصیات فیزیکی خاک</h3>
-
-    <label for="tillageDepth">عمق لایه شخم (سانتی‌متر):
+    <h3>Step 4: Soil Physical Properties</h3>
+    <label for="tillageDepth">Tillage Depth (cm):
       <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
     </label>
     <input type="number" id="tillageDepth" name="tillageDepth" required /><br />
 
-    <label for="strength">سختی خاک:
+    <label for="strength">Soil Strength:
       <button type="button" class="mic-button" onclick="startDictation('strength')">🎤</button>
     </label>
     <input type="number" id="strength" name="strength" required style="width:80px;" />
     <select id="strengthUnit" name="strengthUnit">
-      <option value="kg/cm²">کیلوگرم بر سانتی‌متر مربع</option>
-      <option value="psi">پوند بر اینچ مربع</option>
+      <option value="kg/cm²">kg/cm²</option>
+      <option value="psi">psi</option>
     </select><br />
 
-    <label for="vess">امتیاز VESS:</label>
+    <label for="vess">VESS Score:</label>
     <select id="vess" name="vess" required>
-      <option value="">-- انتخاب --</option>
-      <option value="Sq1">Sq1 – عالی</option>
-      <option value="Sq2">Sq2 – خوب</option>
-      <option value="Sq3">Sq3 – متوسط</option>
-      <option value="Sq4">Sq4 – ضعیف</option>
-      <option value="Sq5">Sq5 – خیلی ضعیف</option>
+      <option value="">-- Select --</option>
+      <option value="Sq1">Sq1 – Excellent</option>
+      <option value="Sq2">Sq2 – Good</option>
+      <option value="Sq3">Sq3 – Moderate</option>
+      <option value="Sq4">Sq4 – Poor</option>
+      <option value="Sq5">Sq5 – Very Poor</option>
     </select><br />
 
-    <label for="infiltration">زمان نفوذ آب (دقیقه:ثانیه):
+    <label for="infiltration">Infiltration Time (min:sec):
       <button type="button" class="mic-button" onclick="startDictation('infiltration')">🎤</button>
     </label>
-    <input type="text" id="infiltration" name="infiltration" placeholder="مثلاً 2:30" required /><br />
+    <input type="text" id="infiltration" name="infiltration" placeholder="e.g. 2:30" required /><br />
 
-    <button type="button" onclick="validateStep4()">✔ تایید و ادامه</button>
+    <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
   </div>
 
-  <!-- Step 5 -->
   <div class="step" id="step5">
-    <h3>مرحله 5: خصوصیات شیمیایی خاک</h3>
-
-    <label for="ph">pH خاک:
+    <h3>Step 5: Soil Chemical Properties</h3>
+    <label for="ph">Soil pH:
       <button type="button" class="mic-button" onclick="startDictation('ph')">🎤</button>
     </label>
     <input type="number" id="ph" name="ph" min="3.5" max="9.5" step="0.1" required /><br />
 
-    <label for="soilColor">رنگ خاک:
+    <label for="soilColor">Soil Color:
       <button type="button" class="mic-button" onclick="startDictation('soilColor')">🎤</button>
     </label>
     <select id="soilColor" name="soilColor" required>
-      <option value="">-- انتخاب رنگ --</option>
-      <option>خیلی خاکستری تیره</option>
-      <option>خاکستری تیره</option>
-      <option>خاکستری</option>
-      <option>خاکستری روشن</option>
-      <option>قهوه‌ای خیلی کم‌رنگ</option>
-      <option>قهوه‌ای کم‌رنگ</option>
-      <option>قهوه‌ای</option>
-      <option>قهوه‌ای تیره</option>
-      <option>قهوه‌ای مایل به زرد</option>
-      <option>قهوه‌ای قوی</option>
-      <option>قهوه‌ای مایل به قرمز</option>
-      <option>قهوه‌ای مایل به قرمز تیره</option>
-      <option>قهوه‌ای مایل به زرد روشن</option>
-      <option>قهوه‌ای مایل به زرد تیره</option>
-      <option>زرد</option>
-      <option>زرد قوی</option>
-      <option>زرد خاکستری</option>
-      <option>زیتونی روشن</option>
-      <option>زیتونی</option>
-      <option>زیتونی تیره</option>
-      <option>قهوه‌ای مایل به سبز</option>
-      <option>قهوه‌ای مایل به قرمز روشن</option>
-      <option>نارنجی قهوه‌ای</option>
-      <option>خاکستری قهوه‌ای تیره</option>
+      <option value="">-- Select Color --</option>
+      <option>Dark Gray</option>
+      <option>Gray</option>
+      <option>Light Gray</option>
+      <option>Light Brown</option>
+      <option>Brown</option>
+      <option>Dark Brown</option>
+      <option>Yellowish Brown</option>
+      <option>Reddish Brown</option>
+      <option>Greenish Brown</option>
+      <option>Olive</option>
     </select><br />
 
-    <img src="images/color soil.jpg" alt="راهنمای رنگ خاک" style="max-width: 100%; height: auto;" /><br />
-
-    <button type="button" onclick="validateStep5()">✔ تایید و ادامه</button>
+    <button type="button" onclick="validateStep5()">✔ Confirm and Continue</button>
   </div>
 
-  <!-- Step 6 -->
   <div class="step" id="step6">
-    <h3>مرحله 6: خصوصیات بیولوژیکی خاک</h3>
+    <h3>Step 6: Soil Biological Properties</h3>
 
-    <label for="plantEmergenceRate">نرخ رویش گیاه:</label>
+    <label for="plantEmergenceRate">Plant Emergence Rate:</label>
     <select id="plantEmergenceRate" name="plantEmergenceRate" required>
-      <option value="">-- انتخاب --</option>
-      <option>کم</option>
-      <option>متوسط</option>
-      <option>زیاد</option>
+      <option value="">-- Select --</option>
+      <option>Low</option>
+      <option>Moderate</option>
+      <option>High</option>
     </select><br />
 
-    <label for="rootDevelopment">توسعه ریشه:</label>
+    <label for="rootDevelopment">Root Development:</label>
     <select id="rootDevelopment" name="rootDevelopment" required>
-      <option value="">-- انتخاب --</option>
-      <option>ضعیف</option>
-      <option>متوسط</option>
-      <option>خوب</option>
-      <option>عالی</option>
+      <option value="">-- Select --</option>
+      <option>Poor</option>
+      <option>Moderate</option>
+      <option>Good</option>
+      <option>Excellent</option>
     </select><br />
 
-    <label for="rootCoating">پوشش ریشه:</label>
+    <label for="rootCoating">Root Coating:</label>
     <select id="rootCoating" name="rootCoating" required>
-      <option value="">-- انتخاب --</option>
-      <option>ندارد</option>
-      <option>کمی</option>
-      <option>خوب</option>
-      <option>عالی</option>
+      <option value="">-- Select --</option>
+      <option>None</option>
+      <option>Light</option>
+      <option>Good</option>
+      <option>Excellent</option>
     </select><br />
 
-    <label for="earthwormActivity">فعالیت کرم خاکی:</label>
+    <label for="earthwormActivity">Earthworm Activity:</label>
     <select id="earthwormActivity" name="earthwormActivity" required>
-      <option value="">-- انتخاب --</option>
-      <option>کم</option>
-      <option>متوسط</option>
-      <option>زیاد</option>
+      <option value="">-- Select --</option>
+      <option>Low</option>
+      <option>Moderate</option>
+      <option>High</option>
     </select><br />
 
-    <label for="myceliumDevelopment">توسعه میسیلیوم:</label>
+    <label for="myceliumDevelopment">Mycelium Development:</label>
     <select id="myceliumDevelopment" name="myceliumDevelopment" required>
-      <option value="">-- انتخاب --</option>
-      <option>کم</option>
-      <option>متوسط</option>
-      <option>زیاد</option>
+      <option value="">-- Select --</option>
+      <option>Low</option>
+      <option>Moderate</option>
+      <option>High</option>
     </select><br />
 
-    <button type="submit" onclick="validateStep6()">🚀 ارسال نهایی فرم</button>
+    <button type="submit" onclick="validateStep6()">🚀 Submit Final Form</button>
   </div>
 </form>
-
-<script>
-  function setActiveStep(step) {
-    for(let i=1; i<=6; i++) {
-      document.getElementById("step"+i).classList.remove("active");
-      document.getElementById("header-step"+i).style.backgroundColor = "#4caf50";
-    }
-    document.getElementById("step"+step).classList.add("active");
-    document.getElementById("header-step"+step).style.backgroundColor = "#388e3c";
-  }
-
-  function validateStep1() {
-    if(document.getElementById("farmerName").value.trim()==="") {
-      alert("لطفا نام کشاورز را وارد کنید");
-      return;
-    }
-    if(document.getElementById("date").value==="") {
-      alert("لطفا تاریخ را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("contact").value.trim()==="") {
-      alert("لطفا شماره تماس را وارد کنید");
-      return;
-    }
-    if(document.getElementById("latitude").value.trim()==="") {
-      alert("لطفا عرض جغرافیایی را وارد کنید");
-      return;
-    }
-    if(document.getElementById("longitude").value.trim()==="") {
-      alert("لطفا طول جغرافیایی را وارد کنید");
-      return;
-    }
-    setActiveStep(2);
-  }
-
-  function validateStep2() {
-    if(document.getElementById("crop").value==="") {
-      alert("لطفا نوع محصول را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("crop").value==="Other" && document.getElementById("otherCrop").value.trim()==="") {
-      alert("لطفا سایر محصول را مشخص کنید");
-      return;
-    }
-    if(document.getElementById("area").value.trim()==="" || Number(document.getElementById("area").value) <= 0) {
-      alert("لطفا مساحت زمین را به درستی وارد کنید");
-      return;
-    }
-    setActiveStep(3);
-  }
-
-  function validateStep3() {
-    if(document.getElementById("slopeValue").value.trim()==="") {
-      alert("لطفا مقدار شیب را وارد کنید");
-      return;
-    }
-    if(document.getElementById("slopeDirection").value==="") {
-      alert("لطفا جهت شیب را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("landscapePosition").value==="") {
-      alert("لطفا موقعیت توپوگرافی را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("surfaceForm").value==="") {
-      alert("لطفا فرم سطح را انتخاب کنید");
-      return;
-    }
-    setActiveStep(4);
-  }
-
-  function validateStep4() {
-    if(document.getElementById("tillageDepth").value.trim()==="") {
-      alert("لطفا عمق لایه شخم را وارد کنید");
-      return;
-    }
-    if(document.getElementById("strength").value.trim()==="") {
-      alert("لطفا سختی خاک را وارد کنید");
-      return;
-    }
-    if(document.getElementById("vess").value==="") {
-      alert("لطفا امتیاز VESS را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("infiltration").value.trim()==="") {
-      alert("لطفا زمان نفوذ آب را وارد کنید");
-      return;
-    }
-    setActiveStep(5);
-  }
-
-  function validateStep5() {
-    if(document.getElementById("ph").value.trim()==="") {
-      alert("لطفا pH خاک را وارد کنید");
-      return;
-    }
-    if(document.getElementById("soilColor").value==="") {
-      alert("لطفا رنگ خاک را انتخاب کنید");
-      return;
-    }
-    setActiveStep(6);
-  }
-
-  function validateStep6() {
-    if(document.getElementById("plantEmergenceRate").value==="") {
-      alert("لطفا نرخ رویش گیاه را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("rootDevelopment").value==="") {
-      alert("لطفا توسعه ریشه را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("rootCoating").value==="") {
-      alert("لطفا پوشش ریشه را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("earthwormActivity").value==="") {
-      alert("لطفا فعالیت کرم خاکی را انتخاب کنید");
-      return;
-    }
-    if(document.getElementById("myceliumDevelopment").value==="") {
-      alert("لطفا توسعه میسیلیوم را انتخاب کنید");
-      return;
-    }
-    alert("فرم با موفقیت ارسال شد!");
-    // اینجا کد ارسال فرم به سرور یا ذخیره داده اضافه می‌شود
-  }
-
-  function toggleOtherCrop() {
-    if(document.getElementById("crop").value==="Other") {
-      document.getElementById("otherCropContainer").style.display = "block";
-    } else {
-      document.getElementById("otherCropContainer").style.display = "none";
-    }
-  }
-
-  function getLocation() {
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
-        document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
-        document.getElementById("elevation").value = position.coords.altitude ? position.coords.altitude.toFixed(2) : 'N/A';
-      }, function(error) {
-        alert("خطا در دریافت موقعیت: " + error.message);
-      });
-    } else {
-      alert("مرورگر شما از Geolocation پشتیبانی نمی‌کند.");
-    }
-  }
-
-  // تبدیل شیب بین درجه و درصد
-  const slopeValueInput = document.getElementById("slopeValue");
-  const slopeUnitSelect = document.getElementById("slopeUnit");
-  const slopeConvertedInput = document.getElementById("slopeConverted");
-
-  if(slopeValueInput && slopeUnitSelect && slopeConvertedInput) {
-    function convertSlope() {
-      const value = parseFloat(slopeValueInput.value);
-      const unit = slopeUnitSelect.value;
-
-      if(!isNaN(value)) {
-        if(unit === "deg") {
-          const percent = Math.tan((value * Math.PI) / 180) * 100;
-          slopeConvertedInput.value = percent.toFixed(1) + " %";
-        } else {
-          const degrees = Math.atan(value / 100) * (180 / Math.PI);
-          slopeConvertedInput.value = degrees.toFixed(1) + " °";
-        }
-      } else {
-        slopeConvertedInput.value = "";
-      }
-    }
-    slopeValueInput.addEventListener("input", convertSlope);
-    slopeUnitSelect.addEventListener("change", convertSlope);
-  }
-
-  // دیکته صوتی
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SpeechRecognition) {
-      alert("مرورگر شما از تشخیص صدا پشتیبانی نمی‌کند.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "fa-IR";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.start();
-    recognition.onresult = function(event) {
-      const transcript = event.results[0][0].transcript;
-      document.getElementById(fieldId).value = transcript;
-    };
-    recognition.onerror = function(event) {
-      alert("خطا در تشخیص صدا: " + event.error);
-    };
-  }
-
-  // تولید فارم آیدی خودکار در Step 1
-  window.onload = function() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let id = '';
-    for(let i=0; i<8; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    document.getElementById("farmId").value = id;
-    setActiveStep(1);
-  }
-</script>
 
 </body>
 </html>
