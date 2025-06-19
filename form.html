@@ -98,7 +98,7 @@
   <h3>Step 1: General Information</h3>
 
   <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" name="farmId" readonly required /><br />
+  <input type="text" id="farmId" name="farmId" readonly /><br />
 
   <label for="farmerName">Farmer Name:
     <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
@@ -111,7 +111,7 @@
   <label for="contact">Phone Number:
     <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
-  <input type="tel" id="contact" name="contact" required pattern="\d{10}" maxlength="10" /><br />
+  <input type="tel" id="contact" name="contact" required /><br />
 
   <h4>Farm Location (GPS):</h4>
   <button type="button" onclick="getLocation()">📍 Get Current Location</button>
@@ -127,14 +127,12 @@
 </div>
 
 <script>
-  // Generate Farm ID when page loads
+  // Generate Farm ID
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
-    const datePart = now.getFullYear().toString() +
-                     String(now.getMonth() + 1).padStart(2, '0') +
-                     String(now.getDate()).padStart(2, '0');
-    const randomPart = Math.floor(1000 + Math.random() * 9000);
-    document.getElementById('farmId').value = `FARM-${datePart}-${randomPart}`;
+    const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('farmId').value = `FARM-${datePart}-${rand}`;
   });
 
   function getLocation() {
@@ -195,9 +193,10 @@
     }
 
     alert("Step 1 completed successfully!");
-    // You can add navigation to the next step here if needed
+    // go to next step if needed
   }
 </script>
+
 
 
 
