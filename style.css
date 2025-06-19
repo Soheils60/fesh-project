@@ -1,22 +1,40 @@
-/* فونت و ریست اولیه */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background: url("canada.jpg") center center / cover no-repeat fixed;
+  background: none;
 }
 
-/* محتوای اصلی در باکس نیمه شفاف */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("canada.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.1; /* 👈 این مقدار رو کمتر کن برای شفاف‌تر شدن */
+  z-index: -1;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* بقیه استایل ها */
 main {
   max-width: 1000px;
   margin: 3rem auto;
   padding: 2.5rem;
-  background-color: rgba(255, 255, 255, 0.7); /* 👈 مستطیل شفاف */
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-/* نوار منو */
 nav {
   background-color: #00796b;
   padding: 1rem;
@@ -42,7 +60,6 @@ nav ul li a:hover {
   text-decoration: underline;
 }
 
-/* تیتر اصلی */
 .main-heading {
   text-align: center;
   font-size: 50px;
@@ -52,7 +69,6 @@ nav ul li a:hover {
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* تیترهای داخلی */
 h2 {
   font-size: 30px;
   font-weight: bold;
@@ -60,7 +76,6 @@ h2 {
   margin-top: 2rem;
 }
 
-/* متن‌ها و لیست‌ها */
 p, li {
   font-size: 1.3rem;
   color: #111;
