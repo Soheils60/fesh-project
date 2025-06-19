@@ -251,14 +251,14 @@
   <label for="slope">Slope:
     <button type="button" class="mic-button" onclick="startDictation('slope')">🎤</button>
   </label>
-  <input type="number" id="slope" name="slope" required style="width: 100px;" />
+  <input type="number" id="slope" name="slope" required />
   <select id="slopeUnit" name="slopeUnit">
     <option value="deg">Degrees (°)</option>
     <option value="percent">Percent (%)</option>
   </select><br />
 
   <label for="slopeDirection">Slope Direction:</label>
-  <select id="slopeDirection" name="slopeDirection" required>
+  <select id="slopeDirection" required>
     <option value="">-- Select --</option>
     <option value="North">North</option>
     <option value="South">South</option>
@@ -268,7 +268,7 @@
   </select><br />
 
   <label for="landscapePosition">Landscape Position:</label>
-  <select id="landscapePosition" name="landscapePosition" required>
+  <select id="landscapePosition" required>
     <option value="">-- Select --</option>
     <option value="Hilltop">Hilltop</option>
     <option value="Valley">Valley</option>
@@ -276,7 +276,7 @@
   </select><br />
 
   <label for="surfaceForm">Surface Form:</label>
-  <select id="surfaceForm" name="surfaceForm" required>
+  <select id="surfaceForm" required>
     <option value="">-- Select --</option>
     <option value="Flat">Flat</option>
     <option value="Concave">Concave</option>
@@ -288,30 +288,30 @@
 
 <script>
   function validateStep3() {
-    const slope = document.getElementById("slope").value.trim();
+    const slope = document.getElementById("slope").value;
     const direction = document.getElementById("slopeDirection").value;
     const position = document.getElementById("landscapePosition").value;
     const surface = document.getElementById("surfaceForm").value;
 
-    if (!slope) {
-      alert("Please enter the slope value.");
+    if (slope === "" || isNaN(slope) || Number(slope) <= 0) {
+      alert("Please enter a valid slope value.");
       return;
     }
-    if (direction === "") {
+    if (!direction) {
       alert("Please select the slope direction.");
       return;
     }
-    if (position === "") {
+    if (!position) {
       alert("Please select the landscape position.");
       return;
     }
-    if (surface === "") {
+    if (!surface) {
       alert("Please select the surface form.");
       return;
     }
 
     alert("Step 3 completed successfully!");
-    // next step logic here...
+    // setActiveStep(4); // optional: go to next step
   }
 
   function startDictation(fieldId) {
@@ -333,6 +333,7 @@
     };
   }
 </script>
+
 
 
   <!-- Step 4 -->
