@@ -17,7 +17,7 @@ body::before {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  opacity: 0.08; /* 👈 تصویر خیلی محو */
+  opacity: 0.25; /* وضوح مناسب */
   z-index: -1;
 }
 
@@ -49,6 +49,8 @@ main {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.88); /* برای خوانایی بهتر */
+  border-radius: 10px;
 }
 
 /* Title (Welcome) */
