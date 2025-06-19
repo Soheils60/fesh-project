@@ -98,7 +98,7 @@
   <h3>Step 1: General Information</h3>
 
   <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" name="farmId" readonly required /><br />
+  <input type="text" id="farmId" name="farmId" readonly /><br />
 
   <label for="farmerName">Farmer Name:
     <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
@@ -111,7 +111,15 @@
   <label for="contact">Phone Number:
     <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
-  <input type="tel" id="contact" name="contact" required /><br />
+  <input 
+    type="tel" 
+    id="contact" 
+    name="contact" 
+    required 
+    pattern="[0-9]{10}" 
+    inputmode="numeric" 
+    placeholder="Enter 10-digit number" 
+  /><br />
 
   <h4>Farm Location (GPS):</h4>
   <button type="button" onclick="getLocation()">📍 Get Current Location</button>
@@ -127,30 +135,28 @@
 </div>
 
 <script>
-  // Generate Farm ID automatically
+  // Generate unique Farm ID
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const random = Math.floor(1000 + Math.random() * 9000); // random 4-digit number
-    const farmId = `FARM-${year}${month}${day}-${random}`;
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const farmId = 'FARM-' + 
+      now.getFullYear() +
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0') +
+      '-' + random;
     document.getElementById('farmId').value = farmId;
   });
 
   function getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
-          document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
-        },
-        function (error) {
-          alert("GPS error: " + error.message);
-        }
-      );
+      navigator.geolocation.getCurrentPosition(function(position) {
+        document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
+        document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
+      }, function(error) {
+        alert("GPS error: " + error.message);
+      });
     } else {
-      alert("Geolocation not supported.");
+      alert("Geolocation is not supported.");
     }
   }
 
@@ -173,10 +179,10 @@
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognition.start();
-    recognition.onresult = function (event) {
+    recognition.onresult = function(event) {
       document.getElementById(fieldId).value = event.results[0][0].transcript;
     };
-    recognition.onerror = function (event) {
+    recognition.onerror = function(event) {
       alert("Voice input error: " + event.error);
     };
   }
@@ -187,10 +193,14 @@
     const contact = document.getElementById("contact").value.trim();
     const lat = document.getElementById("latitude").value.trim();
     const lon = document.getElementById("longitude").value.trim();
-    const farmId = document.getElementById("farmId").value.trim();
 
-    if (!farmId || !name || !date || !contact || !lat || !lon) {
+    if (!name || !date || !contact || !lat || !lon) {
       alert("Please complete all required fields.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(contact)) {
+      alert("Phone number must be exactly 10 digits.");
       return;
     }
 
