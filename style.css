@@ -10,14 +10,23 @@ body {
   background-attachment: fixed;
 }
 
-/* Transparent Main Content (no white haze) */
+/* Remove white container GitHub Pages may inject */
+body > div:first-child {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Main Content Styling */
 main {
   max-width: 1000px;
   margin: 3rem auto;
   padding: 2.5rem;
-  background-color: transparent;  /* ❌ هاله کاملاً حذف شد */
-  border-radius: 0;
-  box-shadow: none;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 /* Navigation Bar */
