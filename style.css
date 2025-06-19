@@ -16,7 +16,7 @@ body::before {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.1; /* 👈 این مقدار رو کمتر کن برای شفاف‌تر شدن */
+  opacity: 0.25; /* 👈 وضوح بیشتر بک‌گراند */
   z-index: -1;
 }
 
