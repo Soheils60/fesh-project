@@ -313,58 +313,69 @@
 <div class="step" id="step4">
   <h3>Step 4: Physical Soil Properties</h3>
 
-  <label for="tillageDepth">Tillage Layer Depth (cm):
-    <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
+  <label for="bulkDensity">Bulk Density (g/cm³):
+    <button type="button" class="mic-button" onclick="startDictation('bulkDensity')">🎤</button>
   </label>
-  <input type="text" id="tillageDepth" inputmode="numeric" pattern="^[0-9]+$" required /><br />
+  <input type="number" id="bulkDensity" name="bulkDensity" min="0" step="0.01" required /><br />
 
-  <label for="soilStrengthUpper">Soil Strength – Upper Layer (kg/cm²):
-    <button type="button" class="mic-button" onclick="startDictation('soilStrengthUpper')">🎤</button>
+  <label for="penetrationPressure">Penetration Resistance (kg/cm²):
+    <button type="button" class="mic-button" onclick="startDictation('penetrationPressure')">🎤</button>
   </label>
-  <input type="text" id="soilStrengthUpper" inputmode="numeric" pattern="^[0-9]+$" required /><br />
+  <input type="number" id="penetrationPressure" name="penetrationPressure" min="0" step="0.01" required /><br />
 
-  <label for="soilStrengthLower">Soil Strength – Lower Layer (kg/cm²):
-    <button type="button" class="mic-button" onclick="startDictation('soilStrengthLower')">🎤</button>
+  <label>Water Infiltration Time (min : sec):
+    <button type="button" class="mic-button" onclick="startDictation('waterTime')">🎤</button>
   </label>
-  <input type="text" id="soilStrengthLower" inputmode="numeric" pattern="^[0-9]+$" required /><br />
-
-  <label for="vessScore">VESS Score:
-    <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
-    <button type="button" onclick="document.getElementById('vessModal').style.display='block'" style="margin-left:10px;">❓</button>
-  </label>
-  <select id="vessScore" required>
-    <option value="">-- Select --</option>
-    <option value="Sq1">Sq1 – Excellent</option>
-    <option value="Sq2">Sq2 – Good</option>
-    <option value="Sq3">Sq3 – Moderate</option>
-    <option value="Sq4">Sq4 – Poor</option>
-    <option value="Sq5">Sq5 – Very Poor</option>
-  </select><br />
-
-  <label>Water Infiltration Time (min : sec):</label>
   <div style="display: flex; gap: 5px; align-items: center;">
     <select id="waterMin" required>
       <option value="">Min</option>
-      ${[...Array(59)].map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+      <!-- 1 to 59 -->
+      " + Array.from({ length: 59 }, (_, i) => `<option>${i + 1}</option>`).join('') + "
     </select>
     <span>:</span>
     <select id="waterSec" required>
       <option value="">Sec</option>
-      ${[...Array(59)].map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+      <!-- 1 to 59 -->
+      " + Array.from({ length: 59 }, (_, i) => `<option>${i + 1}</option>`).join('') + "
     </select>
+  </div><br />
+
+  <label for="vessScore">VESS Score:
+    <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
+    <button type="button" onclick="toggleVessTable()">❓</button>
+  </label>
+  <input type="number" id="vessScore" name="vessScore" min="1" max="5" required /><br />
+
+  <div id="vessTable" style="display:none; margin-top:10px;">
+    <img src="/images/vess_table_small.png" alt="VESS Score Table" style="max-width:100%; border:1px solid #ccc; border-radius:8px;" />
+    <button onclick="toggleVessTable()">Close</button>
   </div>
 
-  <br />
   <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
 </div>
 
-<!-- VESS Table Modal -->
-<div id="vessModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:999; max-width:90%; width:400px;">
-  <h4>VESS Score Table</h4>
-  <img src="vess-table.jpg" alt="VESS Table" style="width:100%; height:auto; max-height:300px;" />
-  <br /><br />
-  <button onclick="document.getElementById('vessModal').style.display='none'" style="padding:6px 12px;">Close</button>
-</div>
+<script>
+  function toggleVessTable() {
+    const table = document.getElementById("vessTable");
+    table.style.display = table.style.display === "none" ? "block" : "none";
+  }
+
+  function validateStep4() {
+    const bulkDensity = document.getElementById("bulkDensity").value.trim();
+    const pressure = document.getElementById("penetrationPressure").value.trim();
+    const min = document.getElementById("waterMin").value;
+    const sec = document.getElementById("waterSec").value;
+    const vess = document.getElementById("vessScore").value.trim();
+
+    if (!bulkDensity || !pressure || !min || !sec || !vess) {
+      alert("Please fill in all required fields in Step 4.");
+      return;
+    }
+
+    alert("Step 4 completed successfully!");
+  }
+</script>
+
 
   <!-- Step 5 -->
   <div class="step" id="step5">
