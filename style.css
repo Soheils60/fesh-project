@@ -16,7 +16,7 @@ body::before {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.6; /* 👈 وضوح بیشتر */
+  opacity: 0.8; /* 👈 بک‌گراند تقریباً کامل دیده میشه */
   z-index: -1;
 }
 
