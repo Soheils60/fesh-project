@@ -343,22 +343,22 @@
   <!-- Tillage Depth -->
   <div style="margin-bottom: 15px;">
     <label>Tillage Layer Depth (cm):</label>
-    <div style="display: flex; gap: 8px;">
-      <input type="number" id="tillageDepth" required />
+    <div style="display: flex; gap: 8px; align-items: center;">
       <button class="mic-button" type="button" onclick="startDictation('tillageDepth')">🎤</button>
+      <input type="number" id="tillageDepth" required />
     </div>
   </div>
 
   <!-- Soil Strength -->
   <div style="margin-bottom: 15px;">
     <label>Soil Strength:</label>
-    <div style="display: flex; gap: 8px;">
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button class="mic-button" type="button" onclick="startDictation('strength')">🎤</button>
       <input type="number" id="strength" required />
       <select id="strengthUnit">
         <option value="kg/cm²">kg/cm²</option>
         <option value="psi">psi</option>
       </select>
-      <button class="mic-button" type="button" onclick="startDictation('strength')">🎤</button>
     </div>
   </div>
 
@@ -367,14 +367,16 @@
     <label>VESS Score:
       <button type="button" class="mic-button" onclick="toggleVESSImage()" title="Show VESS Table">❓</button>
     </label>
-    <select id="vess" required>
-      <option value="">-- Select --</option>
-      <option value="Sq1">Sq1 – Excellent</option>
-      <option value="Sq2">Sq2 – Good</option>
-      <option value="Sq3">Sq3 – Moderate</option>
-      <option value="Sq4">Sq4 – Poor</option>
-      <option value="Sq5">Sq5 – Very Poor</option>
-    </select>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <select id="vess" required style="flex: 1;">
+        <option value="">-- Select --</option>
+        <option value="Sq1">Sq1 – Excellent</option>
+        <option value="Sq2">Sq2 – Good</option>
+        <option value="Sq3">Sq3 – Moderate</option>
+        <option value="Sq4">Sq4 – Poor</option>
+        <option value="Sq5">Sq5 – Very Poor</option>
+      </select>
+    </div>
     <div id="vessImage" style="display:none; margin-top:10px;">
       <img src="vess-table.jpg" alt="VESS Table" style="max-width:100%; border:1px solid #ccc;" />
     </div>
@@ -384,6 +386,7 @@
   <div style="margin-bottom: 20px;">
     <label>Water Infiltration Time (min : sec):</label>
     <div style="display: flex; gap: 10px; align-items: center;">
+      <button class="mic-button" type="button" onclick="startDictation('infiltrationMinutes')">🎤</button>
       <select id="infiltrationMinutes" required>
         <option value="">Min</option>
       </select>
@@ -391,7 +394,6 @@
       <select id="infiltrationSeconds" required>
         <option value="">Sec</option>
       </select>
-      <button type="button" class="mic-button" onclick="startDictation('infiltrationMinutes')">🎤</button>
     </div>
   </div>
 
@@ -399,7 +401,7 @@
 </div>
 
 <script>
-  // Fill dropdowns with 1–59
+  // Populate minutes and seconds
   window.addEventListener('DOMContentLoaded', () => {
     for (let i = 1; i <= 59; i++) {
       document.getElementById("infiltrationMinutes").innerHTML += `<option value="${i}">${i}</option>`;
@@ -425,7 +427,7 @@
     }
 
     alert("Step 4 completed successfully!");
-    setActiveStep(5);
+    setActiveStep(5); // move to next step
   }
 
   function startDictation(fieldId) {
@@ -443,7 +445,7 @@
       document.getElementById(fieldId).value = event.results[0][0].transcript;
     };
     recognition.onerror = function(event) {
-      alert("Voice error: " + event.error);
+      alert("Voice input error: " + event.error);
     };
   }
 </script>
