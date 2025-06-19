@@ -94,36 +94,36 @@
 
 <form id="feshForm" onsubmit="return false;">
   <!-- Step 1 -->
-  <div class="step active" id="step1">
+ <div class="step active" id="step1">
   <h3>Step 1: General Information</h3>
 
   <label for="farmId">Farm ID:</label>
   <input type="text" id="farmId" name="farmId" readonly /><br />
 
-  <label for="farmerName">Farmer Name:
-    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎙️</button>
+  <label>Farmer Name:
+    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
   </label>
   <input type="text" id="farmerName" name="farmerName" required /><br />
 
-  <label for="date">Date:</label>
+  <label>Date:</label>
   <input type="date" id="date" name="date" required /><br />
 
-  <label for="contact">Phone Number:
-    <button type="button" class="mic-button" onclick="startDictation('contact')">🎙️</button>
+  <label>Phone Number:
+    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
   <input type="tel" id="contact" name="contact" required /><br />
 
   <h4>Farm Location (GPS):</h4>
   <button type="button" onclick="getLocation()">📍 Get Current Location</button>
-  <button type="button" onclick="openGoogleMap()">🌍 View on Map</button><br /><br />
+  <button type="button" onclick="openGoogleMap()">🌍 View on Google Maps</button><br /><br />
 
-  <label for="latitude">Latitude:</label>
+  <label>Latitude:</label>
   <input type="text" id="latitude" name="latitude" readonly required /><br />
 
-  <label for="longitude">Longitude:</label>
+  <label>Longitude:</label>
   <input type="text" id="longitude" name="longitude" readonly required /><br />
 
-  <label for="elevation">Elevation (m):</label>
+  <label>Elevation (m):</label>
   <input type="text" id="elevation" name="elevation" readonly /><br />
 
   <button type="button" onclick="validateStep1()">✔ Confirm and Continue</button>
@@ -132,16 +132,31 @@
 <script>
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
-      document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
-      document.getElementById("elevation").value = (100 + Math.random() * 50).toFixed(2);
-    }, function (err) {
-      alert("Error: " + err.message);
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lon = pos.coords.longitude.toFixed(6);
+      document.getElementById("latitude").value = lat;
+      document.getElementById("longitude").value = lon;
+      fetchElevation(lat, lon);
+    }, (err) => {
+      alert("GPS Error: " + err.message);
     });
   } else {
     alert("Geolocation not supported.");
   }
+}
+
+function fetchElevation(lat, lon) {
+  fetch(`https://api.open-elevation.com/api/v1/lookup?locations=${lat},${lon}`)
+    .then(response => response.json())
+    .then(data => {
+      const elevation = data.results[0].elevation;
+      document.getElementById("elevation").value = elevation + " m";
+    })
+    .catch(error => {
+      console.error("Elevation fetch error:", error);
+      document.getElementById("elevation").value = "Unavailable";
+    });
 }
 
 function openGoogleMap() {
@@ -155,41 +170,38 @@ function openGoogleMap() {
 function startDictation(fieldId) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    alert("Voice input not supported.");
+    alert("Your browser does not support voice input.");
     return;
   }
   const recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
+  recognition.lang = "en-US";
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
   recognition.start();
   recognition.onresult = function (event) {
-    document.getElementById(fieldId).value = event.results[0][0].transcript;
+    const result = event.results[0][0].transcript;
+    document.getElementById(fieldId).value = result;
   };
   recognition.onerror = function (event) {
-    alert("Error: " + event.error);
+    alert("Voice input error: " + event.error);
   };
 }
 
 function validateStep1() {
-  const requiredFields = ["farmerName", "date", "contact", "latitude", "longitude"];
-  for (let field of requiredFields) {
-    if (!document.getElementById(field).value.trim()) {
-      alert(`Please fill in ${field}`);
-      return;
-    }
+  if (
+    !document.getElementById("farmerName").value.trim() ||
+    !document.getElementById("date").value ||
+    !document.getElementById("contact").value.trim() ||
+    !document.getElementById("latitude").value.trim() ||
+    !document.getElementById("longitude").value.trim()
+  ) {
+    alert("Please complete all required fields.");
+    return;
   }
-  document.querySelector(".step.active").classList.remove("active");
-  document.getElementById("step2").classList.add("active");
-  document.querySelectorAll(".step-box")[1].classList.add("active");
+  setActiveStep(2);
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
-  const randomId = Math.floor(1000 + Math.random() * 9000);
-  document.getElementById("farmId").value = `FARM-${today}-${randomId}`;
-});
 </script>
+
 
   <!-- Step 2 -->
   <div class="step" id="step2">
