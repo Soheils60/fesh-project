@@ -341,23 +341,27 @@
     <option value="Sq5">Sq5 – Very Poor</option>
   </select><br />
 
-  <label for="waterMin">Water Infiltration Time (min : sec):
-    <button type="button" class="mic-button" onclick="startDictation('waterMin')">🎤</button>
-  </label>
+  <label>Water Infiltration Time (min : sec):</label>
   <div style="display: flex; gap: 5px; align-items: center;">
-    <input type="text" id="waterMin" placeholder="Min" inputmode="numeric" pattern="^[0-9]+$" required />
+    <select id="waterMin" required>
+      <option value="">Min</option>
+      ${[...Array(59)].map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+    </select>
     <span>:</span>
-    <input type="text" id="waterSec" placeholder="Sec" inputmode="numeric" pattern="^[0-9]+$" required />
+    <select id="waterSec" required>
+      <option value="">Sec</option>
+      ${[...Array(59)].map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+    </select>
   </div>
 
   <br />
   <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
 </div>
 
-<!-- VESS Table -->
-<div id="vessModal" style="display:none; position:fixed; top:10%; left:10%; background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:999;">
+<!-- VESS Table Modal -->
+<div id="vessModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:999; max-width:90%; width:400px;">
   <h4>VESS Score Table</h4>
-  <img src="vess-table.jpg" alt="VESS Table" style="max-width:100%; height:auto;" />
+  <img src="vess-table.jpg" alt="VESS Table" style="width:100%; height:auto; max-height:300px;" />
   <br /><br />
   <button onclick="document.getElementById('vessModal').style.display='none'" style="padding:6px 12px;">Close</button>
 </div>
