@@ -316,17 +316,17 @@
   <label for="tillageDepth">Tillage Layer Depth (cm):
     <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
   </label>
-  <input type="number" id="tillageDepth" name="tillageDepth" required /><br />
+  <input type="text" id="tillageDepth" inputmode="numeric" pattern="^[0-9]+$" required /><br />
 
   <label for="soilStrengthUpper">Soil Strength – Upper Layer (kg/cm²):
     <button type="button" class="mic-button" onclick="startDictation('soilStrengthUpper')">🎤</button>
   </label>
-  <input type="number" id="soilStrengthUpper" name="soilStrengthUpper" required /><br />
+  <input type="text" id="soilStrengthUpper" inputmode="numeric" pattern="^[0-9]+$" required /><br />
 
   <label for="soilStrengthLower">Soil Strength – Lower Layer (kg/cm²):
     <button type="button" class="mic-button" onclick="startDictation('soilStrengthLower')">🎤</button>
   </label>
-  <input type="number" id="soilStrengthLower" name="soilStrengthLower" required /><br />
+  <input type="text" id="soilStrengthLower" inputmode="numeric" pattern="^[0-9]+$" required /><br />
 
   <label for="vessScore">VESS Score:
     <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
@@ -341,64 +341,26 @@
     <option value="Sq5">Sq5 – Very Poor</option>
   </select><br />
 
-  <label for="waterInfiltration">Water Infiltration Time (min : sec):
-    <button type="button" class="mic-button" onclick="startDictation('waterInfiltration')">🎤</button>
+  <label for="waterMin">Water Infiltration Time (min : sec):
+    <button type="button" class="mic-button" onclick="startDictation('waterMin')">🎤</button>
   </label>
-  <div style="display: flex; gap: 5px;">
-    <input type="number" id="waterMin" name="waterMin" min="0" max="59" placeholder="Min" required />
+  <div style="display: flex; gap: 5px; align-items: center;">
+    <input type="text" id="waterMin" placeholder="Min" inputmode="numeric" pattern="^[0-9]+$" required />
     <span>:</span>
-    <input type="number" id="waterSec" name="waterSec" min="0" max="59" placeholder="Sec" required />
+    <input type="text" id="waterSec" placeholder="Sec" inputmode="numeric" pattern="^[0-9]+$" required />
   </div>
 
   <br />
   <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
 </div>
 
-<!-- Modal VESS Table -->
+<!-- VESS Table -->
 <div id="vessModal" style="display:none; position:fixed; top:10%; left:10%; background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:999;">
   <h4>VESS Score Table</h4>
-  <img src="vess-table.jpg" alt="VESS Table" style="max-width:100%; height:auto;">
+  <img src="vess-table.jpg" alt="VESS Table" style="max-width:100%; height:auto;" />
   <br /><br />
-  <button onclick="document.getElementById('vessModal').style.display='none'">Close</button>
+  <button onclick="document.getElementById('vessModal').style.display='none'" style="padding:6px 12px;">Close</button>
 </div>
-
-<script>
-  function validateStep4() {
-    const td = document.getElementById('tillageDepth').value.trim();
-    const su = document.getElementById('soilStrengthUpper').value.trim();
-    const sl = document.getElementById('soilStrengthLower').value.trim();
-    const vs = document.getElementById('vessScore').value;
-    const min = document.getElementById('waterMin').value.trim();
-    const sec = document.getElementById('waterSec').value.trim();
-
-    if (!td || !su || !sl || !vs || min === "" || sec === "") {
-      alert("Please complete all required fields.");
-      return;
-    }
-
-    alert("Step 4 completed successfully!");
-    // Move to next step logic here
-  }
-
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Your browser does not support voice input.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.start();
-    recognition.onresult = function (event) {
-      document.getElementById(fieldId).value = event.results[0][0].transcript;
-    };
-    recognition.onerror = function (event) {
-      alert("Voice input error: " + event.error);
-    };
-  }
-</script>
 
   <!-- Step 5 -->
   <div class="step" id="step5">
