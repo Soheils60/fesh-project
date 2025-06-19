@@ -316,97 +316,62 @@
   <label for="tillageDepth">Tillage Layer Depth (cm):
     <button type="button" class="mic-button" onclick="startDictation('tillageDepth')">🎤</button>
   </label>
-  <input type="number" id="tillageDepth" name="tillageDepth" required /><br />
+  <input type="number" id="tillageDepth" name="tillageDepth" required><br />
 
-  <label for="strength">Soil Strength:
-    <button type="button" class="mic-button" onclick="startDictation('strength')">🎤</button>
+  <label for="soilStrengthUpper">Soil Strength – Upper Layer (kg/cm²):
+    <button type="button" class="mic-button" onclick="startDictation('soilStrengthUpper')">🎤</button>
   </label>
-  <div style="display: flex; gap: 8px;">
-    <input type="number" id="strength" name="strength" required />
-    <select id="strengthUnit">
-      <option value="kg/cm²">kg/cm²</option>
-      <option value="psi">psi</option>
-    </select>
-  </div>
+  <input type="number" id="soilStrengthUpper" name="soilStrengthUpper" required><br />
 
-  <label for="vess">VESS Score:
-    <button type="button" class="mic-button" onclick="toggleVESSImage()" title="Show VESS Table">❓</button>
+  <label for="soilStrengthLower">Soil Strength – Lower Layer (kg/cm²):
+    <button type="button" class="mic-button" onclick="startDictation('soilStrengthLower')">🎤</button>
   </label>
-  <select id="vess" required style="width: 250px;">
+  <input type="number" id="soilStrengthLower" name="soilStrengthLower" required><br />
+
+  <label for="vessScore">VESS Score:
+    <button type="button" class="mic-button" onclick="startDictation('vessScore')">🎤</button>
+  </label>
+  <select id="vessScore" name="vessScore" required>
     <option value="">-- Select --</option>
-    <option value="Sq1">Sq1 – Excellent</option>
-    <option value="Sq2">Sq2 – Good</option>
-    <option value="Sq3">Sq3 – Moderate</option>
-    <option value="Sq4">Sq4 – Poor</option>
-    <option value="Sq5">Sq5 – Very Poor</option>
+    <option value="Sq1">Sq1 - Good</option>
+    <option value="Sq2">Sq2 - Moderate</option>
+    <option value="Sq3">Sq3 - Poor</option>
   </select>
+  <button type="button" onclick="document.getElementById('vessModal').style.display='block'">❓</button>
 
-  <div id="vessImage" style="display:none; margin-top:10px;">
-    <img src="vess-table.jpg" alt="VESS Table" style="max-width:100%; border:1px solid #ccc;" />
+  <div id="vessModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:10px; z-index:1000;">
+    <h4>VESS Reference Table</h4>
+    <img src="/path/to/vess_table.png" alt="VESS Table" style="max-width:100%" />
+    <br><button onclick="document.getElementById('vessModal').style.display='none'">Close</button>
   </div>
 
-  <label>Water Infiltration Time (min : sec):
-    <button type="button" class="mic-button" onclick="startDictation('minSelect')">🎤</button>
-  </label>
+  <br />
+  <label>Water Infiltration Time (min : sec):</label><br />
   <div style="display: flex; gap: 10px; align-items: center;">
-    <select id="minSelect" required style="width: 80px;">
+    <select id="waterMin" name="waterMin" required>
       <option value="">Min</option>
-      ${Array.from({ length: 60 }, (_, i) => `<option value="${i}">${i}</option>`).join('')}
+      <!-- Generate 0-59 -->
+      <script>
+        for (let i = 0; i < 60; i++) {
+          document.write(`<option value="${i}">${i}</option>`);
+        }
+      </script>
     </select>
-    <span>:</span>
-    <select id="secSelect" required style="width: 80px;">
+    <strong>:</strong>
+    <select id="waterSec" name="waterSec" required>
       <option value="">Sec</option>
-      ${Array.from({ length: 60 }, (_, i) => `<option value="${i}">${i}</option>`).join('')}
+      <!-- Generate 0-59 -->
+      <script>
+        for (let i = 0; i < 60; i++) {
+          document.write(`<option value="${i}">${i}</option>`);
+        }
+      </script>
     </select>
   </div>
 
+  <br />
   <button type="button" onclick="validateStep4()">✔ Confirm and Continue</button>
 </div>
-
-<script>
-  function toggleVESSImage() {
-    const img = document.getElementById('vessImage');
-    img.style.display = (img.style.display === 'none') ? 'block' : 'none';
-  }
-
-  function validateStep4() {
-    const depth = document.getElementById("tillageDepth").value.trim();
-    const strength = document.getElementById("strength").value.trim();
-    const vess = document.getElementById("vess").value;
-    const min = document.getElementById("minSelect").value;
-    const sec = document.getElementById("secSelect").value;
-
-    if (!depth || !strength || !vess || min === "" || sec === "") {
-      alert("Please complete all required fields in Step 4.");
-      return;
-    }
-
-    alert("Step 4 completed successfully!");
-    // Proceed to step 5 (if needed)
-    document.getElementById("step4").classList.remove("active");
-    document.getElementById("step5").classList.add("active");
-    setActiveStep(5);
-  }
-
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Your browser doesn't support voice input.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.start();
-    recognition.onresult = function (event) {
-      document.getElementById(fieldId).value = event.results[0][0].transcript;
-    };
-    recognition.onerror = function (event) {
-      alert("Voice input error: " + event.error);
-    };
-  }
-</script>
 
   <!-- Step 5 -->
   <div class="step" id="step5">
