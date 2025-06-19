@@ -94,11 +94,11 @@
 
 <form id="feshForm" onsubmit="return false;">
   <!-- Step 1 -->
- <div class="step active" id="step1">
+<div class="step active" id="step1">
   <h3>Step 1: General Information</h3>
 
   <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" name="farmId" readonly /><br />
+  <input type="text" id="farmId" name="farmId" readonly required /><br />
 
   <label for="farmerName">Farmer Name:
     <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
@@ -130,23 +130,25 @@
   // Generate Farm ID automatically
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
-    const farmId = 'FARM-' + now.getFullYear() +
-      String(now.getMonth() + 1).padStart(2, '0') +
-      String(now.getDate()).padStart(2, '0') +
-      String(now.getHours()).padStart(2, '0') +
-      String(now.getMinutes()).padStart(2, '0') +
-      String(now.getSeconds()).padStart(2, '0');
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const random = Math.floor(1000 + Math.random() * 9000); // random 4-digit number
+    const farmId = `FARM-${year}${month}${day}-${random}`;
     document.getElementById('farmId').value = farmId;
   });
 
   function getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
-        document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
-      }, function(error) {
-        alert("GPS error: " + error.message);
-      });
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
+          document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
+        },
+        function (error) {
+          alert("GPS error: " + error.message);
+        }
+      );
     } else {
       alert("Geolocation not supported.");
     }
@@ -171,10 +173,10 @@
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognition.start();
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
       document.getElementById(fieldId).value = event.results[0][0].transcript;
     };
-    recognition.onerror = function(event) {
+    recognition.onerror = function (event) {
       alert("Voice input error: " + event.error);
     };
   }
@@ -185,8 +187,9 @@
     const contact = document.getElementById("contact").value.trim();
     const lat = document.getElementById("latitude").value.trim();
     const lon = document.getElementById("longitude").value.trim();
+    const farmId = document.getElementById("farmId").value.trim();
 
-    if (!name || !date || !contact || !lat || !lon) {
+    if (!farmId || !name || !date || !contact || !lat || !lon) {
       alert("Please complete all required fields.");
       return;
     }
@@ -194,6 +197,7 @@
     alert("Step 1 completed successfully!");
   }
 </script>
+
 
 
   <!-- Step 2 -->
