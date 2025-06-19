@@ -98,7 +98,7 @@
   <h3>Step 1: General Information</h3>
 
   <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" name="farmId" readonly /><br />
+  <input type="text" id="farmId" name="farmId" readonly required /><br />
 
   <label for="farmerName">Farmer Name:
     <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
@@ -111,15 +111,7 @@
   <label for="contact">Phone Number:
     <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
-  <input 
-    type="tel" 
-    id="contact" 
-    name="contact" 
-    required 
-    pattern="[0-9]{10}" 
-    inputmode="numeric" 
-    placeholder="Enter 10-digit number" 
-  /><br />
+  <input type="tel" id="contact" name="contact" required pattern="\d{10}" maxlength="10" /><br />
 
   <h4>Farm Location (GPS):</h4>
   <button type="button" onclick="getLocation()">📍 Get Current Location</button>
@@ -135,16 +127,14 @@
 </div>
 
 <script>
-  // Generate unique Farm ID
+  // Generate Farm ID when page loads
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
-    const random = Math.floor(1000 + Math.random() * 9000);
-    const farmId = 'FARM-' + 
-      now.getFullYear() +
-      String(now.getMonth() + 1).padStart(2, '0') +
-      String(now.getDate()).padStart(2, '0') +
-      '-' + random;
-    document.getElementById('farmId').value = farmId;
+    const datePart = now.getFullYear().toString() +
+                     String(now.getMonth() + 1).padStart(2, '0') +
+                     String(now.getDate()).padStart(2, '0');
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('farmId').value = `FARM-${datePart}-${randomPart}`;
   });
 
   function getLocation() {
@@ -156,7 +146,7 @@
         alert("GPS error: " + error.message);
       });
     } else {
-      alert("Geolocation is not supported.");
+      alert("Geolocation not supported.");
     }
   }
 
@@ -205,8 +195,10 @@
     }
 
     alert("Step 1 completed successfully!");
+    // You can add navigation to the next step here if needed
   }
 </script>
+
 
 
 
