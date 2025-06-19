@@ -95,37 +95,101 @@
 <form id="feshForm" onsubmit="return false;">
   <!-- Step 1 -->
   <div class="step active" id="step1">
-    <h3>Step 1: General Information</h3>
-    <label for="farmId">Farm ID:</label>
-    <input type="text" id="farmId" name="farmId" readonly /><br />
+  <h3>Step 1: General Information</h3>
 
-    <label>Farmer Name:
-      <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-    </label>
-    <input type="text" id="farmerName" name="farmerName" required /><br />
+  <label for="farmId">Farm ID:</label>
+  <input type="text" id="farmId" name="farmId" readonly /><br />
 
-    <label>Date:</label>
-    <input type="date" id="date" name="date" required /><br />
+  <label for="farmerName">Farmer Name:
+    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎙️</button>
+  </label>
+  <input type="text" id="farmerName" name="farmerName" required /><br />
 
-    <label>Phone Number:
-      <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-    </label>
-    <input type="tel" id="contact" name="contact" required /><br />
+  <label for="date">Date:</label>
+  <input type="date" id="date" name="date" required /><br />
 
-    <h4>Farm Location (GPS):</h4>
-    <button type="button" onclick="getLocation()">📍 Get Current Location</button><br /><br />
+  <label for="contact">Phone Number:
+    <button type="button" class="mic-button" onclick="startDictation('contact')">🎙️</button>
+  </label>
+  <input type="tel" id="contact" name="contact" required /><br />
 
-    <label>Latitude:</label>
-    <input type="text" id="latitude" name="latitude" readonly required /><br />
+  <h4>Farm Location (GPS):</h4>
+  <button type="button" onclick="getLocation()">📍 Get Current Location</button>
+  <button type="button" onclick="openGoogleMap()">🌍 View on Map</button><br /><br />
 
-    <label>Longitude:</label>
-    <input type="text" id="longitude" name="longitude" readonly required /><br />
+  <label for="latitude">Latitude:</label>
+  <input type="text" id="latitude" name="latitude" readonly required /><br />
 
-    <label>Elevation (m):</label>
-    <input type="text" id="elevation" name="elevation" readonly /><br />
+  <label for="longitude">Longitude:</label>
+  <input type="text" id="longitude" name="longitude" readonly required /><br />
 
-    <button type="button" onclick="validateStep1()">✔ Confirm and Continue</button>
-  </div>
+  <label for="elevation">Elevation (m):</label>
+  <input type="text" id="elevation" name="elevation" readonly /><br />
+
+  <button type="button" onclick="validateStep1()">✔ Confirm and Continue</button>
+</div>
+
+<script>
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
+      document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
+      document.getElementById("elevation").value = (100 + Math.random() * 50).toFixed(2);
+    }, function (err) {
+      alert("Error: " + err.message);
+    });
+  } else {
+    alert("Geolocation not supported.");
+  }
+}
+
+function openGoogleMap() {
+  const lat = document.getElementById("latitude").value;
+  const lon = document.getElementById("longitude").value;
+  if (lat && lon) {
+    window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+  }
+}
+
+function startDictation(fieldId) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice input not supported.");
+    return;
+  }
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.start();
+  recognition.onresult = function (event) {
+    document.getElementById(fieldId).value = event.results[0][0].transcript;
+  };
+  recognition.onerror = function (event) {
+    alert("Error: " + event.error);
+  };
+}
+
+function validateStep1() {
+  const requiredFields = ["farmerName", "date", "contact", "latitude", "longitude"];
+  for (let field of requiredFields) {
+    if (!document.getElementById(field).value.trim()) {
+      alert(`Please fill in ${field}`);
+      return;
+    }
+  }
+  document.querySelector(".step.active").classList.remove("active");
+  document.getElementById("step2").classList.add("active");
+  document.querySelectorAll(".step-box")[1].classList.add("active");
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+  const randomId = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById("farmId").value = `FARM-${today}-${randomId}`;
+});
+</script>
 
   <!-- Step 2 -->
   <div class="step" id="step2">
