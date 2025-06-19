@@ -1,12 +1,10 @@
-/* تنظیمات کلی متن و صفحه */
 body {
-  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
   background: none;
 }
 
-/* ✅ عکس پس‌زمینه با شفافیت */
 body::before {
   content: "";
   position: fixed;
@@ -14,31 +12,26 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("canada.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.25; /* 👈 شفافیت عکس پس‌زمینه */
+  background: url("canada.jpg") center center / cover no-repeat;
+  opacity: 0.2; /* 👈 کمترش کن تا تصویر محو بشه */
   z-index: -1;
 }
 
-/* محتوای اصلی بیاد بالای عکس */
 body > * {
   position: relative;
   z-index: 1;
 }
 
-/* ناوبری بالا */
 nav {
   background-color: #00796b;
-  padding: 1.2rem;
+  padding: 1rem;
 }
 
 nav ul {
   list-style: none;
   display: flex;
   justify-content: center;
-  gap: 2.5rem;
+  gap: 2rem;
   margin: 0;
   padding: 0;
 }
@@ -46,54 +39,38 @@ nav ul {
 nav ul li a {
   color: white;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.3rem;
-  letter-spacing: 0.5px;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 nav ul li a:hover {
   text-decoration: underline;
 }
 
-/* عنوان اصلی */
-.main-heading {
-  text-align: center;
-  font-size: 56px;
-  font-weight: 900;
-  margin-bottom: 40px;
-  color: #0d0d0d;
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* تیترهای بخش‌ها */
-h2 {
-  font-size: 36px;
-  font-weight: 800;
-  margin-top: 2.5rem;
-  margin-bottom: 1.2rem;
-  color: #004d40;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
-}
-
-/* متن‌ها و لیست‌ها */
-p, li {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #111;
-  line-height: 2;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-ul {
-  padding-left: 2.5rem;
-}
-
-/* محتوای وسط صفحه */
 main {
   max-width: 1000px;
   margin: 3rem auto;
-  padding: 2.5rem;
-  background-color: transparent !important;
-  border-radius: 0;
-  box-shadow: none;
+  padding: 2rem;
+  background: none;
+}
+
+.main-heading {
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.6);
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #004d40;
+  margin-top: 2rem;
+}
+
+p, li {
+  font-size: 1.3rem;
+  color: #111;
+  line-height: 1.8;
 }
