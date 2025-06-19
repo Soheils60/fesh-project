@@ -245,7 +245,7 @@
   </div>
 
   <!-- Step 3 -->
- <div class="step" id="step3">
+<div class="step" id="step3">
   <h3>Step 3: Topography Information</h3>
 
   <label for="slope">Slope:
@@ -293,12 +293,25 @@
     const position = document.getElementById("landscapePosition").value;
     const surface = document.getElementById("surfaceForm").value;
 
-    if (!slope || !direction || !position || !surface) {
-      alert("Please complete all required fields in Step 3.");
+    if (!slope) {
+      alert("Please enter the slope value.");
+      return;
+    }
+    if (direction === "") {
+      alert("Please select the slope direction.");
+      return;
+    }
+    if (position === "") {
+      alert("Please select the landscape position.");
+      return;
+    }
+    if (surface === "") {
+      alert("Please select the surface form.");
       return;
     }
 
     alert("Step 3 completed successfully!");
+    // next step logic here...
   }
 
   function startDictation(fieldId) {
