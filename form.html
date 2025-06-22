@@ -57,6 +57,7 @@
 </head>
 <body>
 
+<!-- Step 1 -->
 <div id="step1" class="form-box active">
   <h2>Step 1: General Information</h2>
 
@@ -76,7 +77,7 @@
     Phone Number (10 digits):
     <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
-  <input type="tel" id="contact" required />
+  <input type="tel" id="contact" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" required />
 
   <label for="latitude">Latitude:</label>
   <input type="text" id="latitude" readonly required />
@@ -85,9 +86,11 @@
   <input type="text" id="longitude" readonly required />
 
   <button onclick="getLocation()">📍 Get Current Location</button>
+  <button onclick="openGoogleMap()">🌐 View on Map</button>
   <button onclick="validateStep1()">✔ Confirm and Continue</button>
 </div>
 
+<!-- Step 2 -->
 <div id="step2" class="form-box">
   <h2>Step 2: Crop Information</h2>
 
@@ -142,6 +145,7 @@
 </div>
 
 <script>
+  // Auto-generate Farm ID
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
@@ -159,6 +163,16 @@
       });
     } else {
       alert("Geolocation not supported.");
+    }
+  }
+
+  function openGoogleMap() {
+    const lat = document.getElementById("latitude").value;
+    const lon = document.getElementById("longitude").value;
+    if (lat && lon) {
+      window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+    } else {
+      alert("Please get location first.");
     }
   }
 
@@ -196,6 +210,7 @@
       alert("❗ Phone number must be exactly 10 digits.");
       return;
     }
+
     document.getElementById("step1").classList.remove("active");
     document.getElementById("step2").classList.add("active");
   }
@@ -222,10 +237,13 @@
       alert("Please enter a valid land area in hectares.");
       return;
     }
-    alert("✅ Step 2 completed!"); // You can continue to step 3 here
+
+    alert("✅ Step 2 completed!");
+    // You can proceed to Step 3 by adding:
+    // document.getElementById("step2").classList.remove("active");
+    // document.getElementById("step3").classList.add("active");
   }
 </script>
 
 </body>
 </html>
-ّ
