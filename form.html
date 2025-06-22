@@ -291,7 +291,6 @@
     alert("Voice input for field: " + fieldId);
   }
 </script>
-<!-- Step 3 -->
 <div class="step" id="step3" style="display: none;">
   <h3>Step 3: Topography Information</h3>
 
@@ -346,86 +345,20 @@
 
 <script>
   function validateStep3() {
-    const slope = document.getElementById("slopeClass").value;
-    const direction = document.getElementById("slopeDirection").value;
-    const position = document.getElementById("landscapePosition").value;
-    const surface = document.getElementById("surfaceForm").value;
+    const slope = document.getElementById("slopeClass").value.trim();
+    const direction = document.getElementById("slopeDirection").value.trim();
+    const position = document.getElementById("landscapePosition").value.trim();
+    const surface = document.getElementById("surfaceForm").value.trim();
 
     if (!slope || !direction || !position || !surface) {
       alert("Please complete all fields in Step 3.");
       return;
     }
 
-    document.getElementById("step3").style.display = "none";
-    document.getElementById("step3").classList.remove("active");
-    document.getElementById("step4").style.display = "block";
-    document.getElementById("step4").classList.add("active");
-
-    window.scrollTo(0, 0);
+    // Add your transition to next step here, e.g.
+    // document.getElementById("step3").style.display = "none";
+    // document.getElementById("step4").style.display = "block";
   }
-</script>
-
-<!-- Step 4 -->
-<div class="step" id="step4" style="display: none;">
-  <h3>Step 4: Physical Soil Properties</h3>
-
-  <label for="bulkDensity">Bulk Density (g/cm³):</label>
-  <input type="number" id="bulkDensity" min="0" step="0.01" required><br><br>
-
-  <label for="penetrationResistance">Penetration Resistance (kg/cm²):</label>
-  <input type="number" id="penetrationResistance" min="0" step="0.1" required><br><br>
-
-  <label>Water Infiltration Time (min : sec):</label><br>
-  <select id="infiltrationMin" required>
-    <option value="">Min</option>
-  </select>
-  :
-  <select id="infiltrationSec" required>
-    <option value="">Sec</option>
-  </select><br><br>
-
-  <label for="vess">VESS Score:</label>
-  <select id="vess" required>
-    <option value="">-- Select --</option>
-    <option value="1">Sq1 – Excellent</option>
-    <option value="2">Sq2 – Good</option>
-    <option value="3">Sq3 – Moderate</option>
-    <option value="4">Sq4 – Poor</option>
-    <option value="5">Sq5 – Very Poor</option>
-  </select><br><br>
-
-  <button type="button">✔ Confirm and Continue</button>
-</div>
-
-<script>
-  function validateStep3() {
-    const slope = document.getElementById("slopeClass").value;
-    const direction = document.getElementById("slopeDirection").value;
-    const position = document.getElementById("landscapePosition").value;
-    const surface = document.getElementById("surfaceForm").value;
-
-    if (!slope || !direction || !position || !surface) {
-      alert("Please complete all fields in Step 3.");
-      return;
-    }
-
-    document.querySelectorAll(".step").forEach(step => step.style.display = "none");
-    document.getElementById("step4").style.display = "block";
-    window.scrollTo(0, 0);
-  }
-
-  // Populate infiltration time dropdowns
-  window.addEventListener("DOMContentLoaded", function () {
-    const min = document.getElementById("infiltrationMin");
-    const sec = document.getElementById("infiltrationSec");
-
-    for (let i = 1; i <= 59; i++) {
-      const opt1 = new Option(i, i);
-      const opt2 = new Option(i, i);
-      min.add(opt1);
-      sec.add(opt2);
-    }
-  });
 </script>
 
   <!-- Step 5 -->
