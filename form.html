@@ -2,229 +2,230 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FESH (Field Evaluation of Soil Health) Soil Health Assessment Form</title>
+  <title>FESH – Step 1 & 2</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f0f0f0;
+      background-color: #f9f9f9;
+      padding: 40px;
     }
-    .step {
+    .form-box {
+      background: #fff;
+      padding: 25px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       display: none;
-      border: 1px solid #ccc;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      background-color: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    .step.active {
+    .form-box.active {
       display: block;
     }
-    button {
-      padding: 8px 16px;
-      margin-top: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .step-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .step-box {
-      padding: 10px 15px;
-      background-color: #4caf50;
-      border-radius: 10px;
+    label {
+      display: block;
+      margin-top: 15px;
       font-weight: bold;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease;
     }
-    .step-box:hover {
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
       background-color: #388e3c;
     }
-    .step-arrow {
-      font-size: 20px;
-      color: #333;
-    }
-    label {
-      font-weight: bold;
-    }
-    input[type="text"], input[type="number"], input[type="tel"], input[type="date"], select {
-      padding: 6px 8px;
-      width: 250px;
-      margin-top: 4px;
-      margin-bottom: 12px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      vertical-align: middle;
+    .mic-button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: 8px;
     }
   </style>
 </head>
 <body>
 
-<h2>FESH (Field Evaluation of Soil Health) Soil Health Assessment Form</h2>
+<div id="step1" class="form-box active">
+  <h2>Step 1: General Information</h2>
 
-<div class="step-header">
-  <div class="step-box" id="header-step1" onclick="setActiveStep(1)">Step 1: General Info</div>
-  <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step2" onclick="setActiveStep(2)">Step 2: Crop Info</div>
-  <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step3" onclick="setActiveStep(3)">Step 3: Topography</div>
-  <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step4" onclick="setActiveStep(4)">Step 4: Physical Soil</div>
-  <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step5" onclick="setActiveStep(5)">Step 5: Chemical Soil</div>
-  <div class="step-arrow">→</div>
-  <div class="step-box" id="header-step6" onclick="setActiveStep(6)">Step 6: Biological Soil</div>
-</div>
+  <label for="farmId">Farm ID:</label>
+  <input type="text" id="farmId" readonly />
 
-<div class="step active" id="step1">
-  <h3>Step 1: General Info</h3>
-  <label for="farmerName">Farmer Name:</label>
-  <input type="text" id="farmerName"><br>
+  <label for="farmerName">
+    Farmer Name:
+    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
+  </label>
+  <input type="text" id="farmerName" required />
+
   <label for="date">Date:</label>
-  <input type="date" id="date"><br>
-  <label for="contact">Phone Number:</label>
-  <input type="tel" id="contact"><br>
+  <input type="date" id="date" required />
+
+  <label for="contact">
+    Phone Number (10 digits):
+    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
+  </label>
+  <input type="tel" id="contact" required />
+
   <label for="latitude">Latitude:</label>
-  <input type="text" id="latitude"><br>
+  <input type="text" id="latitude" readonly required />
+
   <label for="longitude">Longitude:</label>
-  <input type="text" id="longitude"><br>
+  <input type="text" id="longitude" readonly required />
+
+  <button onclick="getLocation()">📍 Get Current Location</button>
   <button onclick="validateStep1()">✔ Confirm and Continue</button>
 </div>
 
-<div class="step" id="step2">
-  <h3>Step 2: Crop Info</h3>
+<div id="step2" class="form-box">
+  <h2>Step 2: Crop Information</h2>
+
   <label for="crop">Crop Type:</label>
-  <select id="crop">
+  <select id="crop" onchange="toggleOtherCrop()">
     <option value="">-- Select Crop --</option>
-    <option value="Wheat">Wheat</option>
-    <option value="Barley">Barley</option>
-    <option value="Other">Other</option>
-  </select><br>
+    <optgroup label="Root Crops">
+      <option value="Potatoes">Potatoes</option>
+      <option value="Carrots">Carrots</option>
+      <option value="Beets">Beets</option>
+      <option value="Turnip">Turnip</option>
+    </optgroup>
+    <optgroup label="Vegetables">
+      <option value="Cabbage">Cabbage</option>
+      <option value="Green Beans">Green Beans</option>
+      <option value="Peas">Peas</option>
+      <option value="Pumpkins">Pumpkins</option>
+    </optgroup>
+    <optgroup label="Grains & Oilseeds">
+      <option value="Wheat">Wheat</option>
+      <option value="Barley">Barley</option>
+      <option value="Oats">Oats</option>
+      <option value="Corn">Corn</option>
+      <option value="Canola">Canola</option>
+      <option value="Soybeans">Soybeans</option>
+    </optgroup>
+    <optgroup label="Fruits & Orchard Crops">
+      <option value="Apples">Apples</option>
+      <option value="Strawberries">Strawberries</option>
+      <option value="Raspberries">Raspberries</option>
+      <option value="Blueberries">Blueberries</option>
+      <option value="Maple (syrup trees)">Maple (syrup trees)</option>
+    </optgroup>
+    <optgroup label="Other">
+      <option value="Other">Other</option>
+    </optgroup>
+  </select>
+
   <div id="otherCropContainer" style="display:none;">
-    <label for="otherCrop">Specify Other Crop:</label>
-    <input type="text" id="otherCrop"><br>
+    <label for="otherCrop">Specify Other Crop:
+      <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
+    </label>
+    <input type="text" id="otherCrop" />
   </div>
-  <label for="area">Land Area (ha):</label>
-  <input type="number" id="area"><br>
+
+  <label for="area">Land Area (hectares):
+    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+  </label>
+  <input type="number" id="area" required min="0.01" step="any" />
+
   <button onclick="validateStep2()">✔ Confirm and Continue</button>
 </div>
 
-<div class="step" id="step3">
-  <h3>Step 3: Topography</h3>
-  <label for="slopeValue">Slope (%):</label>
-  <input type="number" id="slopeValue"><br>
-  <label for="slopeDirection">Slope Direction:</label>
-  <select id="slopeDirection">
-    <option value="">-- Select Direction --</option>
-    <option value="North">North</option>
-    <option value="South">South</option>
-  </select><br>
-  <label for="landscapePosition">Landscape Position:</label>
-  <select id="landscapePosition">
-    <option value="">-- Select Position --</option>
-    <option value="Hilltop">Hilltop</option>
-  </select><br>
-  <label for="surfaceForm">Surface Form:</label>
-  <select id="surfaceForm">
-    <option value="">-- Select Form --</option>
-    <option value="Flat">Flat</option>
-  </select><br>
-  <button onclick="validateStep3()">✔ Confirm and Continue</button>
-</div>
-
-<div class="step" id="step4">
-  <h3>Step 4: Physical Soil</h3>
-  <label for="tillageDepth">Tillage Depth (cm):</label>
-  <input type="number" id="tillageDepth"><br>
-  <label for="strength">Soil Strength:</label>
-  <input type="number" id="strength"><br>
-  <label for="vess">VESS Score:</label>
-  <select id="vess">
-    <option value="">-- Select Score --</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-  </select><br>
-  <label for="infiltration">Water Infiltration (min:sec):</label>
-  <input type="text" id="infiltration"><br>
-  <button onclick="validateStep4()">✔ Confirm and Continue</button>
-</div>
-
-<div class="step" id="step5">
-  <h3>Step 5: Chemical Soil</h3>
-  <label for="ph">Soil pH:</label>
-  <input type="number" id="ph" step="0.1"><br>
-  <label for="soilColor">Soil Color:</label>
-  <select id="soilColor">
-    <option value="">-- Select Color --</option>
-    <option value="Brown">Brown</option>
-    <option value="Dark Gray">Dark Gray</option>
-  </select><br>
-  <button onclick="validateStep5()">✔ Confirm and Continue</button>
-</div>
-
-<div class="step" id="step6">
-  <h3>Step 6: Biological Soil</h3>
-  <label for="plantEmergenceRate">Emergence Rate:</label>
-  <select id="plantEmergenceRate">
-    <option value="">-- Select --</option>
-    <option value="Low">Low</option>
-    <option value="High">High</option>
-  </select><br>
-  <label for="rootDevelopment">Root Development:</label>
-  <select id="rootDevelopment">
-    <option value="">-- Select --</option>
-    <option value="Poor">Poor</option>
-  </select><br>
-  <label for="rootCoating">Root Coating:</label>
-  <select id="rootCoating">
-    <option value="">-- Select --</option>
-    <option value="None">None</option>
-  </select><br>
-  <label for="earthwormActivity">Earthworm Activity:</label>
-  <select id="earthwormActivity">
-    <option value="">-- Select --</option>
-    <option value="Low">Low</option>
-  </select><br>
-  <label for="myceliumDevelopment">Mycelium Development:</label>
-  <select id="myceliumDevelopment">
-    <option value="">-- Select --</option>
-    <option value="Low">Low</option>
-  </select><br>
-  <button onclick="validateStep6()">🚀 Submit Final Form</button>
-</div>
-
 <script>
-function setActiveStep(step) {
-  for (let i = 1; i <= 6; i++) {
-    const stepDiv = document.getElementById("step" + i);
-    if (stepDiv) {
-      stepDiv.classList.remove("active");
-      stepDiv.style.display = "none";
+  window.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('farmId').value = `FARM-${datePart}-${rand}`;
+  });
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        document.getElementById("latitude").value = position.coords.latitude.toFixed(6);
+        document.getElementById("longitude").value = position.coords.longitude.toFixed(6);
+      }, function (error) {
+        alert("Location error: " + error.message);
+      });
+    } else {
+      alert("Geolocation not supported.");
     }
-    const headerBox = document.getElementById("header-step" + i);
-    if (headerBox) {
-      headerBox.style.backgroundColor = "#4caf50";
+  }
+
+  function startDictation(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser doesn't support voice input.");
+      return;
     }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+    recognition.onresult = function(event) {
+      document.getElementById(fieldId).value = event.results[0][0].transcript;
+    };
+    recognition.onerror = function(event) {
+      alert("Voice input error: " + event.error);
+    };
   }
-  const currentStepDiv = document.getElementById("step" + step);
-  if (currentStepDiv) {
-    currentStepDiv.classList.add("active");
-    currentStepDiv.style.display = "block";
+
+  function validateStep1() {
+    const name = document.getElementById("farmerName").value.trim();
+    const date = document.getElementById("date").value;
+    const contact = document.getElementById("contact").value.trim();
+    const lat = document.getElementById("latitude").value.trim();
+    const lon = document.getElementById("longitude").value.trim();
+
+    if (!name || !date || !contact || !lat || !lon) {
+      alert("❗ Please complete all fields.");
+      return;
+    }
+    if (!/^[0-9]{10}$/.test(contact)) {
+      alert("❗ Phone number must be exactly 10 digits.");
+      return;
+    }
+    document.getElementById("step1").classList.remove("active");
+    document.getElementById("step2").classList.add("active");
   }
-  const currentHeaderBox = document.getElementById("header-step" + step);
-  if (currentHeaderBox) {
-    currentHeaderBox.style.backgroundColor = "#388e3c";
+
+  function toggleOtherCrop() {
+    const crop = document.getElementById("crop").value;
+    const container = document.getElementById("otherCropContainer");
+    container.style.display = (crop === "Other") ? "block" : "none";
   }
-}
+
+  function validateStep2() {
+    const crop = document.getElementById("crop").value;
+    const area = parseFloat(document.getElementById("area").value);
+
+    if (!crop) {
+      alert("Please select a crop type.");
+      return;
+    }
+    if (crop === "Other" && document.getElementById("otherCrop").value.trim() === "") {
+      alert("Please specify the other crop.");
+      return;
+    }
+    if (isNaN(area) || area <= 0) {
+      alert("Please enter a valid land area in hectares.");
+      return;
+    }
+    alert("✅ Step 2 completed!"); // You can continue to step 3 here
+  }
 </script>
 
 </body>
 </html>
+ّ
