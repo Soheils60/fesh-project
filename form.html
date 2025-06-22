@@ -203,47 +203,94 @@
 
   <!-- Step 2 -->
   <div class="step" id="step2">
-    <h3>Step 2: Crop Information</h3>
-    <label for="crop">Crop Type:</label>
-    <select id="crop" name="crop" required onchange="toggleOtherCrop()">
-      <option value="">-- Select Crop --</option>
-      <option value="Wheat">Wheat</option>
-      <option value="Barley">Barley</option>
-      <option value="Corn">Corn</option>
-      <option value="Soybeans">Soybeans</option>
-      <option value="Oats">Oats</option>
-      <option value="Canola">Canola</option>
+  <h3>Step 2: Crop Information</h3>
+
+  <label for="crop">Crop Type:</label>
+  <select id="crop" name="crop" required onchange="toggleOtherCrop()">
+    <option value="">-- Select Crop --</option>
+
+    <optgroup label="Root Crops">
       <option value="Potatoes">Potatoes</option>
-      <option value="Blueberries">Blueberries</option>
       <option value="Carrots">Carrots</option>
-      <option value="Cabbage">Cabbage</option>
-      <option value="Strawberries">Strawberries</option>
+      <option value="Beets">Beets</option>
       <option value="Turnip">Turnip</option>
-      <option value="Apples">Apples</option>
-      <option value="Raspberries">Raspberries</option>
-      <option value="Pumpkins">Pumpkins</option>
-      <option value="Maple (syrup trees)">Maple (syrup trees)</option>
+    </optgroup>
+
+    <optgroup label="Vegetables">
+      <option value="Cabbage">Cabbage</option>
       <option value="Green Beans">Green Beans</option>
       <option value="Peas">Peas</option>
-      <option value="Beets">Beets</option>
+      <option value="Pumpkins">Pumpkins</option>
+    </optgroup>
+
+    <optgroup label="Grains & Oilseeds">
+      <option value="Wheat">Wheat</option>
+      <option value="Barley">Barley</option>
+      <option value="Oats">Oats</option>
+      <option value="Corn">Corn</option>
+      <option value="Canola">Canola</option>
+      <option value="Soybeans">Soybeans</option>
+    </optgroup>
+
+    <optgroup label="Fruits & Orchard Crops">
+      <option value="Apples">Apples</option>
+      <option value="Strawberries">Strawberries</option>
+      <option value="Raspberries">Raspberries</option>
+      <option value="Blueberries">Blueberries</option>
+      <option value="Maple (syrup trees)">Maple (syrup trees)</option>
+    </optgroup>
+
+    <optgroup label="Other">
       <option value="Other">Other</option>
-    </select><br />
+    </optgroup>
+  </select><br />
 
-    <div id="otherCropContainer" style="display:none;">
-      <label>Specify Other Crop:
-        <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
-      </label>
-      <input type="text" id="otherCrop" name="otherCrop" /><br />
-    </div>
-
-    <label>Land Area (hectares):
-      <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+  <div id="otherCropContainer" style="display:none;">
+    <label>Specify Other Crop:
+      <button type="button" class="mic-button" onclick="startDictation('otherCrop')">🎤</button>
     </label>
-    <input type="number" id="area" name="area" required /><br />
-
-    <button type="button" onclick="validateStep2()">✔ Confirm and Continue</button>
+    <input type="text" id="otherCrop" name="otherCrop" /><br />
   </div>
 
+  <label>Land Area (hectares):
+    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+  </label>
+  <input type="number" id="area" name="area" required min="0.01" step="any" /><br />
+
+  <button type="button" onclick="validateStep2()">✔ Confirm and Continue</button>
+</div>
+
+<script>
+  function validateStep2() {
+    const crop = document.getElementById("crop").value;
+    const area = parseFloat(document.getElementById("area").value);
+
+    if (!crop) {
+      alert("Please select a crop type.");
+      return;
+    }
+
+    if (isNaN(area) || area <= 0) {
+      alert("Please enter a valid positive land area in hectares.");
+      return;
+    }
+
+    // Go to next step
+    document.getElementById("step2").style.display = "none";
+    document.getElementById("step3").style.display = "block";
+  }
+
+  function toggleOtherCrop() {
+    const crop = document.getElementById("crop").value;
+    const otherCropContainer = document.getElementById("otherCropContainer");
+    otherCropContainer.style.display = (crop === "Other") ? "block" : "none";
+  }
+
+  function startDictation(fieldId) {
+    // Optional: voice input function (placeholder)
+    alert("Voice input for field: " + fieldId);
+  }
+</script>
   <!-- Step 3 -->
 <div class="step" id="step3">
   <h3>Step 3: Topography Information</h3>
