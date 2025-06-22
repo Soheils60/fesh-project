@@ -344,6 +344,31 @@
   <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
 </div>
 
+<script>
+  function validateStep3() {
+    if (document.getElementById("slopeClass").value === "") {
+      alert("Please select Slope Class");
+      return;
+    }
+    if (document.getElementById("slopeDirection").value === "") {
+      alert("Please select Slope Direction");
+      return;
+    }
+    if (document.getElementById("landscapePosition").value === "") {
+      alert("Please select Landscape Position");
+      return;
+    }
+    if (document.getElementById("surfaceForm").value === "") {
+      alert("Please select Surface Form");
+      return;
+    }
+
+    document.getElementById("step3").classList.remove("active");
+    document.getElementById("step4").classList.add("active");
+    setActiveStep(4);
+  }
+</script>
+
 <!-- Step 4 -->
 <div class="step" id="step4" style="display: none;">
   <h3>Step 4: Physical Soil Properties</h3>
