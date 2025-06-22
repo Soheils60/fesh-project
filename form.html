@@ -291,12 +291,12 @@
     alert("Voice input for field: " + fieldId);
   }
 </script>
-  <!-- Step 3 -->
+ <!-- Step 3 -->
 <div class="step" id="step3">
   <h3>Step 3: Topography Information</h3>
 
   <label for="slopeClass">Slope Class:</label>
-  <select id="slopeClass" name="slopeClass" required>
+  <select id="slopeClass" required>
     <option value="">-- Select Slope Range --</option>
     <option value="0-1">0 - 1%</option>
     <option value="1-2">1 - 2%</option>
@@ -311,39 +311,79 @@
   </select><br>
 
   <label for="slopeDirection">Slope Direction:</label>
-  <select id="slopeDirection" name="slopeDirection" required>
+  <select id="slopeDirection" required>
     <option value="">-- Select Direction --</option>
-    <option value="North">North</option>
-    <option value="South">South</option>
-    <option value="East">East</option>
-    <option value="West">West</option>
-    <option value="Flat">Flat</option>
+    <option>North</option>
+    <option>South</option>
+    <option>East</option>
+    <option>West</option>
+    <option>Flat</option>
   </select><br>
 
   <label for="landscapePosition">Landscape Position:</label>
-  <select id="landscapePosition" name="landscapePosition" required>
+  <select id="landscapePosition" required>
     <option value="">-- Select Position --</option>
-    <option value="Hilltop">Hilltop</option>
-    <option value="Valley">Valley</option>
-    <option value="Flatland">Flatland</option>
-    <option value="Mid-slope">Mid-slope</option>
-    <option value="Toe slope">Toe slope</option>
-    <option value="Shoulder">Shoulder</option>
+    <option>Hilltop</option>
+    <option>Valley</option>
+    <option>Flatland</option>
+    <option>Mid-slope</option>
+    <option>Toe slope</option>
+    <option>Shoulder</option>
   </select><br>
 
   <label for="surfaceForm">Surface Form:</label>
-  <select id="surfaceForm" name="surfaceForm" required>
+  <select id="surfaceForm" required>
     <option value="">-- Select Form --</option>
-    <option value="Flat">Flat</option>
-    <option value="Concave">Concave</option>
-    <option value="Convex">Convex</option>
-    <option value="Undulating">Undulating</option>
-    <option value="Irregular">Irregular</option>
+    <option>Flat</option>
+    <option>Concave</option>
+    <option>Convex</option>
+    <option>Undulating</option>
+    <option>Irregular</option>
   </select><br>
 
   <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
 </div>
 
+<!-- Step 4 -->
+<div class="step" id="step4" style="display:none;">
+  <h3>Step 4: Physical Soil Properties</h3>
+
+  <label for="bulkDensity">Bulk Density (g/cm³):</label>
+  <input type="number" id="bulkDensity" min="0" step="0.01" required /><br>
+
+  <label for="penetrationResistance">Penetration Resistance (kg/cm²):</label>
+  <input type="number" id="penetrationResistance" min="0" step="0.1" required /><br>
+
+  <label>Water Infiltration Time (min : sec):</label><br>
+  <select id="infiltrationMin" required>
+    <option value="">Min</option>
+  </select>
+  :
+  <select id="infiltrationSec" required>
+    <option value="">Sec</option>
+  </select><br>
+
+  <label for="vess">VESS Score:</label>
+  <select id="vess" required>
+    <option value="">-- Select --</option>
+    <option value="1">Sq1 – Excellent</option>
+    <option value="2">Sq2 – Good</option>
+    <option value="3">Sq3 – Moderate</option>
+    <option value="4">Sq4 – Poor</option>
+    <option value="5">Sq5 – Very Poor</option>
+  </select>
+  <button type="button" onclick="toggleVESSInfo()">❓</button>
+
+  <div id="vessInfo" style="display:none; margin-top:10px;">
+    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+    <br><button type="button" onclick="toggleVESSInfo()">✖ Close</button>
+  </div>
+
+  <br><br>
+  <button type="button" onclick="validateStep4()">✓ Confirm and Continue</button>
+</div>
+
+<!-- JS -->
 <script>
   function validateStep3() {
     const slope = document.getElementById("slopeClass").value;
@@ -356,69 +396,9 @@
       return;
     }
 
-    // Hide Step 3 and show Step 4
     document.getElementById("step3").style.display = "none";
     document.getElementById("step4").style.display = "block";
-    window.scrollTo(0, 0); // optional scroll to top
-  }
-</script>
-
-  <!-- Step 4 -->
-<div class="step" id="step4">
-  <h3>Step 4: Physical Soil Properties</h3>
-
-  <label for="bulkDensity">Bulk Density (g/cm³):
-    <button type="button" class="mic-button" onclick="startDictation('bulkDensity')">🎤</button>
-  </label>
-  <input type="number" id="bulkDensity" name="bulkDensity" min="0" step="0.01" required /><br>
-
-  <label for="penetrationResistance">Penetration Resistance (kg/cm²):
-    <button type="button" class="mic-button" onclick="startDictation('penetrationResistance')">🎤</button>
-  </label>
-  <input type="number" id="penetrationResistance" name="penetrationResistance" min="0" step="0.1" required /><br>
-
-  <label>Water Infiltration Time (min : sec):
-    <button type="button" class="mic-button" onclick="startDictation('infiltrationMin')">🎤</button>
-  </label><br>
-
-  <select id="infiltrationMin" required>
-    <option value="">Min</option>
-    <!-- 1 to 59 -->
-    ${[...Array(59).keys()].map(i => `<option>${i+1}</option>`).join('')}
-  </select>
-  :
-  <select id="infiltrationSec" required>
-    <option value="">Sec</option>
-    <!-- 1 to 59 -->
-    ${[...Array(59).keys()].map(i => `<option>${i+1}</option>`).join('')}
-  </select><br>
-
-  <label for="vess">VESS Score:
-    <button type="button" class="mic-button" onclick="startDictation('vess')">🎤</button>
-    <button type="button" onclick="toggleVESSInfo()">❓</button>
-  </label>
-  <select id="vess" name="vess" required>
-    <option value="">-- Select --</option>
-    <option value="1">Sq1 – Excellent</option>
-    <option value="2">Sq2 – Good</option>
-    <option value="3">Sq3 – Moderate</option>
-    <option value="4">Sq4 – Poor</option>
-    <option value="5">Sq5 – Very Poor</option>
-  </select>
-
-  <div id="vessInfo" style="display:none; margin-top:10px;">
-    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width:100%; height:auto; border:1px solid #ccc; border-radius:6px;">
-    <br><button type="button" onclick="toggleVESSInfo()">✖ Close</button>
-  </div>
-
-  <br><br>
-  <button type="button" onclick="validateStep4()">✓ Confirm and Continue</button>
-</div>
-
-<script>
-  function toggleVESSInfo() {
-    const info = document.getElementById("vessInfo");
-    info.style.display = (info.style.display === "none") ? "block" : "none";
+    window.scrollTo(0, 0);
   }
 
   function validateStep4() {
@@ -433,42 +413,27 @@
       return;
     }
 
-    document.getElementById("step4").classList.remove("active");
-    document.getElementById("step5").classList.add("active");
-    setActiveStep(5);
+    alert("Step 4 completed successfully!");
+    // Next step can be triggered here
   }
 
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Your browser doesn't support voice input.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
-    recognition.onresult = function (event) {
-      document.getElementById(fieldId).value = event.results[0][0].transcript;
-    };
-    recognition.onerror = function (event) {
-      alert("Voice input error: " + event.error);
-    };
+  function toggleVESSInfo() {
+    const info = document.getElementById("vessInfo");
+    info.style.display = (info.style.display === "none") ? "block" : "none";
   }
 
-  // Populate dropdowns (for plain HTML, use this if no JS template)
-  window.onload = function() {
+  window.onload = function () {
     const minSelect = document.getElementById("infiltrationMin");
     const secSelect = document.getElementById("infiltrationSec");
     for (let i = 1; i <= 59; i++) {
-      const optionMin = document.createElement("option");
-      optionMin.text = i;
-      minSelect.add(optionMin);
-      const optionSec = document.createElement("option");
-      optionSec.text = i;
-      secSelect.add(optionSec);
+      let opt1 = new Option(i, i);
+      let opt2 = new Option(i, i);
+      minSelect.add(opt1);
+      secSelect.add(opt2);
     }
   }
 </script>
+
 
   <!-- Step 5 -->
   <div class="step" id="step5">
