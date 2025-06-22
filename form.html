@@ -292,7 +292,7 @@
   }
 </script>
 <!-- Step 3 -->
-<div class="step active" id="step3">
+<div class="step" id="step3" style="display: block;">
   <h3>Step 3: Topography Information</h3>
 
   <label for="slopeClass">Slope Class:</label>
@@ -344,35 +344,8 @@
   <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
 </div>
 
-<script>
-  function validateStep3() {
-    const slope = document.getElementById("slopeClass").value;
-    const direction = document.getElementById("slopeDirection").value;
-    const position = document.getElementById("landscapePosition").value;
-    const form = document.getElementById("surfaceForm").value;
-
-    if (!slope || !direction || !position || !form) {
-      alert("Please complete all required fields in Step 3.");
-      return;
-    }
-
-    // Go to Step 4
-    document.getElementById("step3").classList.remove("active");
-    document.getElementById("step3").style.display = "none";
-    document.getElementById("step4").classList.add("active");
-    document.getElementById("step4").style.display = "block";
-
-    // Optional: update top navigation step indicators if used
-    if (typeof setActiveStep === 'function') {
-      setActiveStep(4);
-    }
-
-    // Scroll to top for good user experience
-    window.scrollTo(0, 0);
-  }
-</script>
 <!-- Step 4 -->
-<div class="step" id="step4" style="display:none;">
+<div class="step" id="step4" style="display: none;">
   <h3>Step 4: Physical Soil Properties</h3>
 
   <label for="bulkDensity">Bulk Density (g/cm³):</label>
@@ -384,8 +357,7 @@
   <label>Water Infiltration Time (min : sec):</label><br>
   <select id="infiltrationMin" required>
     <option value="">Min</option>
-  </select>
-  :
+  </select> :
   <select id="infiltrationSec" required>
     <option value="">Sec</option>
   </select><br>
@@ -401,8 +373,8 @@
   </select>
   <button type="button" onclick="toggleVESSInfo()">❓</button>
 
-  <div id="vessInfo" style="display:none; margin-top:10px;">
-    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width:100%; border:1px solid #ccc; border-radius:6px;">
+  <div id="vessInfo" style="display: none; margin-top: 10px;">
+    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width: 100%; border: 1px solid #ccc; border-radius: 6px;">
     <br><button type="button" onclick="toggleVESSInfo()">✖ Close</button>
   </div>
 
@@ -410,7 +382,7 @@
   <button type="button" onclick="validateStep4()">✓ Confirm and Continue</button>
 </div>
 
-<!-- JS -->
+<!-- JavaScript -->
 <script>
   function validateStep3() {
     const slope = document.getElementById("slopeClass").value;
@@ -441,7 +413,7 @@
     }
 
     alert("Step 4 completed successfully!");
-    // Next step can be triggered here
+    // You can go to step 5 here
   }
 
   function toggleVESSInfo() {
@@ -453,13 +425,12 @@
     const minSelect = document.getElementById("infiltrationMin");
     const secSelect = document.getElementById("infiltrationSec");
     for (let i = 1; i <= 59; i++) {
-      let opt1 = new Option(i, i);
-      let opt2 = new Option(i, i);
-      minSelect.add(opt1);
-      secSelect.add(opt2);
+      minSelect.add(new Option(i, i));
+      secSelect.add(new Option(i, i));
     }
   }
 </script>
+
 
 
   <!-- Step 5 -->
