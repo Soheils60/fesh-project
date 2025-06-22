@@ -356,10 +356,17 @@
       return;
     }
 
-    // نمایش مرحله بعد و مخفی کردن فعلی
+    // مخفی کردن step3
     document.getElementById("step3").style.display = "none";
-    document.getElementById("step4").style.display = "block";
-    window.scrollTo(0, 0);
+
+    // نمایش step4
+    const step4 = document.getElementById("step4");
+    if (step4) {
+      step4.style.display = "block";
+      window.scrollTo(0, 0);
+    } else {
+      alert("Step 4 not found! Make sure it exists with id='step4'");
+    }
   }
 </script>
 <!-- Step 4 -->
