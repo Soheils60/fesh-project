@@ -292,7 +292,8 @@
   }
 </script>
 <!-- Step 3 -->
-<div class="step" id="step3">
+<!-- Step 3 -->
+<div class="step active" id="step3">
   <h3>Step 3: Topography Information</h3>
 
   <label for="slopeClass">Slope Class:</label>
@@ -344,30 +345,6 @@
   <button type="button" onclick="validateStep3()">✔ Confirm and Continue</button>
 </div>
 
-<script>
-  function validateStep3() {
-    if (document.getElementById("slopeClass").value === "") {
-      alert("Please select Slope Class");
-      return;
-    }
-    if (document.getElementById("slopeDirection").value === "") {
-      alert("Please select Slope Direction");
-      return;
-    }
-    if (document.getElementById("landscapePosition").value === "") {
-      alert("Please select Landscape Position");
-      return;
-    }
-    if (document.getElementById("surfaceForm").value === "") {
-      alert("Please select Surface Form");
-      return;
-    }
-
-    document.getElementById("step3").classList.remove("active");
-    document.getElementById("step4").classList.add("active");
-    window.scrollTo(0, 0);
-  }
-</script>
 <!-- Step 4 -->
 <div class="step" id="step4" style="display: none;">
   <h3>Step 4: Physical Soil Properties</h3>
@@ -394,57 +371,41 @@
     <option value="3">Sq3 – Moderate</option>
     <option value="4">Sq4 – Poor</option>
     <option value="5">Sq5 – Very Poor</option>
-  </select>
-  <button type="button" onclick="toggleVESSInfo()">❓</button>
+  </select><br><br>
 
-  <div id="vessInfo" style="display: none; margin-top: 10px;">
-    <img src="images/vess-table.jpg" alt="VESS Guide" style="max-width: 100%; border: 1px solid #ccc; border-radius: 6px;">
-    <br><button type="button" onclick="toggleVESSInfo()">✖ Close</button>
-  </div>
-
-  <br><br>
-  <button type="button" onclick="validateStep4()">✓ Confirm and Continue</button>
+  <button type="button">✔ Confirm and Continue</button>
 </div>
 
-<!-- JavaScript -->
 <script>
   function validateStep3() {
-    const slope = document.getElementById("slopeClass").value;
-    const direction = document.getElementById("slopeDirection").value;
-    const position = document.getElementById("landscapePosition").value;
-    const form = document.getElementById("surfaceForm").value;
-
-    if (!slope || !direction || !position || !form) {
-      alert("Please complete all required fields in Step 3.");
+    if (document.getElementById("slopeClass").value === "") {
+      alert("Please select Slope Class");
+      return;
+    }
+    if (document.getElementById("slopeDirection").value === "") {
+      alert("Please select Slope Direction");
+      return;
+    }
+    if (document.getElementById("landscapePosition").value === "") {
+      alert("Please select Landscape Position");
+      return;
+    }
+    if (document.getElementById("surfaceForm").value === "") {
+      alert("Please select Surface Form");
       return;
     }
 
+    // رفتن به مرحله بعد
+    document.getElementById("step3").classList.remove("active");
     document.getElementById("step3").style.display = "none";
+
+    document.getElementById("step4").classList.add("active");
     document.getElementById("step4").style.display = "block";
+
     window.scrollTo(0, 0);
   }
 
-  function validateStep4() {
-    const density = document.getElementById("bulkDensity").value.trim();
-    const resistance = document.getElementById("penetrationResistance").value.trim();
-    const min = document.getElementById("infiltrationMin").value;
-    const sec = document.getElementById("infiltrationSec").value;
-    const vess = document.getElementById("vess").value;
-
-    if (!density || !resistance || !min || !sec || !vess) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    alert("Step 4 completed successfully!");
-    // You can go to step 5 here
-  }
-
-  function toggleVESSInfo() {
-    const info = document.getElementById("vessInfo");
-    info.style.display = (info.style.display === "none") ? "block" : "none";
-  }
-
+  // بارگذاری لیست دقیقه و ثانیه برای Step 4
   window.onload = function () {
     const minSelect = document.getElementById("infiltrationMin");
     const secSelect = document.getElementById("infiltrationSec");
@@ -454,8 +415,6 @@
     }
   }
 </script>
-
-
 
   <!-- Step 5 -->
   <div class="step" id="step5">
