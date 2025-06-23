@@ -14,6 +14,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      justify-content: flex-start;
       margin-bottom: 20px;
     }
     .step-button {
@@ -24,6 +25,7 @@
       border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
+      width: auto;
     }
     .step-form {
       display: none;
@@ -109,8 +111,6 @@
 
   <button onclick="validateStep1()">✓ Confirm and Continue</button>
 </div>
-
-<!-- Other steps here (step2–step6 as needed) -->
 
 <script>
   function toggleStep(stepNum) {
