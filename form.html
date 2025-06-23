@@ -139,21 +139,26 @@
   <button onclick="validateStep3()">✓ Confirm and Continue</button>
 </div>
 
+<!-- Step 4: Physical Soil Properties -->
 <div id="step4" class="step-form">
   <h3>Step 4: Physical Soil Properties</h3>
 
   <!-- Soil Infiltration Time -->
-  <label>Soil Infiltration Time:</label><br>
-  <label for="infiltrationMinute">Minutes:</label>
-  <select id="infiltrationMinute" required>
-    <option value="">--</option>
-  </select>
-
-  <label for="infiltrationSecond">Seconds:</label>
-  <select id="infiltrationSecond" required>
-    <option value="">--</option>
-  </select>
-  <br><br>
+  <label>Soil Infiltration Time:</label>
+  <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+    <div>
+      <label for="infiltrationMinute">Minutes:</label>
+      <select id="infiltrationMinute" required>
+        <option value="">--</option>
+      </select>
+    </div>
+    <div>
+      <label for="infiltrationSecond">Seconds:</label>
+      <select id="infiltrationSecond" required>
+        <option value="">--</option>
+      </select>
+    </div>
+  </div>
 
   <!-- Soil Structure -->
   <label for="soilStructure">Soil Structure (VESS Score):</label>
@@ -164,67 +169,65 @@
     <option value="3">Sq3 – Moderate</option>
     <option value="4">Sq4 – Poor</option>
     <option value="5">Sq5 – Very Poor</option>
-  </select><br>
-  <small>See guide below:</small><br>
-  <img src="images/vess.table.jpg" alt="VESS Score Guide" style="max-width:100%; border:1px solid #ccc; margin-top:10px;">
-  <br><br>
+  </select><br><br>
 
   <!-- Tillage Layer -->
   <label for="tillageLayer">Tillage Layer Depth (cm):</label>
-  <input type="number" id="tillageLayer" min="0" max="100" step="1" required>
-  <br><br>
+  <input type="number" id="tillageLayer" min="0" max="100" step="1" required><br><br>
 
   <!-- Soil Strength -->
   <label for="soilStrength">Soil Strength (kg/cm²):</label>
-  <input type="number" id="soilStrength" min="0" max="200" step="0.1" required>
-  <br><br>
+  <input type="number" id="soilStrength" min="0" max="200" step="0.1" required><br><br>
 
+  <!-- Confirm Button -->
   <button onclick="validateStep4()">✓ Confirm and Continue</button>
 </div>
 
 <script>
-  // Populate dropdowns for minutes and seconds
-  window.addEventListener('DOMContentLoaded', () => {
-    const minuteDropdown = document.getElementById("infiltrationMinute");
-    const secondDropdown = document.getElementById("infiltrationSecond");
+  // Fill dropdowns for minutes and seconds
+  function fillInfiltrationDropdowns() {
+    const minSelect = document.getElementById("infiltrationMinute");
+    const secSelect = document.getElementById("infiltrationSecond");
+
     for (let i = 0; i < 60; i++) {
-      const minOpt = document.createElement("option");
-      minOpt.value = i;
-      minOpt.text = i;
-      minuteDropdown.appendChild(minOpt);
+      const optMin = document.createElement("option");
+      optMin.value = i;
+      optMin.text = i;
+      minSelect.appendChild(optMin);
 
-      const secOpt = document.createElement("option");
-      secOpt.value = i;
-      secOpt.text = i;
-      secondDropdown.appendChild(secOpt);
+      const optSec = document.createElement("option");
+      optSec.value = i;
+      optSec.text = i;
+      secSelect.appendChild(optSec);
     }
-  });
+  }
 
-  // Step 4 validation
+  // Run on page load
+  window.addEventListener("DOMContentLoaded", fillInfiltrationDropdowns);
+
+  // Validation for Step 4
   function validateStep4() {
-    const minute = document.getElementById("infiltrationMinute");
-    const second = document.getElementById("infiltrationSecond");
-    const structure = document.getElementById("soilStructure");
-    const tillage = document.getElementById("tillageLayer");
-    const strength = document.getElementById("soilStrength");
+    const ids = ["infiltrationMinute", "infiltrationSecond", "soilStructure", "tillageLayer", "soilStrength"];
+    let isValid = true;
 
-    let valid = true;
-    [minute, second, structure, tillage, strength].forEach(el => {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
       el.style.borderColor = "#ccc";
-      if (!el.value) {
+      if (!el.value || el.value === "") {
         el.style.borderColor = "red";
-        valid = false;
+        isValid = false;
       }
     });
 
-    if (valid) {
+    if (isValid) {
       alert("✅ Step 4 complete. Moving to Step 5.");
       toggleStep(5);
     } else {
-      alert("❗ Please complete all required fields in Step 4.");
+      alert("❗ Please complete all highlighted fields in Step 4.");
     }
   }
 </script>
+
 <div id="step5" class="step-form"><h3>Step 5: Chemical Soil</h3></div>
 <div id="step6" class="step-form"><h3>Step 6: Biological Soil</h3></div>
 <div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
