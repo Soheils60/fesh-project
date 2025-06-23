@@ -9,6 +9,12 @@
       background: #f5f5f5;
       padding: 20px;
     }
+    .step-header {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
     .step-button {
       background-color: #4caf50;
       color: white;
@@ -17,7 +23,6 @@
       border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
-      margin-right: 10px;
     }
     .form-box {
       background: #fff;
@@ -59,7 +64,15 @@
 <body>
 
 <h2>Field Evaluation of Soil Health</h2>
-<button class="step-button">Step 1: General Info</button>
+
+<div class="step-header">
+  <button class="step-button">Step 1: General Info</button>
+  <button class="step-button">Step 2: Crop Info</button>
+  <button class="step-button">Step 3: Topography</button>
+  <button class="step-button">Step 4: Physical Soil</button>
+  <button class="step-button">Step 5: Chemical Soil</button>
+  <button class="step-button">Step 6: Biological Soil</button>
+</div>
 
 <div class="form-box">
   <label for="farmId">Farm ID:</label>
