@@ -1,1 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FESH Form - 7 Steps</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .step-header { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .step-button { background-color: #4caf50; color: white; padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    .step-form { display: none; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px; margin-bottom: 30px; }
+    .step-form.active { display: block; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #ccc; }
+    .button-row button { width: auto; margin-right: 10px; }
+    .mic-button { background: none; border: none; font-size: 18px; margin-left: 6px; cursor: pointer; }
+    .error-message { color: red; font-size: 13px; margin-top: 4px; }
+  </style>
+</head>
+<body>
 
+<h2>Field Evaluation of Soil Health</h2>
+
+<div class="step-header">
+  <button class="step-button" onclick="toggleStep(1)">Step 1: General Info</button>
+  <button class="step-button" onclick="toggleStep(2)">Step 2: Crop Info</button>
+  <button class="step-button" onclick="toggleStep(3)">Step 3: Topography</button>
+  <button class="step-button" onclick="toggleStep(4)">Step 4: Physical Soil</button>
+  <button class="step-button" onclick="toggleStep(5)">Step 5: Chemical Soil</button>
+  <button class="step-button" onclick="toggleStep(6)">Step 6: Biological Soil</button>
+  <button class="step-button" onclick="toggleStep(7)">Step 7: Crop Performance</button>
+</div>
+
+<div id="step1" class="step-form active">
+  <h3>Step 1: General Information</h3>
+  <label for="farmId">Farm ID:</label>
+  <input type="text" id="farmId" readonly>
+
+  <label for="farmerName">Farmer Name:
+    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
+  </label>
+  <input type="text" id="farmerName" required>
+
+  <label for="date">Date:</label>
+  <input type="date" id="date" required>
+
+  <label for="contact">Phone Number (10 digits):
+    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
+  </label>
+  <input type="tel" id="contact" required>
+
+  <label>Farm Location (GPS):</label>
+  <div class="button-row">
+    <button onclick="getLocation()">📍 Get Current Location</button>
+    <button onclick="viewMap()">🌐 View on Map</button>
+  </div>
+
+  <label for="latitude">Latitude:</label>
+  <input type="text" id="latitude" readonly>
+
+  <label for="longitude">Longitude:</label>
+  <input type="text" id="longitude" readonly>
+
+  <button onclick="validateStep1()">✓ Confirm and Continue</button>
+</div>
+
+<div id="step2" class="step-form">
+  <h3>Step 2: Crop Info</h3>
+  <label for="cropCategory">Crop Category:</label>
+  <select id="cropCategory" onchange="updateCropOptions()">
+    <option value="">-- Select Category --</option>
+    <option value="cereal">Cereal Crops</option>
+    <option value="legume">Legumes</option>
+    <option value="root">Root & Tuber Crops</option>
+    <option value="forage">Forage & Pasture</option>
+    <option value="vegetable">Vegetables</option>
+    <option value="fruit">Fruits & Berries</option>
+    <option value="other">Other</option>
+  </select>
+
+  <div id="cropOptionsContainer" style="margin-top:15px;"></div>
+
+  <label for="area">Land Area (hectares):
+    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+  </label>
+  <input type="number" id="area" step="0.001" min="0.001" required>
+
+  <button onclick="validateStep2()">✓ Confirm and Continue</button>
+</div>
+
+<div id="step3" class="step-form">
+  <h3>Step 3: Topography</h3>
+
+  <label for="slopeClass">Slope Class (%):</label>
+  <select id="slopeClass" required>
+    <option value="">-- Select --</option>
+    <option>0–1%</option>
+    <option>1–2%</option>
+    <option>2–4%</option>
+    <option>4–8%</option>
+    <option>8–10%</option>
+    <option>10–20%</option>
+    <option>20–50%</option>
+    <option>50–100%</option>
+    <option>100–829%</option>
+  </select>
+
+  <label for="slopeDirection">Slope Direction:</label>
+  <select id="slopeDirection" required>
+    <option value="">-- Select --</option>
+    <option>North</option>
+    <option>North-East</option>
+    <option>East</option>
+    <option>South-East</option>
+    <option>South</option>
+    <option>South-West</option>
+    <option>West</option>
+    <option>North-West</option>
+  </select>
+
+  <label for="landscapePosition">Landscape Position:</label>
+  <select id="landscapePosition" required>
+    <option value="">-- Select --</option>
+    <option>Summit</option>
+    <option>Shoulder</option>
+    <option>Backslope</option>
+    <option>Footslope</option>
+    <option>Toeslope</option>
+  </select>
+
+  <label for="surfaceForm">Surface Form:</label>
+  <select id="surfaceForm" required>
+    <option value="">-- Select --</option>
+    <option>Flat</option>
+    <option>Concave</option>
+    <option>Convex</option>
+    <option>Complex</option>
+  </select>
+
+  <button onclick="validateStep3()">✓ Confirm and Continue</button>
+</div>
+
+<!-- Step 4: Physical Soil Properties -->
+<div id="step4" class="step-form">
+  <h3>Step 4: Physical Soil Properties</h3>
+
+  <!-- Soil Infiltration Time -->
+  <label>Soil Infiltration Time:</label>
+  <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+    <div>
+      <label for="infiltrationMinute">Minutes:</label>
+      <select id="infiltrationMinute" required>
+        <option value="">--</option>
+      </select>
+    </div>
+    <div>
+      <label for="infiltrationSecond">Seconds:</label>
+      <select id="infiltrationSecond" required>
+        <option value="">--</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Soil Structure -->
+  <label for="soilStructure">Soil Structure (VESS Score):</label>
+  <select id="soilStructure" required>
+    <option value="">-- Select --</option>
+    <option value="1">Sq1 – Very Good</option>
+    <option value="2">Sq2 – Good</option>
+    <option value="3">Sq3 – Moderate</option>
+    <option value="4">Sq4 – Poor</option>
+    <option value="5">Sq5 – Very Poor</option>
+  </select><br><br>
+
+  <!-- VESS Guide Image -->
+<div style="margin-top: 10px;">
+  <label style="font-size: 14px; color: #555;">See guide below:</label><br>
+  <img src="vess-table.jpg" alt="VESS Score Guide" style="max-width:100%; border:1px solid #ccc; margin-top:5px;">
+</div>
+<br>
+  <!-- Tillage Layer -->
+  <label for="tillageLayer">Tillage Layer Depth (cm):</label>
+  <input type="number" id="tillageLayer" min="0" max="100" step="1" required><br><br>
+
+  <!-- Soil Strength -->
+  <label for="soilStrength">Soil Strength (kg/cm²):</label>
+  <input type="number" id="soilStrength" min="0" max="200" step="0.1" required><br><br>
+
+  <!-- Confirm Button -->
+  <button onclick="validateStep4()">✓ Confirm and Continue</button>
+</div>
+
+<script>
+  // Fill dropdowns for minutes and seconds
+  function fillInfiltrationDropdowns() {
+    const minSelect = document.getElementById("infiltrationMinute");
+    const secSelect = document.getElementById("infiltrationSecond");
+
+    for (let i = 0; i < 60; i++) {
+      const optMin = document.createElement("option");
+      optMin.value = i;
+      optMin.text = i;
+      minSelect.appendChild(optMin);
+
+      const optSec = document.createElement("option");
+      optSec.value = i;
+      optSec.text = i;
+      secSelect.appendChild(optSec);
+    }
+  }
+
+  // Run on page load
+  window.addEventListener("DOMContentLoaded", fillInfiltrationDropdowns);
+
+  // Validation for Step 4
+  function validateStep4() {
+    const ids = ["infiltrationMinute", "infiltrationSecond", "soilStructure", "tillageLayer", "soilStrength"];
+    let isValid = true;
+
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      el.style.borderColor = "#ccc";
+      if (!el.value || el.value === "") {
+        el.style.borderColor = "red";
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      alert("✅ Step 4 complete. Moving to Step 5.");
+      toggleStep(5);
+    } else {
+      alert("❗ Please complete all highlighted fields in Step 4.");
+    }
+  }
+</script>
+
+<!-- Step 5: Chemical Soil Properties -->
+<div id="step5" class="step-form">
+  <h3>Step 5: Chemical Soil Properties</h3>
+
+  <!-- Soil Color -->
+  <label for="soilColor">Soil Color (Munsell):</label>
+  <select id="soilColor" required>
+    <option value="">-- Select --</option>
+    <option>Very dark grayish brown</option>
+    <option>Dark grayish brown</option>
+    <option>Dark brown</option>
+    <option>Dark yellowish brown</option>
+    <option>Yellowish brown</option>
+    <option>Strong brown</option>
+    <option>Brown</option>
+    <option>Reddish brown</option>
+    <option>Dark reddish brown</option>
+    <option>Very dark brown</option>
+    <option>Grayish brown</option>
+    <option>Dark gray</option>
+    <option>Light brownish gray</option>
+    <option>Pale brown</option>
+    <option>Dark reddish gray</option>
+    <option>Light yellowish brown</option>
+    <option>Dusky red</option>
+    <option>Light olive brown</option>
+    <option>Olive brown</option>
+    <option>Dark olive brown</option>
+    <option>Dark grayish red</option>
+    <option>Very dark gray</option>
+    <option>Black</option>
+  </select><br><br>
+
+  <!-- Soil pH -->
+  <label for="soilPh">Soil pH (0.0 – 14.0):</label>
+  <input type="number" id="soilPh" min="0" max="14" step="0.1" required><br><br>
+
+  <!-- Confirm Button -->
+  <button onclick="validateStep5()">✓ Confirm and Continue</button>
+</div>
+
+<!-- Step 5 Validation Script -->
+<script>
+  function validateStep5() {
+    const soilColor = document.getElementById("soilColor");
+    const soilPh = document.getElementById("soilPh");
+    let isValid = true;
+
+    // Reset border colors
+    soilColor.style.borderColor = "#ccc";
+    soilPh.style.borderColor = "#ccc";
+
+    // Validation
+    if (!soilColor.value) {
+      soilColor.style.borderColor = "red";
+      isValid = false;
+    }
+    if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
+      soilPh.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (isValid) {
+      alert("✅ Step 5 complete. Moving to Step 6.");
+      toggleStep(6); // Ensure step6 exists
+    } else {
+      alert("❗ Please complete all highlighted fields in Step 5.");
+    }
+  }
+</script>
+<!-- Step 6: Biological Soil Properties -->
+<div id="step6" class="step-form">
+  <h3>Step 6: Biological Soil Properties</h3>
+
+  <!-- Emergence Rate -->
+  <label for="emergenceRate">Emergence Rate:</label>
+  <select id="emergenceRate" required>
+    <option value="">-- Select --</option>
+    <option>None</option>
+    <option>Low</option>
+    <option>Moderate</option>
+    <option>High</option>
+  </select><br><br>
+
+  <!-- Root Development -->
+  <label for="rootDevelopment">Root Development:</label>
+  <select id="rootDevelopment" required>
+    <option value="">-- Select --</option>
+    <option>Poor</option>
+    <option>Moderate</option>
+    <option>Good</option>
+    <option>Excellent</option>
+  </select><br><br>
+
+  <!-- Root Coating -->
+  <label for="rootCoating">Root Coating:</label>
+  <select id="rootCoating" required>
+    <option value="">-- Select --</option>
+    <option>None</option>
+    <option>Light</option>
+    <option>Moderate</option>
+    <option>Heavy</option>
+  </select><br><br>
+
+  <!-- Earthworm Activity (Count in Soil Block) -->
+  <label for="earthwormsBlock">Number of Earthworms (in soil block):</label>
+  <select id="earthwormsBlock" required>
+    <option value="">-- Select --</option>
+    <!-- 0–100 will be filled via JS -->
+  </select><br><br>
+
+  <!-- Earthworm Activity (Count on Surface) -->
+  <label for="earthwormsSurface">Number of Earthworms (on surface):</label>
+  <select id="earthwormsSurface" required>
+    <option value="">-- Select --</option>
+    <!-- 0–100 will be filled via JS -->
+  </select><br><br>
+
+  <!-- Mycelium Development -->
+  <label for="myceliumDevelopment">Mycelium Development:</label>
+  <select id="myceliumDevelopment" required>
+    <option value="">-- Select --</option>
+    <option>None</option>
+    <option>Low</option>
+    <option>Moderate</option>
+    <option>Abundant</option>
+  </select><br><br>
+
+  <!-- Confirm Button -->
+  <button onclick="validateStep6()">✓ Confirm and Continue</button>
+</div>
+
+<!-- JavaScript for Step 6 -->
+<script>
+  // Fill earthworm dropdowns 0–100
+  function fillEarthwormDropdowns() {
+    const ids = ["earthwormsBlock", "earthwormsSurface"];
+    ids.forEach(id => {
+      const sel = document.getElementById(id);
+      for (let i = 0; i <= 100; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i;
+        sel.appendChild(opt);
+      }
+    });
+  }
+
+  // Validation for Step 6
+  function validateStep6() {
+    const ids = [
+      "emergenceRate",
+      "rootDevelopment",
+      "rootCoating",
+      "earthwormsBlock",
+      "earthwormsSurface",
+      "myceliumDevelopment"
+    ];
+    let isValid = true;
+
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      el.style.borderColor = "#ccc";
+      if (!el.value) {
+        el.style.borderColor = "red";
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      alert("✅ Step 6 complete. Moving to Step 7.");
+      toggleStep(7);
+    } else {
+      alert("❗ Please complete all highlighted fields in Step 6.");
+    }
+  }
+
+  // Run on page load
+  window.addEventListener("DOMContentLoaded", fillEarthwormDropdowns);
+</script>
+<!-- Step 7: Crop Performance -->
+<div id="step7" class="step-form">
+  <h3>Step 7: Crop Performance</h3>
+
+  <!-- Crop Selection - Part 1 -->
+  <label for="cropPart1">Crop Grown - Part 1:</label>
+  <select id="cropPart1" required>
+    <option value="">-- Select Crop --</option>
+    <optgroup label="Vegetables">
+      <option>Potato</option>
+      <option>Carrot</option>
+      <option>Tomato</option>
+      <option>Cabbage</option>
+      <option>Spinach</option>
+    </optgroup>
+    <optgroup label="Cereals">
+      <option>Wheat</option>
+      <option>Barley</option>
+      <option>Oats</option>
+      <option>Rye</option>
+    </optgroup>
+    <optgroup label="Legumes">
+      <option>Peas</option>
+      <option>Beans</option>
+      <option>Lentils</option>
+    </optgroup>
+    <optgroup label="Oilseeds">
+      <option>Canola</option>
+      <option>Sunflower</option>
+      <option>Flax</option>
+    </optgroup>
+    <optgroup label="Forages">
+      <option>Alfalfa</option>
+      <option>Clover</option>
+      <option>Grass Mix</option>
+    </optgroup>
+    <optgroup label="Others">
+      <option>Mixed Garden</option>
+      <option>Fallow</option>
+    </optgroup>
+  </select><br><br>
+
+  <!-- Yield Part 1 -->
+  <label for="yieldPart1">Yield - Part 1 (ton/ha):</label>
+  <input type="number" id="yieldPart1" min="0" max="100" step="0.1" required><br><br>
+
+  <!-- Crop Selection - Part 2 -->
+  <label for="cropPart2">Crop Grown - Part 2 (if any):</label>
+  <select id="cropPart2">
+    <option value="">-- Select Crop (Optional) --</option>
+    <optgroup label="Vegetables">
+      <option>Potato</option>
+      <option>Carrot</option>
+      <option>Tomato</option>
+      <option>Cabbage</option>
+      <option>Spinach</option>
+    </optgroup>
+    <optgroup label="Cereals">
+      <option>Wheat</option>
+      <option>Barley</option>
+      <option>Oats</option>
+      <option>Rye</option>
+    </optgroup>
+    <optgroup label="Legumes">
+      <option>Peas</option>
+      <option>Beans</option>
+      <option>Lentils</option>
+    </optgroup>
+    <optgroup label="Oilseeds">
+      <option>Canola</option>
+      <option>Sunflower</option>
+      <option>Flax</option>
+    </optgroup>
+    <optgroup label="Forages">
+      <option>Alfalfa</option>
+      <option>Clover</option>
+      <option>Grass Mix</option>
+    </optgroup>
+    <optgroup label="Others">
+      <option>Mixed Garden</option>
+      <option>Fallow</option>
+    </optgroup>
+  </select><br><br>
+
+  <!-- Yield Part 2 -->
+  <label for="yieldPart2">Yield - Part 2 (ton/ha):</label>
+  <input type="number" id="yieldPart2" min="0" max="100" step="0.1"><br><br>
+
+  <!-- Confirm Button -->
+  <button onclick="validateStep7()">✓ Confirm and Finish</button>
+</div>
+
+<!-- Step 7 Validation Script -->
+<script>
+  function validateStep7() {
+    const crop1 = document.getElementById("cropPart1");
+    const yield1 = document.getElementById("yieldPart1");
+
+    crop1.style.borderColor = "#ccc";
+    yield1.style.borderColor = "#ccc";
+
+    let isValid = true;
+
+    if (!crop1.value) {
+      crop1.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (!yield1.value || yield1.value < 0) {
+      yield1.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (isValid) {
+      alert("✅ All steps complete. Ready to submit or review!");
+      // You may now show summary or submit data
+    } else {
+      alert("❗ Please fill all required fields in Step 7.");
+    }
+  }
+</script>
