@@ -267,6 +267,9 @@
     <option>Black</option>
   </select><br><br>
 
+  <!-- Optional Color Guide Image -->
+  <label style="font-size: 14px; color: #555;">See guide below:</label><br>
+  <img src="color soil.jpg" alt="Soil Color Guide" style="max-width: 100%; border: 1px solid #ccc;"><br><br>
 
   <!-- Soil pH -->
   <label for="soilPh">Soil pH (0.0 – 14.0):</label>
@@ -276,18 +279,18 @@
   <button onclick="validateStep5()">✓ Confirm and Continue</button>
 </div>
 
-<!-- Step 5 validation script -->
+<!-- Step 5 Validation Script -->
 <script>
   function validateStep5() {
     const soilColor = document.getElementById("soilColor");
     const soilPh = document.getElementById("soilPh");
     let isValid = true;
 
-    // Reset borders
+    // Reset previous styles
     soilColor.style.borderColor = "#ccc";
     soilPh.style.borderColor = "#ccc";
 
-    // Validate color
+    // Validate Soil Color
     if (!soilColor.value) {
       soilColor.style.borderColor = "red";
       isValid = false;
@@ -301,7 +304,7 @@
 
     if (isValid) {
       alert("✅ Step 5 complete. Moving to Step 6.");
-      toggleStep(6); // Make sure step 6 exists
+      toggleStep(6); // Assumes you have a toggleStep() function and Step 6 div
     } else {
       alert("❗ Please complete all highlighted fields in Step 5.");
     }
