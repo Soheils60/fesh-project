@@ -247,24 +247,14 @@
   <label for="infiltrationMinute">Infiltration Time - Minutes</label>
   <select id="infiltrationMinute">
     <option value="">-- Select --</option>
-    <!-- Options 0 to 59 -->
-    <script>
-      for(let i=0;i<=59;i++){
-        document.write(`<option value="${i}">${i}</option>`);
-      }
-    </script>
+    <!-- Options 0 to 59 populated by JS -->
   </select>
   <div class="error-message" id="error-infiltrationMinute"></div>
 
   <label for="infiltrationSecond">Infiltration Time - Seconds</label>
   <select id="infiltrationSecond">
     <option value="">-- Select --</option>
-    <!-- Options 0 to 59 -->
-    <script>
-      for(let i=0;i<=59;i++){
-        document.write(`<option value="${i}">${i}</option>`);
-      }
-    </script>
+    <!-- Options 0 to 59 populated by JS -->
   </select>
   <div class="error-message" id="error-infiltrationSecond"></div>
 
@@ -389,11 +379,11 @@
   <label for="earthwormCount">Earthworm Count (0 to 100)</label>
   <select id="earthwormCount">
     <option value="">-- Select --</option>
-    <!-- Options 0 to 100 will be populated by JS -->
+    <!-- Options 0 to 100 populated by JS -->
   </select>
   <div class="error-message" id="error-earthwormCount"></div>
 
-  <button onclick="validateStep(6)">Confirm and Continue</button>
+  <button onclick="submitFinal()">Submit Final</button>
 </div>
 
 <script>
@@ -416,8 +406,6 @@
 
   function validateStep(step) {
     let valid = true;
-
-    // Clear all error messages of the step before validation
     const errorIds = {
       1: ["error-date", "error-farmerName", "error-mobileNumber", "error-location"],
       2: ["error-cropType", "error-fieldArea", "error-estimatedYield"],
@@ -426,12 +414,10 @@
       5: ["error-soilPh", "error-soilColor"],
       6: ["error-emergenceRate", "error-rootDevelopment", "error-rootCoating", "error-earthwormActivity", "error-myceliumDevelopment", "error-earthwormCount"]
     };
-
     errorIds[step].forEach(id => {
       document.getElementById(id).textContent = "";
     });
 
-    // Validation logic per step
     if (step === 1) {
       const date = document.getElementById("date");
       const farmerName = document.getElementById("farmerName");
@@ -656,14 +642,10 @@
       }
     }
 
-    if (valid) {
-      if (step < totalSteps) {
-        currentStep = step + 1;
-        showStep(currentStep);
-      } else {
-        alert("All steps completed successfully!");
-      }
+    if (!valid) {
+      return false;
     }
+    return true;
   }
 
   function getLocation() {
@@ -692,9 +674,51 @@
     window.open(`https://www.google.com/maps?q=${loc}`, "_blank");
   }
 
-  // Populate earthwormCount options 0-100 dynamically
+  function submitFinal() {
+    if (!validateStep(6)) {
+      return;
+    }
+
+    const data = {
+      farmId: document.getElementById("farmId").value,
+      date: document.getElementById("date").value,
+      farmerName: document.getElementById("farmerName").value,
+      mobileNumber: document.getElementById("mobileNumber").value,
+      location: document.getElementById("location").value,
+      cropType: document.getElementById("cropType").value,
+      fieldArea: document.getElementById("fieldArea").value,
+      estimatedYield: document.getElementById("estimatedYield").value,
+      slopeClass: document.getElementById("slopeClass").value,
+      slopeDirection: document.getElementById("slopeDirection").value,
+      landscapePosition: document.getElementById("landscapePosition").value,
+      surfaceForm: document.getElementById("surfaceForm").value,
+      infiltrationMinute: document.getElementById("infiltrationMinute").value,
+      infiltrationSecond: document.getElementById("infiltrationSecond").value,
+      soilStructure: document.getElementById("soilStructure").value,
+      tillageLayer: document.getElementById("tillageLayer").value,
+      soilStrength: document.getElementById("soilStrength").value,
+      soilPh: document.getElementById("soilPh").value,
+      soilColor: document.getElementById("soilColor").value,
+      emergenceRate: document.getElementById("emergenceRate").value,
+      rootDevelopment: document.getElementById("rootDevelopment").value,
+      rootCoating: document.getElementById("rootCoating").value,
+      earthwormActivity: document.getElementById("earthwormActivity").value,
+      myceliumDevelopment: document.getElementById("myceliumDevelopment").value,
+      earthwormCount: document.getElementById("earthwormCount").value
+    };
+
+    let existingData = JSON.parse(localStorage.getItem("soilData")) || [];
+    existingData.push(data);
+    localStorage.setItem("soilData", JSON.stringify(existingData));
+
+    alert("Final data submitted successfully!");
+    window.location.href = "database.html";
+  }
+
+  // Populate earthwormCount and infiltration time options on load
   window.onload = () => {
     generateFarmId();
+
     const earthwormSelect = document.getElementById("earthwormCount");
     for (let i = 0; i <= 100; i++) {
       let option = document.createElement("option");
@@ -702,12 +726,21 @@
       option.text = i;
       earthwormSelect.appendChild(option);
     }
+
+    const infiltrationMinute = document.getElementById("infiltrationMinute");
+    const infiltrationSecond = document.getElementById("infiltrationSecond");
+    for (let i = 0; i <= 59; i++) {
+      infiltrationMinute.appendChild(new Option(i, i));
+      infiltrationSecond.appendChild(new Option(i, i));
+    }
+
     document.querySelectorAll('.step').forEach(stepBtn => {
       stepBtn.addEventListener('click', () => {
         currentStep = parseInt(stepBtn.getAttribute('data-step'));
         showStep(currentStep);
       });
     });
+
     showStep(currentStep);
   };
 
