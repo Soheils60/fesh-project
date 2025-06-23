@@ -59,17 +59,38 @@
 </main>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(registration => {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(error => {
-          console.error('Service Worker registration failed:', error);
-        });
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.createElement('button');
+    installBtn.textContent = 'Install FESH App';
+    installBtn.style.position = 'fixed';
+    installBtn.style.bottom = '20px';
+    installBtn.style.right = '20px';
+    installBtn.style.padding = '10px 20px';
+    installBtn.style.backgroundColor = '#388e3c';
+    installBtn.style.color = 'white';
+    installBtn.style.border = 'none';
+    installBtn.style.borderRadius = '5px';
+    installBtn.style.cursor = 'pointer';
+    document.body.appendChild(installBtn);
+
+    installBtn.addEventListener('click', async () => {
+      installBtn.disabled = true;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      deferredPrompt = null;
+      installBtn.remove();
     });
-  }
+  });
 </script>
 
 </body>
