@@ -12,18 +12,30 @@
     }
     .step-header {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
       margin-bottom: 20px;
     }
     .step-button {
       background-color: #4caf50;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
+      min-width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .step-button:hover {
+      background-color: #388e3c;
+      transform: translateY(-2px);
+    }
+    .step-button.active {
+      background-color: #2e7d32;
     }
     .step-form {
       display: none;
@@ -32,7 +44,7 @@
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 600px;
-      margin-bottom: 30px;
+      margin: 0 auto 30px;
     }
     .step-form.active {
       display: block;
@@ -70,7 +82,7 @@
 </head>
 <body>
 
-<h2>Field Evaluation of Soil Health</h2>
+<h2 style="text-align:center">Field Evaluation of Soil Health</h2>
 
 <div class="step-header">
   <button class="step-button" onclick="toggleStep(1)">Step 1: General Info</button>
@@ -142,6 +154,9 @@
   function toggleStep(stepNum) {
     document.querySelectorAll('.step-form').forEach((el, i) => {
       el.classList.toggle('active', i === stepNum - 1);
+    });
+    document.querySelectorAll('.step-button').forEach((btn, i) => {
+      btn.classList.toggle('active', i === stepNum - 1);
     });
   }
 
@@ -229,6 +244,7 @@
       return;
     }
     alert("✅ Step 2 complete. You can now continue.");
+    toggleStep(3);
   }
 </script>
 
