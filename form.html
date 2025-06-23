@@ -1,87 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>FESH – Step 1</title>
+  <meta charset="UTF-8">
+  <title>FESH Form – Step 1</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
-      margin: 0;
       padding: 20px;
     }
-    .form-container {
-      max-width: 600px;
-      margin: auto;
+    .step-button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .form-box {
       background: #fff;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #333;
+      max-width: 600px;
+      margin-top: 30px;
     }
     label {
-      font-weight: bold;
       display: block;
       margin-top: 15px;
+      font-weight: bold;
     }
     input {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 6px;
     }
-    .button-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    button {
-      background-color: #4caf50;
-      color: white;
-      padding: 10px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #388e3c;
-    }
-    .mic-button {
-      background: none;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-      margin-left: 5px;
+    input.error {
+      border: 2px solid red;
     }
     .error-message {
       color: red;
-      font-size: 0.9em;
+      font-size: 14px;
       margin-top: 4px;
+    }
+    .button-row {
+      margin-top: 15px;
+    }
+    .button-row button {
+      width: auto;
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
 
-<div class="form-container">
-  <h2>Step 1: General Information</h2>
+<h2>Field Evaluation of Soil Health</h2>
+<button class="step-button">Step 1: General Info</button>
 
+<div class="form-box">
   <label for="farmId">Farm ID:</label>
   <input type="text" id="farmId" readonly />
 
-  <label for="farmerName">Farmer Name:
-    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-  </label>
+  <label for="farmerName">Farmer Name:</label>
   <input type="text" id="farmerName" />
 
   <label for="date">Date:</label>
   <input type="date" id="date" />
 
-  <label for="contact">Phone Number (10 digits):
-    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-  </label>
+  <label for="contact">Phone Number (10 digits):</label>
   <input type="tel" id="contact" />
 
   <label>Farm Location (GPS):</label>
@@ -96,11 +86,11 @@
   <label for="longitude">Longitude:</label>
   <input type="text" id="longitude" readonly />
 
-  <button style="margin-top: 20px;" onclick="validateStep1()">✓ Confirm and Continue</button>
+  <button onclick="validateStep1()">✓ Confirm and Continue</button>
 </div>
 
 <script>
-  // Generate Farm ID
+  // Generate random FARM ID
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     const datePart = now.toISOString().slice(0,10).replace(/-/g, '');
@@ -108,23 +98,7 @@
     document.getElementById('farmId').value = `FARM-${datePart}-${rand}`;
   });
 
-  // Voice input
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Voice input not supported.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
-    recognition.onresult = (e) => {
-      document.getElementById(fieldId).value = e.results[0][0].transcript;
-    };
-    recognition.onerror = (e) => alert("Voice input error: " + e.error);
-  }
-
-  // GPS
+  // Get GPS location
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
@@ -136,7 +110,7 @@
     }
   }
 
-  // Map
+  // Open map in new tab
   function viewMap() {
     const lat = document.getElementById("latitude").value;
     const lon = document.getElementById("longitude").value;
@@ -147,42 +121,42 @@
     }
   }
 
-  // Validation
+  // Validate fields with red border and custom error per field
   function validateStep1() {
     const fields = [
-      { id: "farmerName", message: "Please enter farmer's name." },
-      { id: "date", message: "Please select a date." },
-      { id: "contact", message: "Phone number must be exactly 10 digits.", pattern: /^\d{10}$/ },
-      { id: "latitude", message: "Latitude is required." },
-      { id: "longitude", message: "Longitude is required." }
+      { id: "farmerName", msg: "Please enter farmer name." },
+      { id: "date", msg: "Please select a date." },
+      { id: "contact", msg: "Phone number must be 10 digits.", pattern: /^\d{10}$/ },
+      { id: "latitude", msg: "Latitude required." },
+      { id: "longitude", msg: "Longitude required." }
     ];
 
-    let isValid = true;
+    let valid = true;
 
-    fields.forEach(({id, message, pattern}) => {
-      const field = document.getElementById(id);
-      const value = field.value.trim();
+    fields.forEach(({id, msg, pattern}) => {
+      const el = document.getElementById(id);
+      const val = el.value.trim();
 
-      // Remove previous error
-      field.style.border = "";
-      if (field.nextElementSibling && field.nextElementSibling.classList.contains("error-message")) {
-        field.nextElementSibling.remove();
+      // Remove previous
+      el.classList.remove("error");
+      if (el.nextElementSibling && el.nextElementSibling.classList.contains("error-message")) {
+        el.nextElementSibling.remove();
       }
 
-      // Validate
-      if (!value || (pattern && !pattern.test(value))) {
-        field.style.border = "2px solid red";
-        const error = document.createElement("div");
-        error.className = "error-message";
-        error.textContent = message;
-        field.after(error);
-        isValid = false;
+      const hasError = (!val || (pattern && !pattern.test(val)));
+      if (hasError) {
+        el.classList.add("error");
+        const err = document.createElement("div");
+        err.className = "error-message";
+        err.textContent = msg;
+        el.insertAdjacentElement("afterend", err);
+        valid = false;
       }
     });
 
-    if (isValid) {
-      alert("✅ All fields valid. You can now proceed to Step 2.");
-      // Here, add toggleStep(2) or redirect logic
+    if (valid) {
+      alert("✅ All fields are valid. Moving to next step...");
+      // Move to next step or perform action
     }
   }
 </script>
