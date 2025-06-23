@@ -235,7 +235,7 @@
 </script>
 
 <!-- Step 5: Chemical Soil Properties -->
-<div id="step5" class="step-form">
+<div id="step5" class="step-form" style="display: none;">
   <h3>Step 5: Chemical Soil Properties</h3>
 
   <!-- Soil Color -->
@@ -275,30 +275,32 @@
   <button onclick="validateStep5()">✓ Confirm and Continue</button>
 </div>
 
-<!-- Step 5 Validation Script -->
+<!-- Step 5 validation script -->
 <script>
   function validateStep5() {
-    const color = document.getElementById("soilColor");
-    const ph = document.getElementById("soilPh");
+    const soilColor = document.getElementById("soilColor");
+    const soilPh = document.getElementById("soilPh");
     let isValid = true;
 
-    // Reset styles
-    color.style.borderColor = "#ccc";
-    ph.style.borderColor = "#ccc";
+    // Reset borders
+    soilColor.style.borderColor = "#ccc";
+    soilPh.style.borderColor = "#ccc";
 
-    if (!color.value) {
-      color.style.borderColor = "red";
+    // Validate color
+    if (!soilColor.value) {
+      soilColor.style.borderColor = "red";
       isValid = false;
     }
 
-    if (!ph.value || ph.value < 0 || ph.value > 14) {
-      ph.style.borderColor = "red";
+    // Validate pH
+    if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
+      soilPh.style.borderColor = "red";
       isValid = false;
     }
 
     if (isValid) {
       alert("✅ Step 5 complete. Moving to Step 6.");
-      toggleStep(6);
+      toggleStep(6); // Make sure step 6 exists
     } else {
       alert("❗ Please complete all highlighted fields in Step 5.");
     }
