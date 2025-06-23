@@ -1,537 +1,800 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>FESH Form - 7 Steps</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-    .step-header { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    .step-button { background-color: #4caf50; color: white; padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    .step-form { display: none; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px; margin-bottom: 30px; }
-    .step-form.active { display: block; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select, button { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #ccc; }
-    .button-row button { width: auto; margin-right: 10px; }
-    .mic-button { background: none; border: none; font-size: 18px; margin-left: 6px; cursor: pointer; }
-    .error-message { color: red; font-size: 13px; margin-top: 4px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>فرم چندمرحله‌ای FESH</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    background: #f0f2f5;
+    margin: 20px;
+  }
+  .stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
+  .step {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    margin: 0 5px;
+    background-color: #a5d6a7;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #2e7d32;
+    transition: background-color 0.3s ease;
+  }
+  .step.active {
+    background-color: #388e3c;
+    color: #fff;
+  }
+  .step.disabled {
+    background-color: #c8e6c9;
+    color: #999;
+    cursor: default;
+  }
+  .step-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ccc;
+    display: none;
+  }
+  .step-form.active {
+    display: block;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+  }
+  input.error,
+  select.error {
+    border-color: red;
+  }
+  .error-message {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:disabled {
+    background-color: #a5d6a7;
+    cursor: default;
+  }
+</style>
 </head>
 <body>
 
-<h2>Field Evaluation of Soil Health</h2>
-
-<div class="step-header">
-  <button class="step-button" onclick="toggleStep(1)">Step 1: General Info</button>
-  <button class="step-button" onclick="toggleStep(2)">Step 2: Crop Info</button>
-  <button class="step-button" onclick="toggleStep(3)">Step 3: Topography</button>
-  <button class="step-button" onclick="toggleStep(4)">Step 4: Physical Soil</button>
-  <button class="step-button" onclick="toggleStep(5)">Step 5: Chemical Soil</button>
-  <button class="step-button" onclick="toggleStep(6)">Step 6: Biological Soil</button>
-  <button class="step-button" onclick="toggleStep(7)">Step 7: Crop Performance</button>
+<div class="stepper" id="stepper">
+  <div class="step active" data-step="1">مرحله 1</div>
+  <div class="step disabled" data-step="2">مرحله 2</div>
+  <div class="step disabled" data-step="3">مرحله 3</div>
+  <div class="step disabled" data-step="4">مرحله 4</div>
+  <div class="step disabled" data-step="5">مرحله 5</div>
+  <div class="step disabled" data-step="6">مرحله 6</div>
 </div>
 
+<!-- مرحله 1 -->
 <div id="step1" class="step-form active">
-  <h3>Step 1: General Information</h3>
-  <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" readonly>
+  <h2>مرحله 1: اطلاعات عمومی</h2>
+  <label for="farmId">Farm ID</label>
+  <input type="text" id="farmId" readonly />
+  <label for="date">تاریخ</label>
+  <input type="date" id="date" />
+  <div class="error-message" id="error-date"></div>
 
-  <label for="farmerName">Farmer Name:
-    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
-  </label>
-  <input type="text" id="farmerName" required>
+  <label for="farmerName">نام کشاورز</label>
+  <input type="text" id="farmerName" />
+  <div class="error-message" id="error-farmerName"></div>
 
-  <label for="date">Date:</label>
-  <input type="date" id="date" required>
+  <label for="mobileNumber">شماره موبایل (۱۰ رقم)</label>
+  <input type="text" id="mobileNumber" maxlength="10" />
+  <div class="error-message" id="error-mobileNumber"></div>
 
-  <label for="contact">Phone Number (10 digits):
-    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
-  </label>
-  <input type="tel" id="contact" required>
+  <label for="location">مختصات (GPS)</label>
+  <input type="text" id="location" readonly />
+  <button type="button" onclick="getLocation()">دریافت موقعیت</button>
+  <div class="error-message" id="error-location"></div>
 
-  <label>Farm Location (GPS):</label>
-  <div class="button-row">
-    <button onclick="getLocation()">📍 Get Current Location</button>
-    <button onclick="viewMap()">🌐 View on Map</button>
-  </div>
-
-  <label for="latitude">Latitude:</label>
-  <input type="text" id="latitude" readonly>
-
-  <label for="longitude">Longitude:</label>
-  <input type="text" id="longitude" readonly>
-
-  <button onclick="validateStep1()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(1)">تأیید و ادامه</button>
 </div>
 
+<!-- مرحله 2 -->
 <div id="step2" class="step-form">
-  <h3>Step 2: Crop Info</h3>
-  <label for="cropCategory">Crop Category:</label>
-  <select id="cropCategory" onchange="updateCropOptions()">
-    <option value="">-- Select Category --</option>
-    <option value="cereal">Cereal Crops</option>
-    <option value="legume">Legumes</option>
-    <option value="root">Root & Tuber Crops</option>
-    <option value="forage">Forage & Pasture</option>
-    <option value="vegetable">Vegetables</option>
-    <option value="fruit">Fruits & Berries</option>
-    <option value="other">Other</option>
+  <h2>مرحله 2: اطلاعات محصول و عملکرد</h2>
+
+  <label for="cropType">نوع محصول</label>
+  <select id="cropType">
+    <option value="">-- انتخاب کنید --</option>
+    <optgroup label="غلات">
+      <option value="wheat">گندم</option>
+      <option value="barley">جو</option>
+      <option value="oats">یولاف</option>
+      <option value="grain_corn">ذرت دانه‌ای</option>
+    </optgroup>
+    <optgroup label="سبزیجات">
+      <option value="potato">سیب‌زمینی</option>
+      <option value="cabbage">کلم</option>
+      <option value="carrot">هویج</option>
+      <option value="onion">پیاز</option>
+      <option value="lettuce">کاهو</option>
+      <option value="beet">چغندر</option>
+      <option value="green_peas">نخود سبز</option>
+    </optgroup>
+    <optgroup label="حبوبات">
+      <option value="beans">لوبیا</option>
+      <option value="dry_peas">نخود خشک</option>
+      <option value="lentils">عدس</option>
+    </optgroup>
+    <optgroup label="علوفه‌ای">
+      <option value="alfalfa">یونجه</option>
+      <option value="red_clover">شبدر قرمز</option>
+      <option value="timothy">تیموتی</option>
+      <option value="mixed_forage">مخلوط علوفه‌ای</option>
+    </optgroup>
+    <optgroup label="سایر محصولات زراعی">
+      <option value="silage_corn">ذرت سیلویی</option>
+      <option value="soybeans">سویا</option>
+      <option value="canola">کلزا</option>
+      <option value="flax">کتان</option>
+    </optgroup>
+    <optgroup label="محصولات باغی">
+      <option value="apple">سیب</option>
+      <option value="blueberry">بلوبری</option>
+      <option value="strawberry">توت‌فرنگی</option>
+      <option value="raspberry">تمشک</option>
+    </optgroup>
+    <option value="other">سایر</option>
   </select>
+  <div class="error-message" id="error-cropType"></div>
 
-  <div id="cropOptionsContainer" style="margin-top:15px;"></div>
+  <label for="fieldArea">مساحت زمین (هکتار)</label>
+  <input type="number" step="0.01" id="fieldArea" placeholder="مثلاً 3.25" />
+  <div class="error-message" id="error-fieldArea"></div>
 
-  <label for="area">Land Area (hectares):
-    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
-  </label>
-  <input type="number" id="area" step="0.001" min="0.001" required>
+  <label for="estimatedYield">عملکرد محصول (تن در هکتار)</label>
+  <input type="number" step="0.01" id="estimatedYield" placeholder="مثلاً 12.40" />
+  <div class="error-message" id="error-estimatedYield"></div>
 
-  <button onclick="validateStep2()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(2)">تأیید و ادامه</button>
 </div>
 
+<!-- مرحله 3 -->
 <div id="step3" class="step-form">
-  <h3>Step 3: Topography</h3>
+  <h2>مرحله 3: توپوگرافی</h2>
 
-  <label for="slopeClass">Slope Class (%):</label>
-  <select id="slopeClass" required>
-    <option value="">-- Select --</option>
-    <option>0–1%</option>
-    <option>1–2%</option>
-    <option>2–4%</option>
-    <option>4–8%</option>
-    <option>8–10%</option>
-    <option>10–20%</option>
-    <option>20–50%</option>
-    <option>50–100%</option>
-    <option>100–829%</option>
+  <label for="slopeClass">طبقه شیب (%)</label>
+  <select id="slopeClass">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="0-1">0–1%</option>
+    <option value="1-2">1–2%</option>
+    <option value="2-4">2–4%</option>
+    <option value="4-8">4–8%</option>
+    <option value="8-10">8–10%</option>
+    <option value="10-20">10–20%</option>
+    <option value="20-50">20–50%</option>
+    <option value="50-100">50–100%</option>
+    <option value="100+">بیشتر از 100%</option>
   </select>
+  <div class="error-message" id="error-slopeClass"></div>
 
-  <label for="slopeDirection">Slope Direction:</label>
-  <select id="slopeDirection" required>
-    <option value="">-- Select --</option>
-    <option>North</option>
-    <option>North-East</option>
-    <option>East</option>
-    <option>South-East</option>
-    <option>South</option>
-    <option>South-West</option>
-    <option>West</option>
-    <option>North-West</option>
+  <label for="slopeDirection">جهت شیب</label>
+  <select id="slopeDirection">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="North">North</option>
+    <option value="North-East">North-East</option>
+    <option value="East">East</option>
+    <option value="South-East">South-East</option>
+    <option value="South">South</option>
+    <option value="South-West">South-West</option>
+    <option value="West">West</option>
+    <option value="North-West">North-West</option>
   </select>
+  <div class="error-message" id="error-slopeDirection"></div>
 
-  <label for="landscapePosition">Landscape Position:</label>
-  <select id="landscapePosition" required>
-    <option value="">-- Select --</option>
-    <option>Summit</option>
-    <option>Shoulder</option>
-    <option>Backslope</option>
-    <option>Footslope</option>
-    <option>Toeslope</option>
+  <label for="landscapePosition">موقعیت در چشم‌انداز</label>
+  <select id="landscapePosition">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Summit">Summit</option>
+    <option value="Shoulder">Shoulder</option>
+    <option value="Backslope">Backslope</option>
+    <option value="Footslope">Footslope</option>
+    <option value="Toeslope">Toeslope</option>
   </select>
+  <div class="error-message" id="error-landscapePosition"></div>
 
-  <label for="surfaceForm">Surface Form:</label>
-  <select id="surfaceForm" required>
-    <option value="">-- Select --</option>
-    <option>Flat</option>
-    <option>Concave</option>
-    <option>Convex</option>
-    <option>Complex</option>
+  <label for="surfaceForm">فرم سطح</label>
+  <select id="surfaceForm">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Flat">Flat</option>
+    <option value="Convex">Convex</option>
+    <option value="Concave">Concave</option>
   </select>
+  <div class="error-message" id="error-surfaceForm"></div>
 
-  <button onclick="validateStep3()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(3)">تأیید و ادامه</button>
 </div>
 
-<!-- Step 4: Physical Soil Properties -->
+<!-- مرحله 4 -->
 <div id="step4" class="step-form">
-  <h3>Step 4: Physical Soil Properties</h3>
+  <h2>مرحله 4: ویژگی‌های فیزیکی خاک</h2>
 
-  <!-- Soil Infiltration Time -->
-  <label>Soil Infiltration Time:</label>
-  <div style="display: flex; gap: 20px; margin-bottom: 15px;">
-    <div>
-      <label for="infiltrationMinute">Minutes:</label>
-      <select id="infiltrationMinute" required>
-        <option value="">--</option>
-      </select>
-    </div>
-    <div>
-      <label for="infiltrationSecond">Seconds:</label>
-      <select id="infiltrationSecond" required>
-        <option value="">--</option>
-      </select>
-    </div>
-  </div>
+  <label for="infiltrationMinute">زمان نفوذ - دقیقه</label>
+  <select id="infiltrationMinute">
+    <option value="">-- انتخاب کنید --</option>
+    <!-- 0 تا 59 -->
+    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+  </select>
+  <div class="error-message" id="error-infiltrationMinute"></div>
 
-  <!-- Soil Structure -->
-  <label for="soilStructure">Soil Structure (VESS Score):</label>
-  <select id="soilStructure" required>
-    <option value="">-- Select --</option>
+  <label for="infiltrationSecond">زمان نفوذ - ثانیه</label>
+  <select id="infiltrationSecond">
+    <option value="">-- انتخاب کنید --</option>
+    <!-- 0 تا 59 -->
+    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+  </select>
+  <div class="error-message" id="error-infiltrationSecond"></div>
+
+  <label for="soilStructure">ساختار خاک (VESS Score)</label>
+  <select id="soilStructure">
+    <option value="">-- انتخاب کنید --</option>
     <option value="1">Sq1 – Very Good</option>
     <option value="2">Sq2 – Good</option>
     <option value="3">Sq3 – Moderate</option>
     <option value="4">Sq4 – Poor</option>
     <option value="5">Sq5 – Very Poor</option>
-  </select><br><br>
+  </select>
+  <div class="error-message" id="error-soilStructure"></div>
 
-  <!-- VESS Guide Image -->
-<div style="margin-top: 10px;">
-  <label style="font-size: 14px; color: #555;">See guide below:</label><br>
-  <img src="vess-table.jpg" alt="VESS Score Guide" style="max-width:100%; border:1px solid #ccc; margin-top:5px;">
-</div>
-<br>
-  <!-- Tillage Layer -->
-  <label for="tillageLayer">Tillage Layer Depth (cm):</label>
-  <input type="number" id="tillageLayer" min="0" max="100" step="1" required><br><br>
+  <label for="tillageLayer">عمق لایه خاک‌ورزی (سانتی‌متر)</label>
+  <input type="number" step="0.01" id="tillageLayer" placeholder="مثلاً 25.50" />
+  <div class="error-message" id="error-tillageLayer"></div>
 
-  <!-- Soil Strength -->
-  <label for="soilStrength">Soil Strength (kg/cm²):</label>
-  <input type="number" id="soilStrength" min="0" max="200" step="0.1" required><br><br>
+  <label for="soilStrength">مقاومت خاک (kg/cm²)</label>
+  <input type="number" step="0.01" id="soilStrength" placeholder="مثلاً 1.75" />
+  <div class="error-message" id="error-soilStrength"></div>
 
-  <!-- Confirm Button -->
-  <button onclick="validateStep4()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(4)">تأیید و ادامه</button>
 </div>
 
-<script>
-  // Fill dropdowns for minutes and seconds
-  function fillInfiltrationDropdowns() {
-    const minSelect = document.getElementById("infiltrationMinute");
-    const secSelect = document.getElementById("infiltrationSecond");
-
-    for (let i = 0; i < 60; i++) {
-      const optMin = document.createElement("option");
-      optMin.value = i;
-      optMin.text = i;
-      minSelect.appendChild(optMin);
-
-      const optSec = document.createElement("option");
-      optSec.value = i;
-      optSec.text = i;
-      secSelect.appendChild(optSec);
-    }
-  }
-
-  // Run on page load
-  window.addEventListener("DOMContentLoaded", fillInfiltrationDropdowns);
-
-  // Validation for Step 4
-  function validateStep4() {
-    const ids = ["infiltrationMinute", "infiltrationSecond", "soilStructure", "tillageLayer", "soilStrength"];
-    let isValid = true;
-
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      el.style.borderColor = "#ccc";
-      if (!el.value || el.value === "") {
-        el.style.borderColor = "red";
-        isValid = false;
-      }
-    });
-
-    if (isValid) {
-      alert("✅ Step 4 complete. Moving to Step 5.");
-      toggleStep(5);
-    } else {
-      alert("❗ Please complete all highlighted fields in Step 4.");
-    }
-  }
-</script>
-
-<!-- Step 5: Chemical Soil Properties -->
+<!-- مرحله 5 -->
 <div id="step5" class="step-form">
-  <h3>Step 5: Chemical Soil Properties</h3>
+  <h2>مرحله 5: ویژگی‌های شیمیایی خاک</h2>
 
-  <!-- Soil Color -->
-  <label for="soilColor">Soil Color (Munsell):</label>
-  <select id="soilColor" required>
-    <option value="">-- Select --</option>
-    <option>Very dark grayish brown</option>
-    <option>Dark grayish brown</option>
-    <option>Dark brown</option>
-    <option>Dark yellowish brown</option>
-    <option>Yellowish brown</option>
-    <option>Strong brown</option>
-    <option>Brown</option>
-    <option>Reddish brown</option>
-    <option>Dark reddish brown</option>
-    <option>Very dark brown</option>
-    <option>Grayish brown</option>
-    <option>Dark gray</option>
-    <option>Light brownish gray</option>
-    <option>Pale brown</option>
-    <option>Dark reddish gray</option>
-    <option>Light yellowish brown</option>
-    <option>Dusky red</option>
-    <option>Light olive brown</option>
-    <option>Olive brown</option>
-    <option>Dark olive brown</option>
-    <option>Dark grayish red</option>
-    <option>Very dark gray</option>
-    <option>Black</option>
-  </select><br><br>
+  <label for="soilPh">pH خاک (0 تا 14)</label>
+  <input type="number" id="soilPh" step="0.01" min="0" max="14" placeholder="مثلاً 6.50" />
+  <div class="error-message" id="error-soilPh"></div>
 
-  <!-- Soil pH -->
-  <label for="soilPh">Soil pH (0.0 – 14.0):</label>
-  <input type="number" id="soilPh" min="0" max="14" step="0.1" required><br><br>
+  <label for="soilColor">رنگ خاک</label>
+  <select id="soilColor">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Very black">Very black</option>
+    <option value="Black">Black</option>
+    <option value="Very dark brown">Very dark brown</option>
+    <option value="Dark brown">Dark brown</option>
+    <option value="Medium dark brown">Medium dark brown</option>
+    <option value="Brown">Brown</option>
+    <option value="Medium brown">Medium brown</option>
+    <option value="Light brown">Light brown</option>
+    <option value="Very light brown">Very light brown</option>
+    <option value="Yellowish brown">Yellowish brown</option>
+    <option value="Yellow brown">Yellow brown</option>
+    <option value="Pale brown">Pale brown</option>
+    <option value="Reddish brown">Reddish brown</option>
+    <option value="Dark reddish brown">Dark reddish brown</option>
+    <option value="Very dark gray">Very dark gray</option>
+    <option value="Dark gray">Dark gray</option>
+    <option value="Gray">Gray</option>
+    <option value="Light gray">Light gray</option>
+    <option value="Very light gray">Very light gray</option>
+    <option value="Yellowish gray">Yellowish gray</option>
+    <option value="Olive">Olive</option>
+    <option value="Dark olive">Dark olive</option>
+    <option value="Red">Red</option>
+    <option value="Orange brown">Orange brown</option>
+  </select>
+  <div class="error-message" id="error-soilColor"></div>
 
-  <!-- Confirm Button -->
-  <button onclick="validateStep5()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(5)">تأیید و ادامه</button>
 </div>
 
-<!-- Step 5 Validation Script -->
-<script>
-  function validateStep5() {
-    const soilColor = document.getElementById("soilColor");
-    const soilPh = document.getElementById("soilPh");
-    let isValid = true;
-
-    // Reset border colors
-    soilColor.style.borderColor = "#ccc";
-    soilPh.style.borderColor = "#ccc";
-
-    // Validation
-    if (!soilColor.value) {
-      soilColor.style.borderColor = "red";
-      isValid = false;
-    }
-    if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
-      soilPh.style.borderColor = "red";
-      isValid = false;
-    }
-
-    if (isValid) {
-      alert("✅ Step 5 complete. Moving to Step 6.");
-      toggleStep(6); // Ensure step6 exists
-    } else {
-      alert("❗ Please complete all highlighted fields in Step 5.");
-    }
-  }
-</script>
-<!-- Step 6: Biological Soil Properties -->
+<!-- مرحله 6 -->
 <div id="step6" class="step-form">
-  <h3>Step 6: Biological Soil Properties</h3>
+  <h2>مرحله 6: ویژگی‌های بیولوژیکی خاک</h2>
 
-  <!-- Emergence Rate -->
-  <label for="emergenceRate">Emergence Rate:</label>
-  <select id="emergenceRate" required>
-    <option value="">-- Select --</option>
-    <option>None</option>
-    <option>Low</option>
-    <option>Moderate</option>
-    <option>High</option>
-  </select><br><br>
+  <label for="earthwormCount">تعداد کرم خاکی (0 تا 100)</label>
+  <select id="earthwormCount">
+    <option value="">-- انتخاب کنید --</option>
+    <!-- 0 تا 100 -->
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <option value="17">17</option>
+    <option value="18">18</option>
+    <option value="19">19</option>
+    <option value="20">20</option>
+    <option value="21">21</option>
+    <option value="22">22</option>
+    <option value="23">23</option>
+    <option value="24">24</option>
+    <option value="25">25</option>
+    <option value="26">26</option>
+    <option value="27">27</option>
+    <option value="28">28</option>
+    <option value="29">29</option>
+    <option value="30">30</option>
+    <option value="31">31</option>
+    <option value="32">32</option>
+    <option value="33">33</option>
+    <option value="34">34</option>
+    <option value="35">35</option>
+    <option value="36">36</option>
+    <option value="37">37</option>
+    <option value="38">38</option>
+    <option value="39">39</option>
+    <option value="40">40</option>
+    <option value="41">41</option>
+    <option value="42">42</option>
+    <option value="43">43</option>
+    <option value="44">44</option>
+    <option value="45">45</option>
+    <option value="46">46</option>
+    <option value="47">47</option>
+    <option value="48">48</option>
+    <option value="49">49</option>
+    <option value="50">50</option>
+    <option value="51">51</option>
+    <option value="52">52</option>
+    <option value="53">53</option>
+    <option value="54">54</option>
+    <option value="55">55</option>
+    <option value="56">56</option>
+    <option value="57">57</option>
+    <option value="58">58</option>
+    <option value="59">59</option>
+    <option value="60">60</option>
+    <option value="61">61</option>
+    <option value="62">62</option>
+    <option value="63">63</option>
+    <option value="64">64</option>
+    <option value="65">65</option>
+    <option value="66">66</option>
+    <option value="67">67</option>
+    <option value="68">68</option>
+    <option value="69">69</option>
+    <option value="70">70</option>
+    <option value="71">71</option>
+    <option value="72">72</option>
+    <option value="73">73</option>
+    <option value="74">74</option>
+    <option value="75">75</option>
+    <option value="76">76</option>
+    <option value="77">77</option>
+    <option value="78">78</option>
+    <option value="79">79</option>
+    <option value="80">80</option>
+    <option value="81">81</option>
+    <option value="82">82</option>
+    <option value="83">83</option>
+    <option value="84">84</option>
+    <option value="85">85</option>
+    <option value="86">86</option>
+    <option value="87">87</option>
+    <option value="88">88</option>
+    <option value="89">89</option>
+    <option value="90">90</option>
+    <option value="91">91</option>
+    <option value="92">92</option>
+    <option value="93">93</option>
+    <option value="94">94</option>
+    <option value="95">95</option>
+    <option value="96">96</option>
+    <option value="97">97</option>
+    <option value="98">98</option>
+    <option value="99">99</option>
+    <option value="100">100</option>
+  </select>
+  <div class="error-message" id="error-earthwormCount"></div>
 
-  <!-- Root Development -->
-  <label for="rootDevelopment">Root Development:</label>
-  <select id="rootDevelopment" required>
-    <option value="">-- Select --</option>
-    <option>Poor</option>
-    <option>Moderate</option>
-    <option>Good</option>
-    <option>Excellent</option>
-  </select><br><br>
+  <label for="microbialActivity">فعالیت میکروبی</label>
+  <select id="microbialActivity">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Low">کم</option>
+    <option value="Medium">متوسط</option>
+    <option value="High">زیاد</option>
+  </select>
+  <div class="error-message" id="error-microbialActivity"></div>
 
-  <!-- Root Coating -->
-  <label for="rootCoating">Root Coating:</label>
-  <select id="rootCoating" required>
-    <option value="">-- Select --</option>
-    <option>None</option>
-    <option>Light</option>
-    <option>Moderate</option>
-    <option>Heavy</option>
-  </select><br><br>
+  <label for="soilOrganicMatter">ماده آلی خاک</label>
+  <select id="soilOrganicMatter">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Low">کم</option>
+    <option value="Medium">متوسط</option>
+    <option value="High">زیاد</option>
+  </select>
+  <div class="error-message" id="error-soilOrganicMatter"></div>
 
-  <!-- Earthworm Activity (Count in Soil Block) -->
-  <label for="earthwormsBlock">Number of Earthworms (in soil block):</label>
-  <select id="earthwormsBlock" required>
-    <option value="">-- Select --</option>
-    <!-- 0–100 will be filled via JS -->
-  </select><br><br>
+  <label for="rootDensity">تراکم ریشه</label>
+  <select id="rootDensity">
+    <option value="">-- انتخاب کنید --</option>
+    <option value="Low">کم</option>
+    <option value="Medium">متوسط</option>
+    <option value="High">زیاد</option>
+  </select>
+  <div class="error-message" id="error-rootDensity"></div>
 
-  <!-- Earthworm Activity (Count on Surface) -->
-  <label for="earthwormsSurface">Number of Earthworms (on surface):</label>
-  <select id="earthwormsSurface" required>
-    <option value="">-- Select --</option>
-    <!-- 0–100 will be filled via JS -->
-  </select><br><br>
-
-  <!-- Mycelium Development -->
-  <label for="myceliumDevelopment">Mycelium Development:</label>
-  <select id="myceliumDevelopment" required>
-    <option value="">-- Select --</option>
-    <option>None</option>
-    <option>Low</option>
-    <option>Moderate</option>
-    <option>Abundant</option>
-  </select><br><br>
-
-  <!-- Confirm Button -->
-  <button onclick="validateStep6()">✓ Confirm and Continue</button>
+  <button onclick="validateStep(6)">تأیید و ادامه</button>
 </div>
 
-<!-- JavaScript for Step 6 -->
 <script>
-  // Fill earthworm dropdowns 0–100
-  function fillEarthwormDropdowns() {
-    const ids = ["earthwormsBlock", "earthwormsSurface"];
-    ids.forEach(id => {
-      const sel = document.getElementById(id);
-      for (let i = 0; i <= 100; i++) {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = i;
-        sel.appendChild(opt);
+  let currentStep = 1;
+  const totalSteps = 6;
+
+  function showStep(step) {
+    for (let i = 1; i <= totalSteps; i++) {
+      const form = document.getElementById(`step${i}`);
+      const stepBtn = document.querySelector(`.step[data-step="${i}"]`);
+      if (i === step) {
+        form.classList.add("active");
+        stepBtn.classList.add("active");
+        stepBtn.classList.remove("disabled");
+      } else {
+        form.classList.remove("active");
+        stepBtn.classList.remove("active");
+        if (i > currentStep) stepBtn.classList.add("disabled");
       }
-    });
+    }
   }
 
-  // Validation for Step 6
-  function validateStep6() {
-    const ids = [
-      "emergenceRate",
-      "rootDevelopment",
-      "rootCoating",
-      "earthwormsBlock",
-      "earthwormsSurface",
-      "myceliumDevelopment"
-    ];
-    let isValid = true;
+  function validateStep(step) {
+    if (step === 1) {
+      let valid = true;
 
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      el.style.borderColor = "#ccc";
-      if (!el.value) {
-        el.style.borderColor = "red";
-        isValid = false;
+      document.getElementById("error-date").textContent = "";
+      document.getElementById("error-farmerName").textContent = "";
+      document.getElementById("error-mobileNumber").textContent = "";
+      document.getElementById("error-location").textContent = "";
+
+      const date = document.getElementById("date");
+      const farmerName = document.getElementById("farmerName");
+      const mobileNumber = document.getElementById("mobileNumber");
+      const location = document.getElementById("location");
+
+      if (!date.value) {
+        valid = false;
+        date.classList.add("error");
+        document.getElementById("error-date").textContent = "تاریخ را وارد کنید";
+      } else {
+        date.classList.remove("error");
       }
-    });
 
-    if (isValid) {
-      alert("✅ Step 6 complete. Moving to Step 7.");
-      toggleStep(7);
-    } else {
-      alert("❗ Please complete all highlighted fields in Step 6.");
+      if (!farmerName.value.trim()) {
+        valid = false;
+        farmerName.classList.add("error");
+        document.getElementById("error-farmerName").textContent = "نام کشاورز را وارد کنید";
+      } else {
+        farmerName.classList.remove("error");
+      }
+
+      if (!/^\d{10}$/.test(mobileNumber.value)) {
+        valid = false;
+        mobileNumber.classList.add("error");
+        document.getElementById("error-mobileNumber").textContent = "شماره موبایل باید 10 رقم باشد";
+      } else {
+        mobileNumber.classList.remove("error");
+      }
+
+      if (!location.value) {
+        valid = false;
+        location.classList.add("error");
+        document.getElementById("error-location").textContent = "موقعیت GPS را دریافت کنید";
+      } else {
+        location.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    } else if (step === 2) {
+      let valid = true;
+
+      document.getElementById("error-cropType").textContent = "";
+      document.getElementById("error-fieldArea").textContent = "";
+      document.getElementById("error-estimatedYield").textContent = "";
+
+      const cropType = document.getElementById("cropType");
+      const fieldArea = document.getElementById("fieldArea");
+      const estimatedYield = document.getElementById("estimatedYield");
+
+      if (!cropType.value) {
+        valid = false;
+        cropType.classList.add("error");
+        document.getElementById("error-cropType").textContent = "نوع محصول را انتخاب کنید";
+      } else {
+        cropType.classList.remove("error");
+      }
+
+      if (!fieldArea.value || parseFloat(fieldArea.value) <= 0) {
+        valid = false;
+        fieldArea.classList.add("error");
+        document.getElementById("error-fieldArea").textContent = "مساحت معتبر وارد کنید";
+      } else {
+        fieldArea.classList.remove("error");
+      }
+
+      if (!estimatedYield.value || parseFloat(estimatedYield.value) <= 0) {
+        valid = false;
+        estimatedYield.classList.add("error");
+        document.getElementById("error-estimatedYield").textContent = "عملکرد معتبر وارد کنید";
+      } else {
+        estimatedYield.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    } else if (step === 3) {
+      let valid = true;
+
+      document.getElementById("error-slopeClass").textContent = "";
+      document.getElementById("error-slopeDirection").textContent = "";
+      document.getElementById("error-landscapePosition").textContent = "";
+      document.getElementById("error-surfaceForm").textContent = "";
+
+      const slopeClass = document.getElementById("slopeClass");
+      const slopeDirection = document.getElementById("slopeDirection");
+      const landscapePosition = document.getElementById("landscapePosition");
+      const surfaceForm = document.getElementById("surfaceForm");
+
+      if (!slopeClass.value) {
+        valid = false;
+        slopeClass.classList.add("error");
+        document.getElementById("error-slopeClass").textContent = "طبقه شیب را انتخاب کنید";
+      } else {
+        slopeClass.classList.remove("error");
+      }
+
+      if (!slopeDirection.value) {
+        valid = false;
+        slopeDirection.classList.add("error");
+        document.getElementById("error-slopeDirection").textContent = "جهت شیب را انتخاب کنید";
+      } else {
+        slopeDirection.classList.remove("error");
+      }
+
+      if (!landscapePosition.value) {
+        valid = false;
+        landscapePosition.classList.add("error");
+        document.getElementById("error-landscapePosition").textContent = "موقعیت چشم‌انداز را انتخاب کنید";
+      } else {
+        landscapePosition.classList.remove("error");
+      }
+
+      if (!surfaceForm.value) {
+        valid = false;
+        surfaceForm.classList.add("error");
+        document.getElementById("error-surfaceForm").textContent = "فرم سطح را انتخاب کنید";
+      } else {
+        surfaceForm.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    } else if (step === 4) {
+      let valid = true;
+
+      document.getElementById("error-infiltrationMinute").textContent = "";
+      document.getElementById("error-infiltrationSecond").textContent = "";
+      document.getElementById("error-soilStructure").textContent = "";
+      document.getElementById("error-tillageLayer").textContent = "";
+      document.getElementById("error-soilStrength").textContent = "";
+
+      const infiltrationMinute = document.getElementById("infiltrationMinute");
+      const infiltrationSecond = document.getElementById("infiltrationSecond");
+      const soilStructure = document.getElementById("soilStructure");
+      const tillageLayer = document.getElementById("tillageLayer");
+      const soilStrength = document.getElementById("soilStrength");
+
+      if (!infiltrationMinute.value) {
+        valid = false;
+        infiltrationMinute.classList.add("error");
+        document.getElementById("error-infiltrationMinute").textContent = "دقیقه را انتخاب کنید";
+      } else {
+        infiltrationMinute.classList.remove("error");
+      }
+
+      if (!infiltrationSecond.value) {
+        valid = false;
+        infiltrationSecond.classList.add("error");
+        document.getElementById("error-infiltrationSecond").textContent = "ثانیه را انتخاب کنید";
+      } else {
+        infiltrationSecond.classList.remove("error");
+      }
+
+      if (!soilStructure.value) {
+        valid = false;
+        soilStructure.classList.add("error");
+        document.getElementById("error-soilStructure").textContent = "امتیاز ساختار خاک را انتخاب کنید";
+      } else {
+        soilStructure.classList.remove("error");
+      }
+
+      if (!tillageLayer.value || parseFloat(tillageLayer.value) <= 0) {
+        valid = false;
+        tillageLayer.classList.add("error");
+        document.getElementById("error-tillageLayer").textContent = "عمق لایه خاک‌ورزی معتبر وارد کنید";
+      } else {
+        tillageLayer.classList.remove("error");
+      }
+
+      if (!soilStrength.value || parseFloat(soilStrength.value) <= 0) {
+        valid = false;
+        soilStrength.classList.add("error");
+        document.getElementById("error-soilStrength").textContent = "مقاومت خاک معتبر وارد کنید";
+      } else {
+        soilStrength.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    } else if (step === 5) {
+      let valid = true;
+
+      document.getElementById("error-soilPh").textContent = "";
+      document.getElementById("error-soilColor").textContent = "";
+
+      const soilPh = document.getElementById("soilPh");
+      const soilColor = document.getElementById("soilColor");
+
+      if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
+        valid = false;
+        soilPh.classList.add("error");
+        document.getElementById("error-soilPh").textContent = "مقدار pH باید بین 0 تا 14 باشد";
+      } else {
+        soilPh.classList.remove("error");
+      }
+
+      if (!soilColor.value) {
+        valid = false;
+        soilColor.classList.add("error");
+        document.getElementById("error-soilColor").textContent = "رنگ خاک را انتخاب کنید";
+      } else {
+        soilColor.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    } else if (step === 6) {
+      let valid = true;
+
+      document.getElementById("error-earthwormCount").textContent = "";
+      document.getElementById("error-microbialActivity").textContent = "";
+      document.getElementById("error-soilOrganicMatter").textContent = "";
+      document.getElementById("error-rootDensity").textContent = "";
+
+      const earthwormCount = document.getElementById("earthwormCount");
+      const microbialActivity = document.getElementById("microbialActivity");
+      const soilOrganicMatter = document.getElementById("soilOrganicMatter");
+      const rootDensity = document.getElementById("rootDensity");
+
+      if (!earthwormCount.value) {
+        valid = false;
+        earthwormCount.classList.add("error");
+        document.getElementById("error-earthwormCount").textContent = "تعداد کرم خاکی را انتخاب کنید";
+      } else {
+        earthwormCount.classList.remove("error");
+      }
+
+      if (!microbialActivity.value) {
+        valid = false;
+        microbialActivity.classList.add("error");
+        document.getElementById("error-microbialActivity").textContent = "فعالیت میکروبی را انتخاب کنید";
+      } else {
+        microbialActivity.classList.remove("error");
+      }
+
+      if (!soilOrganicMatter.value) {
+        valid = false;
+        soilOrganicMatter.classList.add("error");
+        document.getElementById("error-soilOrganicMatter").textContent = "ماده آلی خاک را انتخاب کنید";
+      } else {
+        soilOrganicMatter.classList.remove("error");
+      }
+
+      if (!rootDensity.value) {
+        valid = false;
+        rootDensity.classList.add("error");
+        document.getElementById("error-rootDensity").textContent = "تراکم ریشه را انتخاب کنید";
+      } else {
+        rootDensity.classList.remove("error");
+      }
+
+      if (valid) {
+        currentStep++;
+        showStep(currentStep);
+      }
     }
   }
 
-  // Run on page load
-  window.addEventListener("DOMContentLoaded", fillEarthwormDropdowns);
-</script>
-<!-- Step 7: Crop Performance -->
-<div id="step7" class="step-form">
-  <h3>Step 7: Crop Performance</h3>
-
-  <!-- Crop Selection - Part 1 -->
-  <label for="cropPart1">Crop Grown - Part 1:</label>
-  <select id="cropPart1" required>
-    <option value="">-- Select Crop --</option>
-    <optgroup label="Vegetables">
-      <option>Potato</option>
-      <option>Carrot</option>
-      <option>Tomato</option>
-      <option>Cabbage</option>
-      <option>Spinach</option>
-    </optgroup>
-    <optgroup label="Cereals">
-      <option>Wheat</option>
-      <option>Barley</option>
-      <option>Oats</option>
-      <option>Rye</option>
-    </optgroup>
-    <optgroup label="Legumes">
-      <option>Peas</option>
-      <option>Beans</option>
-      <option>Lentils</option>
-    </optgroup>
-    <optgroup label="Oilseeds">
-      <option>Canola</option>
-      <option>Sunflower</option>
-      <option>Flax</option>
-    </optgroup>
-    <optgroup label="Forages">
-      <option>Alfalfa</option>
-      <option>Clover</option>
-      <option>Grass Mix</option>
-    </optgroup>
-    <optgroup label="Others">
-      <option>Mixed Garden</option>
-      <option>Fallow</option>
-    </optgroup>
-  </select><br><br>
-
-  <!-- Yield Part 1 -->
-  <label for="yieldPart1">Yield - Part 1 (ton/ha):</label>
-  <input type="number" id="yieldPart1" min="0" max="100" step="0.1" required><br><br>
-
-  <!-- Crop Selection - Part 2 -->
-  <label for="cropPart2">Crop Grown - Part 2 (if any):</label>
-  <select id="cropPart2">
-    <option value="">-- Select Crop (Optional) --</option>
-    <optgroup label="Vegetables">
-      <option>Potato</option>
-      <option>Carrot</option>
-      <option>Tomato</option>
-      <option>Cabbage</option>
-      <option>Spinach</option>
-    </optgroup>
-    <optgroup label="Cereals">
-      <option>Wheat</option>
-      <option>Barley</option>
-      <option>Oats</option>
-      <option>Rye</option>
-    </optgroup>
-    <optgroup label="Legumes">
-      <option>Peas</option>
-      <option>Beans</option>
-      <option>Lentils</option>
-    </optgroup>
-    <optgroup label="Oilseeds">
-      <option>Canola</option>
-      <option>Sunflower</option>
-      <option>Flax</option>
-    </optgroup>
-    <optgroup label="Forages">
-      <option>Alfalfa</option>
-      <option>Clover</option>
-      <option>Grass Mix</option>
-    </optgroup>
-    <optgroup label="Others">
-      <option>Mixed Garden</option>
-      <option>Fallow</option>
-    </optgroup>
-  </select><br><br>
-
-  <!-- Yield Part 2 -->
-  <label for="yieldPart2">Yield - Part 2 (ton/ha):</label>
-  <input type="number" id="yieldPart2" min="0" max="100" step="0.1"><br><br>
-
-  <!-- Confirm Button -->
-  <button onclick="validateStep7()">✓ Confirm and Finish</button>
-</div>
-
-<!-- Step 7 Validation Script -->
-<script>
-  function validateStep7() {
-    const crop1 = document.getElementById("cropPart1");
-    const yield1 = document.getElementById("yieldPart1");
-
-    crop1.style.borderColor = "#ccc";
-    yield1.style.borderColor = "#ccc";
-
-    let isValid = true;
-
-    if (!crop1.value) {
-      crop1.style.borderColor = "red";
-      isValid = false;
-    }
-
-    if (!yield1.value || yield1.value < 0) {
-      yield1.style.borderColor = "red";
-      isValid = false;
-    }
-
-    if (isValid) {
-      alert("✅ All steps complete. Ready to submit or review!");
-      // You may now show summary or submit data
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const locInput = document.getElementById("location");
+          locInput.value = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+        },
+        () => {
+          alert("موقعیت‌یابی فعال نیست یا اجازه داده نشده است.");
+        }
+      );
     } else {
-      alert("❗ Please fill all required fields in Step 7.");
+      alert("مرورگر شما قابلیت موقعیت‌یابی ندارد.");
     }
   }
+
+  function generateFarmId() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    const randomNum = Math.floor(100 + Math.random() * 900);
+    const farmId = `${day}-${month}-${year}-${randomNum}`;
+    document.getElementById("farmId").value = farmId;
+  }
+
+  window.onload = () => {
+    generateFarmId();
+    showStep(currentStep);
+  };
 </script>
+
+</body>
+</html>
