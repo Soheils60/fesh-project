@@ -62,27 +62,4 @@
 
   <button onclick="validateStep1()">✓ Confirm and Continue</button>
 </div>
-<div id="step2" class="step-form">
-  <h3>Step 2: Crop Info</h3>
-  <label for="cropCategory">Crop Category:</label>
-  <select id="cropCategory" onchange="updateCropOptions()">
-    <option value="">-- Select Category --</option>
-    <option value="cereal">Cereal Crops</option>
-    <option value="legume">Legumes</option>
-    <option value="root">Root & Tuber Crops</option>
-    <option value="forage">Forage & Pasture</option>
-    <option value="vegetable">Vegetables</option>
-    <option value="fruit">Fruits & Berries</option>
-    <option value="other">Other</option>
-  </select>
-
-  <div id="cropOptionsContainer" style="margin-top:15px;"></div>
-
-  <label for="area">Land Area (hectares):
-    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
-  </label>
-  <input type="number" id="area" step="0.001" min="0.001" required>
-
-  <button onclick="validateStep2()">✓ Confirm and Continue</button>
-</div>
 
