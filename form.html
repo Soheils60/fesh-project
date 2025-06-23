@@ -308,18 +308,9 @@
 <div id="step6" class="step-form">
   <h3>Step 6: Biological Soil Properties</h3>
 
-  <label for="earthwormsBlock">Number of Earthworms (per soil block):</label>
-  <select id="earthwormsBlock" required>
-    <option value="">-- Select --</option>
-  </select><br><br>
-
-  <label for="earthwormsSurface">Number of Earthworms (surface):</label>
-  <select id="earthwormsSurface" required>
-    <option value="">-- Select --</option>
-  </select><br><br>
-
-  <label for="organicResidue">Organic Residue Presence:</label>
-  <select id="organicResidue" required>
+  <!-- Emergence Rate -->
+  <label for="emergenceRate">Emergence Rate:</label>
+  <select id="emergenceRate" required>
     <option value="">-- Select --</option>
     <option>None</option>
     <option>Low</option>
@@ -327,37 +318,83 @@
     <option>High</option>
   </select><br><br>
 
-  <label for="rootAbundance">Root Abundance:</label>
-  <select id="rootAbundance" required>
+  <!-- Root Development -->
+  <label for="rootDevelopment">Root Development:</label>
+  <select id="rootDevelopment" required>
     <option value="">-- Select --</option>
-    <option>None</option>
-    <option>Sparse</option>
+    <option>Poor</option>
     <option>Moderate</option>
-    <option>Dense</option>
+    <option>Good</option>
+    <option>Excellent</option>
   </select><br><br>
 
+  <!-- Root Coating -->
+  <label for="rootCoating">Root Coating:</label>
+  <select id="rootCoating" required>
+    <option value="">-- Select --</option>
+    <option>None</option>
+    <option>Light</option>
+    <option>Moderate</option>
+    <option>Heavy</option>
+  </select><br><br>
+
+  <!-- Earthworm Activity (Count in Soil Block) -->
+  <label for="earthwormsBlock">Number of Earthworms (in soil block):</label>
+  <select id="earthwormsBlock" required>
+    <option value="">-- Select --</option>
+    <!-- 0–100 will be filled via JS -->
+  </select><br><br>
+
+  <!-- Earthworm Activity (Count on Surface) -->
+  <label for="earthwormsSurface">Number of Earthworms (on surface):</label>
+  <select id="earthwormsSurface" required>
+    <option value="">-- Select --</option>
+    <!-- 0–100 will be filled via JS -->
+  </select><br><br>
+
+  <!-- Mycelium Development -->
+  <label for="myceliumDevelopment">Mycelium Development:</label>
+  <select id="myceliumDevelopment" required>
+    <option value="">-- Select --</option>
+    <option>None</option>
+    <option>Low</option>
+    <option>Moderate</option>
+    <option>Abundant</option>
+  </select><br><br>
+
+  <!-- Confirm Button -->
   <button onclick="validateStep6()">✓ Confirm and Continue</button>
 </div>
 
+<!-- JavaScript for Step 6 -->
 <script>
+  // Fill earthworm dropdowns 0–100
   function fillEarthwormDropdowns() {
     const ids = ["earthwormsBlock", "earthwormsSurface"];
     ids.forEach(id => {
-      const select = document.getElementById(id);
+      const sel = document.getElementById(id);
       for (let i = 0; i <= 100; i++) {
-        const option = document.createElement("option");
-        option.value = i;
-        option.text = i;
-        select.appendChild(option);
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i;
+        sel.appendChild(opt);
       }
     });
   }
 
+  // Validation for Step 6
   function validateStep6() {
-    const fields = ["earthwormsBlock", "earthwormsSurface", "organicResidue", "rootAbundance"];
+    const ids = [
+      "emergenceRate",
+      "rootDevelopment",
+      "rootCoating",
+      "earthwormsBlock",
+      "earthwormsSurface",
+      "myceliumDevelopment"
+    ];
     let isValid = true;
 
-    fields.forEach(id => {
+    ids.forEach(id => {
       const el = document.getElementById(id);
       el.style.borderColor = "#ccc";
       if (!el.value) {
@@ -374,9 +411,9 @@
     }
   }
 
+  // Run on page load
   window.addEventListener("DOMContentLoaded", fillEarthwormDropdowns);
 </script>
-
 <div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
 
 <script>
