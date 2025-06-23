@@ -124,6 +124,7 @@
   <label for="location">Coordinates (GPS)</label>
   <input type="text" id="location" readonly />
   <button type="button" onclick="getLocation()">Get Location</button>
+  <button type="button" onclick="showMap()">Show Map</button>
   <div class="error-message" id="error-location"></div>
   <div id="map"></div>
   
@@ -387,7 +388,6 @@
   <label for="earthwormCount">Earthworm Count (0 to 100)</label>
   <select id="earthwormCount">
     <option value="">-- Select --</option>
-    <!-- options 0 to 100 -->
     <!-- For brevity, just some options here -->
     <option value="0">0</option>
     <option value="1">1</option>
@@ -690,14 +690,14 @@
     if (!map) {
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
-        center: { lat: lat, lng: lng },
+        center: { lat, lng },
       });
     }
     if (marker) {
-      marker.setPosition({ lat: lat, lng: lng });
+      marker.setPosition({ lat, lng });
     } else {
       marker = new google.maps.Marker({
-        position: { lat: lat, lng: lng },
+        position: { lat, lng },
         map: map,
       });
     }
@@ -711,7 +711,7 @@
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           document.getElementById("location").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-          initMap(lat, lng);
+          // Map not loaded here
         },
         () => {
           alert("Geolocation is disabled or permission denied.");
@@ -720,6 +720,29 @@
     } else {
       alert("Your browser does not support geolocation.");
     }
+  }
+
+  function showMap() {
+    const locValue = document.getElementById("location").value;
+    if (!locValue) {
+      alert("Please get the GPS location first.");
+      return;
+    }
+    const [lat, lng] = locValue.split(",").map(x => parseFloat(x.trim()));
+    if (!map) {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: { lat, lng },
+      });
+      marker = new google.maps.Marker({
+        position: { lat, lng },
+        map: map,
+      });
+    } else {
+      map.setCenter({ lat, lng });
+      marker.setPosition({ lat, lng });
+    }
+    document.getElementById("map").style.display = "block";
   }
 
   function generateFarmId() {
