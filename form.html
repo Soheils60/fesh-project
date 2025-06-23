@@ -305,26 +305,19 @@
   }
 </script>
 <!-- Step 6: Biological Soil Properties -->
-<div id="step6" class="step-form" style="display: none;">
+<div id="step6" class="step-form">
   <h3>Step 6: Biological Soil Properties</h3>
 
-  <!-- Earthworms in Soil Block -->
   <label for="earthwormsBlock">Number of Earthworms (per soil block):</label>
   <select id="earthwormsBlock" required>
     <option value="">-- Select --</option>
-    <!-- Earthworms 0 to 100 -->
-    <!-- Will be filled by JS below -->
   </select><br><br>
 
-  <!-- Earthworms on Soil Surface -->
   <label for="earthwormsSurface">Number of Earthworms (surface):</label>
   <select id="earthwormsSurface" required>
     <option value="">-- Select --</option>
-    <!-- Earthworms 0 to 100 -->
-    <!-- Will be filled by JS below -->
   </select><br><br>
 
-  <!-- Organic Residue -->
   <label for="organicResidue">Organic Residue Presence:</label>
   <select id="organicResidue" required>
     <option value="">-- Select --</option>
@@ -334,7 +327,6 @@
     <option>High</option>
   </select><br><br>
 
-  <!-- Root Abundance -->
   <label for="rootAbundance">Root Abundance:</label>
   <select id="rootAbundance" required>
     <option value="">-- Select --</option>
@@ -344,32 +336,28 @@
     <option>Dense</option>
   </select><br><br>
 
-  <!-- Confirm Button -->
   <button onclick="validateStep6()">✓ Confirm and Continue</button>
 </div>
 
-<!-- JavaScript for Step 6 -->
 <script>
-  // Fill earthworm dropdowns with 0 to 100
   function fillEarthwormDropdowns() {
-    const dropdowns = ["earthwormsBlock", "earthwormsSurface"];
-    dropdowns.forEach(id => {
-      const sel = document.getElementById(id);
+    const ids = ["earthwormsBlock", "earthwormsSurface"];
+    ids.forEach(id => {
+      const select = document.getElementById(id);
       for (let i = 0; i <= 100; i++) {
         const option = document.createElement("option");
         option.value = i;
         option.text = i;
-        sel.appendChild(option);
+        select.appendChild(option);
       }
     });
   }
 
-  // Validate Step 6 fields
   function validateStep6() {
-    const ids = ["earthwormsBlock", "earthwormsSurface", "organicResidue", "rootAbundance"];
+    const fields = ["earthwormsBlock", "earthwormsSurface", "organicResidue", "rootAbundance"];
     let isValid = true;
 
-    ids.forEach(id => {
+    fields.forEach(id => {
       const el = document.getElementById(id);
       el.style.borderColor = "#ccc";
       if (!el.value) {
@@ -386,9 +374,9 @@
     }
   }
 
-  // Run on page load
   window.addEventListener("DOMContentLoaded", fillEarthwormDropdowns);
 </script>
+
 <div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
 
 <script>
