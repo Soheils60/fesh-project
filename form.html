@@ -59,6 +59,13 @@
       width: auto;
       margin-right: 10px;
     }
+    .mic-button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -78,13 +85,17 @@
   <label for="farmId">Farm ID:</label>
   <input type="text" id="farmId" readonly />
 
-  <label for="farmerName">Farmer Name:</label>
+  <label for="farmerName">Farmer Name:
+    <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
+  </label>
   <input type="text" id="farmerName" />
 
   <label for="date">Date:</label>
   <input type="date" id="date" />
 
-  <label for="contact">Phone Number (10 digits):</label>
+  <label for="contact">Phone Number (10 digits):
+    <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
+  </label>
   <input type="tel" id="contact" />
 
   <label>Farm Location (GPS):</label>
@@ -132,6 +143,26 @@
     } else {
       alert("Please get GPS coordinates first.");
     }
+  }
+
+  // Start speech recognition
+  function startDictation(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser does not support speech recognition.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+    recognition.onresult = function(event) {
+      document.getElementById(fieldId).value = event.results[0][0].transcript;
+    };
+    recognition.onerror = function(event) {
+      alert("Speech recognition error: " + event.error);
+    };
   }
 
   // Validate fields with red border and custom error per field
