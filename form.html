@@ -269,7 +269,7 @@
 
   <!-- Optional Color Guide Image -->
   <label style="font-size: 14px; color: #555;">See guide below:</label><br>
-  <img src="color soil.jpg" alt="Soil Color Guide" style="max-width: 100%; border: 1px solid #ccc;"><br><br>
+  <img src="color-soil.jpg" alt="Soil Color Guide" style="max-width: 100%; border: 1px solid #ccc;"><br><br>
 
   <!-- Soil pH -->
   <label for="soilPh">Soil pH (0.0 – 14.0):</label>
@@ -286,17 +286,15 @@
     const soilPh = document.getElementById("soilPh");
     let isValid = true;
 
-    // Reset previous styles
+    // Reset border colors
     soilColor.style.borderColor = "#ccc";
     soilPh.style.borderColor = "#ccc";
 
-    // Validate Soil Color
+    // Validation
     if (!soilColor.value) {
       soilColor.style.borderColor = "red";
       isValid = false;
     }
-
-    // Validate pH
     if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
       soilPh.style.borderColor = "red";
       isValid = false;
@@ -304,7 +302,7 @@
 
     if (isValid) {
       alert("✅ Step 5 complete. Moving to Step 6.");
-      toggleStep(6); // Assumes you have a toggleStep() function and Step 6 div
+      toggleStep(6); // Make sure step6 div exists
     } else {
       alert("❗ Please complete all highlighted fields in Step 5.");
     }
