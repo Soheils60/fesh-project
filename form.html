@@ -418,18 +418,11 @@
 <div id="step7" class="step-form">
   <h3>Step 7: Crop Performance</h3>
 
-  <!-- Crop Selection - Part 1 -->
-  <label for="cropPart1">Crop Grown - Part 1:</label>
+  <!-- Crop Selection -->
+  <label for="cropPart1">Crop Grown:</label>
   <select id="cropPart1" required>
     <option value="">-- Select Crop --</option>
-    <optgroup label="Vegetables">
-      <option>Potato</option>
-      <option>Carrot</option>
-      <option>Tomato</option>
-      <option>Cabbage</option>
-      <option>Spinach</option>
-    </optgroup>
-    <optgroup label="Cereals">
+    <optgroup label="Cereal Crops">
       <option>Wheat</option>
       <option>Barley</option>
       <option>Oats</option>
@@ -440,70 +433,41 @@
       <option>Beans</option>
       <option>Lentils</option>
     </optgroup>
-    <optgroup label="Oilseeds">
-      <option>Canola</option>
-      <option>Sunflower</option>
-      <option>Flax</option>
+    <optgroup label="Root & Tuber Crops">
+      <option>Potato</option>
+      <option>Carrot</option>
+      <option>Beetroot</option>
+      <option>Onion</option>
     </optgroup>
-    <optgroup label="Forages">
+    <optgroup label="Forage & Pasture">
       <option>Alfalfa</option>
       <option>Clover</option>
       <option>Grass Mix</option>
     </optgroup>
-    <optgroup label="Others">
+    <optgroup label="Vegetables">
+      <option>Tomato</option>
+      <option>Cabbage</option>
+      <option>Spinach</option>
+      <option>Lettuce</option>
+    </optgroup>
+    <optgroup label="Fruits & Berries">
+      <option>Strawberry</option>
+      <option>Apple</option>
+      <option>Blueberry</option>
+    </optgroup>
+    <optgroup label="Other">
       <option>Mixed Garden</option>
       <option>Fallow</option>
     </optgroup>
   </select><br><br>
 
-  <!-- Yield Part 1 -->
-  <label for="yieldPart1">Yield - Part 1 (ton/ha):</label>
+  <!-- Yield -->
+  <label for="yieldPart1">Yield (ton/ha):</label>
   <input type="number" id="yieldPart1" min="0" max="100" step="0.1" required><br><br>
 
-  <!-- Crop Selection - Part 2 -->
-  <label for="cropPart2">Crop Grown - Part 2 (if any):</label>
-  <select id="cropPart2">
-    <option value="">-- Select Crop (Optional) --</option>
-    <optgroup label="Vegetables">
-      <option>Potato</option>
-      <option>Carrot</option>
-      <option>Tomato</option>
-      <option>Cabbage</option>
-      <option>Spinach</option>
-    </optgroup>
-    <optgroup label="Cereals">
-      <option>Wheat</option>
-      <option>Barley</option>
-      <option>Oats</option>
-      <option>Rye</option>
-    </optgroup>
-    <optgroup label="Legumes">
-      <option>Peas</option>
-      <option>Beans</option>
-      <option>Lentils</option>
-    </optgroup>
-    <optgroup label="Oilseeds">
-      <option>Canola</option>
-      <option>Sunflower</option>
-      <option>Flax</option>
-    </optgroup>
-    <optgroup label="Forages">
-      <option>Alfalfa</option>
-      <option>Clover</option>
-      <option>Grass Mix</option>
-    </optgroup>
-    <optgroup label="Others">
-      <option>Mixed Garden</option>
-      <option>Fallow</option>
-    </optgroup>
-  </select><br><br>
-
-  <!-- Yield Part 2 -->
-  <label for="yieldPart2">Yield - Part 2 (ton/ha):</label>
-  <input type="number" id="yieldPart2" min="0" max="100" step="0.1"><br><br>
-
-  <!-- Confirm Button -->
-  <button onclick="validateStep7()">✓ Confirm and Finish</button>
+  <!-- Final Buttons -->
+  <button onclick="validateStep7()">\u2713 Confirm and Finish</button>
+  <button onclick="submitAllData()">\ud83d\ude80 Submit to Database</button>
 </div>
 
 <!-- Step 7 Validation Script -->
@@ -528,13 +492,65 @@
     }
 
     if (isValid) {
-      alert("✅ All steps complete. Ready to submit or review!");
-      // You may now show summary or submit data
+      alert("\u2705 Step 7 complete. Ready to submit!");
     } else {
-      alert("❗ Please fill all required fields in Step 7.");
+      alert("\u2757 Please fill all required fields in Step 7.");
     }
   }
 </script>
+
+<!-- Submit to Database Script -->
+<script>
+  function submitAllData() {
+    const data = {
+      farmId: document.getElementById("farmId").value,
+      name: document.getElementById("name").value,
+      date: document.getElementById("date").value,
+
+      cropCategory: document.getElementById("cropCategory").value,
+      crop: document.getElementById("cropSelect")?.value || document.getElementById("cropPart1").value || "",
+      area: document.getElementById("area").value,
+      cropYield: document.getElementById("cropYield")?.value || document.getElementById("yieldPart1").value || "",
+
+      slopeClass: document.getElementById("slopeClass").value,
+      slopeDirection: document.getElementById("slopeDirection").value,
+      landscape: document.getElementById("landscape").value,
+      surfaceForm: document.getElementById("surfaceForm").value,
+
+      vessScore: document.getElementById("vessScore").value,
+      texture: document.getElementById("texture").value,
+      permeabilityMinutes: document.getElementById("permMinutes").value,
+      permeabilitySeconds: document.getElementById("permSeconds").value,
+
+      soilColor: document.getElementById("soilColor").value,
+      soilPh: document.getElementById("soilPh").value,
+
+      earthwormsBlock: document.getElementById("earthwormsBlock").value,
+      earthwormsSurface: document.getElementById("earthwormsSurface").value,
+      organicResidue: document.getElementById("organicResidue").value,
+      rootAbundance: document.getElementById("rootAbundance").value
+    };
+
+    fetch("save_data.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.success) {
+        alert("\u2705 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u0630\u062e\u06cc\u0631\u0647 \u0634\u062f!");
+      } else {
+        alert("\u2757 \u062e\u0637\u0627 \u062f\u0631 \u0630\u062e\u06cc\u0631\u0647\u200c\u0633\u0627\u0632\u06cc. \u0644\u0637\u0641\u0627\u064b \u0645\u062c\u062f\u062f\u0627\u064b \u0627\u0645\u062a\u062d\u0627\u0646 \u06a9\u0646\u06cc\u062f.");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("\u274c \u062e\u0637\u0627 \u062f\u0631 \u0627\u0631\u062a\u0628\u0627\u0637 \u0628\u0627 \u0633\u0631\u0648\u0631.");
+    });
+  }
+</script>
+
 
   function toggleStep(stepNum) {
     document.querySelectorAll('.step-form').forEach((el, i) => {
