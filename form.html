@@ -178,3 +178,79 @@
 
 </body>
 </html>
+<!-- Step 3: Topography -->
+<div id="step3" class="step-form">
+  <h3>Step 3: Topography</h3>
+
+  <label for="slopeClass">Slope Class (%):</label>
+  <select id="slopeClass" required>
+    <option value="">-- Select --</option>
+    <option>0–1%</option>
+    <option>1–2%</option>
+    <option>2–4%</option>
+    <option>4–8%</option>
+    <option>8–10%</option>
+    <option>10–20%</option>
+    <option>20–50%</option>
+    <option>50–100%</option>
+    <option>100–829%</option>
+  </select>
+
+  <label for="slopeDirection">Slope Direction:</label>
+  <select id="slopeDirection" required>
+    <option value="">-- Select --</option>
+    <option>North</option>
+    <option>North-East</option>
+    <option>East</option>
+    <option>South-East</option>
+    <option>South</option>
+    <option>South-West</option>
+    <option>West</option>
+    <option>North-West</option>
+  </select>
+
+  <label for="landscapePosition">Landscape Position:</label>
+  <select id="landscapePosition" required>
+    <option value="">-- Select --</option>
+    <option>Summit</option>
+    <option>Shoulder</option>
+    <option>Backslope</option>
+    <option>Footslope</option>
+    <option>Toeslope</option>
+  </select>
+
+  <label for="surfaceForm">Surface Form:</label>
+  <select id="surfaceForm" required>
+    <option value="">-- Select --</option>
+    <option>Flat</option>
+    <option>Concave</option>
+    <option>Convex</option>
+    <option>Complex</option>
+  </select>
+
+  <button onclick="validateStep3()">✓ Confirm and Continue</button>
+</div>
+
+<script>
+function validateStep3() {
+  const fields = ["slopeClass", "slopeDirection", "landscapePosition", "surfaceForm"];
+  let valid = true;
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    el.style.borderColor = "#ccc";
+    if (!el.value.trim()) {
+      el.style.borderColor = "red";
+      valid = false;
+    }
+  });
+
+  if (valid) {
+    alert("✅ Step 3 complete. Moving to Step 4.");
+    toggleStep(4);
+  } else {
+    alert("❗ Please complete all highlighted fields in Step 3.");
+  }
+}
+</script>
+
