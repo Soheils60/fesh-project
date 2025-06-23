@@ -2,70 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FESH Form – Steps</title>
+  <title>FESH Form - 7 Steps</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    .step-header {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .step-button {
-      background-color: #4caf50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .step-form {
-      display: none;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin-bottom: 30px;
-    }
-    .step-form.active {
-      display: block;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .button-row button {
-      width: auto;
-      margin-right: 10px;
-    }
-    .mic-button {
-      width: auto;
-      background: none;
-      border: none;
-      font-size: 18px;
-      margin-left: 6px;
-      cursor: pointer;
-    }
-    .error-message {
-      color: red;
-      font-size: 13px;
-      margin-top: 4px;
-    }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .step-header { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .step-button { background-color: #4caf50; color: white; padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    .step-form { display: none; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px; margin-bottom: 30px; }
+    .step-form.active { display: block; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #ccc; }
+    .button-row button { width: auto; margin-right: 10px; }
+    .mic-button { background: none; border: none; font-size: 18px; margin-left: 6px; cursor: pointer; }
+    .error-message { color: red; font-size: 13px; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -79,6 +27,7 @@
   <button class="step-button" onclick="toggleStep(4)">Step 4: Physical Soil</button>
   <button class="step-button" onclick="toggleStep(5)">Step 5: Chemical Soil</button>
   <button class="step-button" onclick="toggleStep(6)">Step 6: Biological Soil</button>
+  <button class="step-button" onclick="toggleStep(7)">Step 7: Crop Performance</button>
 </div>
 
 <div id="step1" class="step-form active">
@@ -138,6 +87,12 @@
   <button onclick="validateStep2()">✓ Confirm and Continue</button>
 </div>
 
+<div id="step3" class="step-form"><h3>Step 3: Topography</h3></div>
+<div id="step4" class="step-form"><h3>Step 4: Physical Soil</h3></div>
+<div id="step5" class="step-form"><h3>Step 5: Chemical Soil</h3></div>
+<div id="step6" class="step-form"><h3>Step 6: Biological Soil</h3></div>
+<div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
+
 <script>
   function toggleStep(stepNum) {
     document.querySelectorAll('.step-form').forEach((el, i) => {
@@ -181,24 +136,13 @@
   }
 
   function validateStep1() {
-    document.querySelectorAll('.error-message').forEach(e => e.remove());
-    const fields = [
-      { id: "farmerName", msg: "Enter farmer name" },
-      { id: "date", msg: "Select date" },
-      { id: "contact", msg: "Enter valid 10-digit phone", pattern: /^[0-9]{10}$/ },
-      { id: "latitude", msg: "Get latitude" },
-      { id: "longitude", msg: "Get longitude" }
-    ];
+    const fields = ["farmerName", "date", "contact", "latitude", "longitude"];
     let valid = true;
-    fields.forEach(f => {
-      const el = document.getElementById(f.id);
+    fields.forEach(id => {
+      const el = document.getElementById(id);
       el.style.borderColor = "#ccc";
-      if (!el.value.trim() || (f.pattern && !f.pattern.test(el.value.trim()))) {
+      if (!el.value || (id === "contact" && !/^[0-9]{10}$/.test(el.value))) {
         el.style.borderColor = "red";
-        const err = document.createElement("div");
-        err.className = "error-message";
-        err.textContent = f.msg;
-        el.after(err);
         valid = false;
       }
     });
@@ -206,17 +150,17 @@
   }
 
   function updateCropOptions() {
-    const category = document.getElementById("cropCategory").value;
-    const container = document.getElementById("cropOptionsContainer");
-    let options = "";
-    if (category === "cereal") options = `<label>Crop Type:<select><option>Wheat</option><option>Barley</option><option>Oats</option><option>Corn</option></select></label>`;
-    else if (category === "legume") options = `<label>Crop Type:<select><option>Soybeans</option><option>Peas</option><option>Beans</option></select></label>`;
-    else if (category === "root") options = `<label>Crop Type:<select><option>Potatoes</option><option>Carrots</option><option>Beets</option><option>Turnip</option></select></label>`;
-    else if (category === "forage") options = `<label>Crop Type:<select><option>Alfalfa</option><option>Timothy</option><option>Clover</option></select></label>`;
-    else if (category === "vegetable") options = `<label>Crop Type:<select><option>Cabbage</option><option>Broccoli</option><option>Spinach</option><option>Pumpkins</option></select></label>`;
-    else if (category === "fruit") options = `<label>Crop Type:<select><option>Strawberries</option><option>Blueberries</option><option>Apples</option><option>Raspberries</option></select></label>`;
-    else if (category === "other") options = `<label>Other Crop:<input type='text'></label>`;
-    container.innerHTML = options;
+    const cat = document.getElementById("cropCategory").value;
+    const c = document.getElementById("cropOptionsContainer");
+    let opts = "";
+    if (cat === "cereal") opts = `<label>Crop Type:<select><option>Wheat</option><option>Barley</option><option>Oats</option><option>Corn</option></select></label>`;
+    else if (cat === "legume") opts = `<label>Crop Type:<select><option>Soybeans</option><option>Peas</option><option>Beans</option></select></label>`;
+    else if (cat === "root") opts = `<label>Crop Type:<select><option>Potatoes</option><option>Carrots</option><option>Beets</option></select></label>`;
+    else if (cat === "forage") opts = `<label>Crop Type:<select><option>Alfalfa</option><option>Timothy</option><option>Clover</option></select></label>`;
+    else if (cat === "vegetable") opts = `<label>Crop Type:<select><option>Cabbage</option><option>Broccoli</option><option>Spinach</option></select></label>`;
+    else if (cat === "fruit") opts = `<label>Crop Type:<select><option>Strawberries</option><option>Blueberries</option><option>Apples</option></select></label>`;
+    else if (cat === "other") opts = `<label>Other Crop:<input type='text'></label>`;
+    c.innerHTML = opts;
   }
 
   function validateStep2() {
@@ -224,11 +168,11 @@
     const el = document.getElementById("area");
     el.style.borderColor = "#ccc";
     if (isNaN(area) || area <= 0) {
-      alert("Please enter a valid land area (greater than 0). Only decimals up to 3 digits allowed.");
+      alert("Please enter a valid land area (> 0).");
       el.style.borderColor = "red";
       return;
     }
-    alert("✅ Step 2 complete. You can now continue.");
+    toggleStep(3);
   }
 </script>
 
