@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FESH Form – Step 1</title>
+  <title>FESH Form – Steps</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
+      margin: 0;
       padding: 20px;
     }
     .step-header {
@@ -24,46 +25,40 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .form-box {
+    .step-form {
+      display: none;
       background: #fff;
-      padding: 25px;
+      padding: 20px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 600px;
-      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    .step-form.active {
+      display: block;
     }
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-    input {
+    input, select, button {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
-    input.error {
-      border: 2px solid red;
-    }
-    .error-message {
-      color: red;
-      font-size: 14px;
-      margin-top: 4px;
-    }
-    .button-row {
-      margin-top: 15px;
-    }
     .button-row button {
       width: auto;
       margin-right: 10px;
     }
     .mic-button {
+      width: auto;
       background: none;
       border: none;
       font-size: 18px;
-      margin-left: 8px;
+      margin-left: 6px;
       cursor: pointer;
     }
   </style>
@@ -73,30 +68,31 @@
 <h2>Field Evaluation of Soil Health</h2>
 
 <div class="step-header">
-  <button class="step-button">Step 1: General Info</button>
-  <button class="step-button">Step 2: Crop Info</button>
-  <button class="step-button">Step 3: Topography</button>
-  <button class="step-button">Step 4: Physical Soil</button>
-  <button class="step-button">Step 5: Chemical Soil</button>
-  <button class="step-button">Step 6: Biological Soil</button>
+  <button class="step-button" onclick="toggleStep(1)">Step 1: General Info</button>
+  <button class="step-button" onclick="toggleStep(2)">Step 2: Crop Info</button>
+  <button class="step-button" onclick="toggleStep(3)">Step 3: Topography</button>
+  <button class="step-button" onclick="toggleStep(4)">Step 4: Physical Soil</button>
+  <button class="step-button" onclick="toggleStep(5)">Step 5: Chemical Soil</button>
+  <button class="step-button" onclick="toggleStep(6)">Step 6: Biological Soil</button>
 </div>
 
-<div class="form-box">
+<div id="step1" class="step-form active">
+  <h3>Step 1: General Information</h3>
   <label for="farmId">Farm ID:</label>
-  <input type="text" id="farmId" readonly />
+  <input type="text" id="farmId" readonly>
 
   <label for="farmerName">Farmer Name:
     <button type="button" class="mic-button" onclick="startDictation('farmerName')">🎤</button>
   </label>
-  <input type="text" id="farmerName" />
+  <input type="text" id="farmerName" required>
 
   <label for="date">Date:</label>
-  <input type="date" id="date" />
+  <input type="date" id="date" required>
 
   <label for="contact">Phone Number (10 digits):
     <button type="button" class="mic-button" onclick="startDictation('contact')">🎤</button>
   </label>
-  <input type="tel" id="contact" />
+  <input type="tel" id="contact" required>
 
   <label>Farm Location (GPS):</label>
   <div class="button-row">
@@ -105,16 +101,47 @@
   </div>
 
   <label for="latitude">Latitude:</label>
-  <input type="text" id="latitude" readonly />
+  <input type="text" id="latitude" readonly>
 
   <label for="longitude">Longitude:</label>
-  <input type="text" id="longitude" readonly />
+  <input type="text" id="longitude" readonly>
 
   <button onclick="validateStep1()">✓ Confirm and Continue</button>
 </div>
 
+<div id="step2" class="step-form">
+  <h3>Step 2: Crop Info</h3>
+  <label for="cropCategory">Crop Category:</label>
+  <select id="cropCategory" onchange="updateCropOptions()">
+    <option value="">-- Select Category --</option>
+    <option value="cereal">Cereal Crops</option>
+    <option value="legume">Legumes</option>
+    <option value="root">Root & Tuber Crops</option>
+    <option value="forage">Forage & Pasture</option>
+    <option value="vegetable">Vegetables</option>
+    <option value="fruit">Fruits & Berries</option>
+    <option value="other">Other</option>
+  </select>
+
+  <div id="cropOptionsContainer" style="margin-top:15px;"></div>
+
+  <label for="area">Land Area (hectares):
+    <button type="button" class="mic-button" onclick="startDictation('area')">🎤</button>
+  </label>
+  <input type="number" id="area" step="0.001" min="0.001" required>
+
+  <button onclick="validateStep2()">✓ Confirm and Continue</button>
+</div>
+
 <script>
-  // Generate random FARM ID
+  function toggleStep(stepNum) {
+    const steps = document.querySelectorAll('.step-form');
+    steps.forEach((step, index) => {
+      step.classList.remove('active');
+      if (index === stepNum - 1) step.classList.add('active');
+    });
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     const datePart = now.toISOString().slice(0,10).replace(/-/g, '');
@@ -122,86 +149,74 @@
     document.getElementById('farmId').value = `FARM-${datePart}-${rand}`;
   });
 
-  // Get GPS location
+  function startDictation(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return alert("Voice input not supported.");
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.start();
+    recognition.onresult = e => {
+      document.getElementById(fieldId).value = e.results[0][0].transcript;
+    };
+    recognition.onerror = e => alert("Voice error: " + e.error);
+  }
+
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         document.getElementById("latitude").value = pos.coords.latitude.toFixed(6);
         document.getElementById("longitude").value = pos.coords.longitude.toFixed(6);
       }, err => alert("Location error: " + err.message));
-    } else {
-      alert("Geolocation not supported");
-    }
+    } else alert("Geolocation not supported");
   }
 
-  // Open map in new tab
   function viewMap() {
     const lat = document.getElementById("latitude").value;
     const lon = document.getElementById("longitude").value;
-    if (lat && lon) {
-      window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
-    } else {
-      alert("Please get GPS coordinates first.");
-    }
+    if (lat && lon) window.open(`https://www.google.com/maps?q=${lat},${lon}`, '_blank');
+    else alert("Please get GPS coordinates first.");
   }
 
-  // Start speech recognition
-  function startDictation(fieldId) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Your browser does not support speech recognition.");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.start();
-    recognition.onresult = function(event) {
-      document.getElementById(fieldId).value = event.results[0][0].transcript;
-    };
-    recognition.onerror = function(event) {
-      alert("Speech recognition error: " + event.error);
-    };
-  }
-
-  // Validate fields with red border and custom error per field
   function validateStep1() {
-    const fields = [
-      { id: "farmerName", msg: "Please enter farmer name." },
-      { id: "date", msg: "Please select a date." },
-      { id: "contact", msg: "Phone number must be 10 digits.", pattern: /^\d{10}$/ },
-      { id: "latitude", msg: "Latitude required." },
-      { id: "longitude", msg: "Longitude required." }
-    ];
-
     let valid = true;
-
-    fields.forEach(({id, msg, pattern}) => {
+    const fields = ["farmerName", "date", "contact", "latitude", "longitude"];
+    fields.forEach(id => {
       const el = document.getElementById(id);
-      const val = el.value.trim();
-
-      // Remove previous
-      el.classList.remove("error");
-      if (el.nextElementSibling && el.nextElementSibling.classList.contains("error-message")) {
-        el.nextElementSibling.remove();
-      }
-
-      const hasError = (!val || (pattern && !pattern.test(val)));
-      if (hasError) {
-        el.classList.add("error");
-        const err = document.createElement("div");
-        err.className = "error-message";
-        err.textContent = msg;
-        el.insertAdjacentElement("afterend", err);
+      if (!el.value.trim() || (id === "contact" && !/^[0-9]{10}$/.test(el.value))) {
+        el.style.borderColor = "red";
         valid = false;
+      } else {
+        el.style.borderColor = "#ccc";
       }
     });
+    if (valid) toggleStep(2);
+    else alert("❗ Please complete all highlighted fields.");
+  }
 
-    if (valid) {
-      alert("✅ All fields are valid. Moving to next step...");
-      // Move to next step or perform action
+  function updateCropOptions() {
+    const category = document.getElementById("cropCategory").value;
+    const container = document.getElementById("cropOptionsContainer");
+    let options = "";
+    if (category === "cereal") options = `<label>Crop Type:<select><option>Barley</option><option>Oats</option><option>Corn</option></select></label>`;
+    else if (category === "legume") options = `<label>Crop Type:<select><option>Soybeans</option><option>Peas</option><option>Beans</option></select></label>`;
+    else if (category === "root") options = `<label>Crop Type:<select><option>Potatoes</option><option>Carrots</option><option>Beets</option></select></label>`;
+    else if (category === "forage") options = `<label>Crop Type:<select><option>Alfalfa</option><option>Timothy</option><option>Clover Mix</option></select></label>`;
+    else if (category === "vegetable") options = `<label>Crop Type:<select><option>Cabbage</option><option>Broccoli</option><option>Spinach</option></select></label>`;
+    else if (category === "fruit") options = `<label>Crop Type:<select><option>Strawberries</option><option>Blueberries</option><option>Apples</option></select></label>`;
+    else if (category === "other") options = `<label>Other Crop:<input type='text'></label>`;
+    container.innerHTML = options;
+  }
+
+  function validateStep2() {
+    const area = parseFloat(document.getElementById("area").value);
+    if (isNaN(area) || area <= 0) {
+      alert("Please enter a valid land area (greater than 0).");
+      document.getElementById("area").style.borderColor = "red";
+      return;
+    } else {
+      document.getElementById("area").style.borderColor = "#ccc";
     }
+    alert("✅ Step 2 complete. You can now continue.");
   }
 </script>
 
