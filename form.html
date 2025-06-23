@@ -645,6 +645,13 @@
     if (!valid) {
       return false;
     }
+
+    // اگر اعتبارسنجی موفق بود و مرحله کمتر از آخر هست، به مرحله بعد برو
+    if (step < totalSteps) {
+      currentStep = step + 1;
+      showStep(currentStep);
+    }
+
     return true;
   }
 
