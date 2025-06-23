@@ -234,6 +234,7 @@
   }
 </script>
 
+<!-- Step 5: Chemical Soil Properties -->
 <div id="step5" class="step-form">
   <h3>Step 5: Chemical Soil Properties</h3>
 
@@ -273,6 +274,36 @@
   <!-- Confirm Button -->
   <button onclick="validateStep5()">✓ Confirm and Continue</button>
 </div>
+
+<!-- Step 5 Validation Script -->
+<script>
+  function validateStep5() {
+    const color = document.getElementById("soilColor");
+    const ph = document.getElementById("soilPh");
+    let isValid = true;
+
+    // Reset styles
+    color.style.borderColor = "#ccc";
+    ph.style.borderColor = "#ccc";
+
+    if (!color.value) {
+      color.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (!ph.value || ph.value < 0 || ph.value > 14) {
+      ph.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (isValid) {
+      alert("✅ Step 5 complete. Moving to Step 6.");
+      toggleStep(6);
+    } else {
+      alert("❗ Please complete all highlighted fields in Step 5.");
+    }
+  }
+</script>
 <div id="step6" class="step-form"><h3>Step 6: Biological Soil</h3></div>
 <div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
 
