@@ -414,7 +414,128 @@
   // Run on page load
   window.addEventListener("DOMContentLoaded", fillEarthwormDropdowns);
 </script>
-<div id="step7" class="step-form"><h3>Step 7: Crop Performance</h3></div>
+<!-- Step 7: Crop Performance -->
+<div id="step7" class="step-form">
+  <h3>Step 7: Crop Performance</h3>
+
+  <!-- Crop Selection - Part 1 -->
+  <label for="cropPart1">Crop Grown - Part 1:</label>
+  <select id="cropPart1" required>
+    <option value="">-- Select Crop --</option>
+    <optgroup label="Vegetables">
+      <option>Potato</option>
+      <option>Carrot</option>
+      <option>Tomato</option>
+      <option>Cabbage</option>
+      <option>Spinach</option>
+    </optgroup>
+    <optgroup label="Cereals">
+      <option>Wheat</option>
+      <option>Barley</option>
+      <option>Oats</option>
+      <option>Rye</option>
+    </optgroup>
+    <optgroup label="Legumes">
+      <option>Peas</option>
+      <option>Beans</option>
+      <option>Lentils</option>
+    </optgroup>
+    <optgroup label="Oilseeds">
+      <option>Canola</option>
+      <option>Sunflower</option>
+      <option>Flax</option>
+    </optgroup>
+    <optgroup label="Forages">
+      <option>Alfalfa</option>
+      <option>Clover</option>
+      <option>Grass Mix</option>
+    </optgroup>
+    <optgroup label="Others">
+      <option>Mixed Garden</option>
+      <option>Fallow</option>
+    </optgroup>
+  </select><br><br>
+
+  <!-- Yield Part 1 -->
+  <label for="yieldPart1">Yield - Part 1 (ton/ha):</label>
+  <input type="number" id="yieldPart1" min="0" max="100" step="0.1" required><br><br>
+
+  <!-- Crop Selection - Part 2 -->
+  <label for="cropPart2">Crop Grown - Part 2 (if any):</label>
+  <select id="cropPart2">
+    <option value="">-- Select Crop (Optional) --</option>
+    <optgroup label="Vegetables">
+      <option>Potato</option>
+      <option>Carrot</option>
+      <option>Tomato</option>
+      <option>Cabbage</option>
+      <option>Spinach</option>
+    </optgroup>
+    <optgroup label="Cereals">
+      <option>Wheat</option>
+      <option>Barley</option>
+      <option>Oats</option>
+      <option>Rye</option>
+    </optgroup>
+    <optgroup label="Legumes">
+      <option>Peas</option>
+      <option>Beans</option>
+      <option>Lentils</option>
+    </optgroup>
+    <optgroup label="Oilseeds">
+      <option>Canola</option>
+      <option>Sunflower</option>
+      <option>Flax</option>
+    </optgroup>
+    <optgroup label="Forages">
+      <option>Alfalfa</option>
+      <option>Clover</option>
+      <option>Grass Mix</option>
+    </optgroup>
+    <optgroup label="Others">
+      <option>Mixed Garden</option>
+      <option>Fallow</option>
+    </optgroup>
+  </select><br><br>
+
+  <!-- Yield Part 2 -->
+  <label for="yieldPart2">Yield - Part 2 (ton/ha):</label>
+  <input type="number" id="yieldPart2" min="0" max="100" step="0.1"><br><br>
+
+  <!-- Confirm Button -->
+  <button onclick="validateStep7()">✓ Confirm and Finish</button>
+</div>
+
+<!-- Step 7 Validation Script -->
+<script>
+  function validateStep7() {
+    const crop1 = document.getElementById("cropPart1");
+    const yield1 = document.getElementById("yieldPart1");
+
+    crop1.style.borderColor = "#ccc";
+    yield1.style.borderColor = "#ccc";
+
+    let isValid = true;
+
+    if (!crop1.value) {
+      crop1.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (!yield1.value || yield1.value < 0) {
+      yield1.style.borderColor = "red";
+      isValid = false;
+    }
+
+    if (isValid) {
+      alert("✅ All steps complete. Ready to submit or review!");
+      // You may now show summary or submit data
+    } else {
+      alert("❗ Please fill all required fields in Step 7.");
+    }
+  }
+</script>
+
 
 <script>
   function toggleStep(stepNum) {
