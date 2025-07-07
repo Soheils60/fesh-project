@@ -6,6 +6,25 @@
 <title>FESH Multi-step Form</title>
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#388e3c" />
+<!-- ✅ Firebase SDK + Config -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCmT1fhhlwlJ_EqqLdgNDNNEdb53MzCCR4",
+    authDomain: "fesh-project.firebaseapp.com",
+    databaseURL: "https://fesh-project-default-rtdb.firebaseio.com",
+    projectId: "fesh-project",
+    storageBucket: "fesh-project.firebasestorage.app",
+    messagingSenderId: "775712995019",
+    appId: "1:775712995019:web:d6658af65a13bbe737cd4e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  window.feshDB = { db, ref, push };
+</script>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -681,96 +700,47 @@
     window.open(`https://www.google.com/maps?q=${loc}`, "_blank");
   }
 
-  function submitFinal() {
-    if (!validateStep(6)) {
-      return;
-    }
+ async function submitFinal() {
+  if (!validateStep(6)) return;
 
-    const data = {
-      farmId: document.getElementById("farmId").value,
-      date: document.getElementById("date").value,
-      farmerName: document.getElementById("farmerName").value,
-      mobileNumber: document.getElementById("mobileNumber").value,
-      location: document.getElementById("location").value,
-      cropType: document.getElementById("cropType").value,
-      fieldArea: document.getElementById("fieldArea").value,
-      estimatedYield: document.getElementById("estimatedYield").value,
-      slopeClass: document.getElementById("slopeClass").value,
-      slopeDirection: document.getElementById("slopeDirection").value,
-      landscapePosition: document.getElementById("landscapePosition").value,
-      surfaceForm: document.getElementById("surfaceForm").value,
-      infiltrationMinute: document.getElementById("infiltrationMinute").value,
-      infiltrationSecond: document.getElementById("infiltrationSecond").value,
-      soilStructure: document.getElementById("soilStructure").value,
-      tillageLayer: document.getElementById("tillageLayer").value,
-      soilStrength: document.getElementById("soilStrength").value,
-      soilPh: document.getElementById("soilPh").value,
-      soilColor: document.getElementById("soilColor").value,
-      emergenceRate: document.getElementById("emergenceRate").value,
-      rootDevelopment: document.getElementById("rootDevelopment").value,
-      rootCoating: document.getElementById("rootCoating").value,
-      earthwormActivity: document.getElementById("earthwormActivity").value,
-      myceliumDevelopment: document.getElementById("myceliumDevelopment").value,
-      earthwormCount: document.getElementById("earthwormCount").value
-    };
-
-    let existingData = JSON.parse(localStorage.getItem("soilData")) || [];
-    existingData.push(data);
-    localStorage.setItem("soilData", JSON.stringify(existingData));
-
-    alert("Final data submitted successfully!");
-    window.location.href = "database.html";
-  }
-
-  // Populate earthwormCount and infiltration time options on load
-  window.onload = () => {
-    generateFarmId();
-
-    const earthwormSelect = document.getElementById("earthwormCount");
-    for (let i = 0; i <= 100; i++) {
-      let option = document.createElement("option");
-      option.value = i;
-      option.text = i;
-      earthwormSelect.appendChild(option);
-    }
-
-    const infiltrationMinute = document.getElementById("infiltrationMinute");
-    const infiltrationSecond = document.getElementById("infiltrationSecond");
-    for (let i = 0; i <= 59; i++) {
-      infiltrationMinute.appendChild(new Option(i, i));
-      infiltrationSecond.appendChild(new Option(i, i));
-    }
-
-    document.querySelectorAll('.step').forEach(stepBtn => {
-      stepBtn.addEventListener('click', () => {
-        currentStep = parseInt(stepBtn.getAttribute('data-step'));
-        showStep(currentStep);
-      });
-    });
-
-    showStep(currentStep);
+  const data = {
+    farmId: document.getElementById("farmId").value,
+    date: document.getElementById("date").value,
+    farmerName: document.getElementById("farmerName").value,
+    mobileNumber: document.getElementById("mobileNumber").value,
+    location: document.getElementById("location").value,
+    cropType: document.getElementById("cropType").value,
+    fieldArea: document.getElementById("fieldArea").value,
+    estimatedYield: document.getElementById("estimatedYield").value,
+    slopeClass: document.getElementById("slopeClass").value,
+    slopeDirection: document.getElementById("slopeDirection").value,
+    landscapePosition: document.getElementById("landscapePosition").value,
+    surfaceForm: document.getElementById("surfaceForm").value,
+    infiltrationMinute: document.getElementById("infiltrationMinute").value,
+    infiltrationSecond: document.getElementById("infiltrationSecond").value,
+    soilStructure: document.getElementById("soilStructure").value,
+    tillageLayer: document.getElementById("tillageLayer").value,
+    soilStrength: document.getElementById("soilStrength").value,
+    soilPh: document.getElementById("soilPh").value,
+    soilColor: document.getElementById("soilColor").value,
+    emergenceRate: document.getElementById("emergenceRate").value,
+    rootDevelopment: document.getElementById("rootDevelopment").value,
+    rootCoating: document.getElementById("rootCoating").value,
+    earthwormActivity: document.getElementById("earthwormActivity").value,
+    myceliumDevelopment: document.getElementById("myceliumDevelopment").value,
+    earthwormCount: document.getElementById("earthwormCount").value
   };
 
-  function generateFarmId() {
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, "0");
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const year = now.getFullYear();
-    const randomNum = Math.floor(100 + Math.random() * 900);
-    const farmId = `${day}-${month}-${year}-${randomNum}`;
-    document.getElementById("farmId").value = farmId;
-  }
-</script>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service Worker registered:', reg))
-        .catch(err => console.error('Service Worker registration failed:', err));
+  try {
+    const { db, ref, push } = window.feshDB;
+    await push(ref(db, "submissions/"), {
+      ...data,
+      submittedAt: new Date().toISOString()
     });
+    alert("Final data submitted successfully to Firebase!");
+    window.location.href = "database.html";
+  } catch (err) {
+    console.error("Firebase submit error:", err);
+    alert("Submission failed: " + err.message);
   }
-</script>
-
-</body>
-</html>
+}
