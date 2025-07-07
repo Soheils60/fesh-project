@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FESH Project - Firebase Database View</title>
+  <title>FESH Project - Firebase Data View</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -34,7 +34,6 @@
       z-index: 100;
       left: 0; top: 0;
       width: 100%; height: 100%;
-      overflow: auto;
       background-color: rgba(0,0,0,0.5);
     }
     #modalContent {
@@ -62,15 +61,14 @@
   </style>
 </head>
 <body>
+
   <h1>Stored Soil Health Data (Firebase)</h1>
   <table id="dataTable">
-    <thead>
-      <tr id="tableHeader"></tr>
-    </thead>
+    <thead><tr id="tableHeader"></tr></thead>
     <tbody id="tableBody"></tbody>
   </table>
 
-  <!-- Modal -->
+  <!-- Modal for details -->
   <div id="modal">
     <div id="modalContent">
       <span id="closeModal">&times;</span>
@@ -97,6 +95,17 @@
     const db = getDatabase(app);
     const dataRef = ref(db, 'submissions');
 
+    const keys = [
+      "farmId", "date", "farmerName", "mobileNumber", "location",
+      "cropType", "fieldArea", "estimatedYield",
+      "slopeClass", "slopeDirection", "landscapePosition", "surfaceForm",
+      "infiltrationMinute", "infiltrationSecond",
+      "soilStructure", "tillageLayer", "soilStrength",
+      "soilPh", "soilColor",
+      "emergenceRate", "rootDevelopment", "rootCoating",
+      "earthwormActivity", "myceliumDevelopment", "earthwormCount"
+    ];
+
     window.onload = () => {
       const headerRow = document.getElementById('tableHeader');
       const tbody = document.getElementById('tableBody');
@@ -104,23 +113,23 @@
       const modalContentTable = document.getElementById('detailsTable');
       const closeModal = document.getElementById('closeModal');
 
+      // Build header row
+      headerRow.innerHTML = '';
+      keys.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      });
+
+      // Listen to Firebase data
       onValue(dataRef, (snapshot) => {
         const data = snapshot.val();
         if (!data) {
-          document.body.innerHTML += '<p>No data available in Firebase.</p>';
+          tbody.innerHTML = '<tr><td colspan="100%">No data available</td></tr>';
           return;
         }
 
         const entries = Object.values(data);
-        const keys = Object.keys(entries[0]);
-
-        headerRow.innerHTML = '';
-        keys.forEach(key => {
-          const th = document.createElement('th');
-          th.textContent = key;
-          headerRow.appendChild(th);
-        });
-
         tbody.innerHTML = '';
         entries.forEach(entry => {
           const tr = document.createElement('tr');
@@ -136,7 +145,7 @@
               });
               td.appendChild(link);
             } else {
-              td.textContent = entry[key];
+              td.textContent = entry[key] || "-";
             }
             tr.appendChild(td);
           });
@@ -145,27 +154,22 @@
 
         function showModal(entry) {
           modalContentTable.innerHTML = '';
-          for (const key in entry) {
+          keys.forEach(key => {
             const row = document.createElement('tr');
             const th = document.createElement('th');
             th.textContent = key;
             const td = document.createElement('td');
-            td.textContent = entry[key];
+            td.textContent = entry[key] || "-";
             row.appendChild(th);
             row.appendChild(td);
             modalContentTable.appendChild(row);
-          }
+          });
           modal.style.display = 'block';
         }
 
-        closeModal.onclick = function () {
-          modal.style.display = 'none';
-        };
-
-        window.onclick = function (event) {
-          if (event.target == modal) {
-            modal.style.display = 'none';
-          }
+        closeModal.onclick = () => modal.style.display = 'none';
+        window.onclick = (event) => {
+          if (event.target === modal) modal.style.display = 'none';
         };
       });
     };
