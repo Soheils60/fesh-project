@@ -1,101 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FESH Multi-step Form</title>
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#388e3c" />
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    direction: ltr;
-    background: #f0f2f5;
-    margin: 20px;
-  }
-  .stepper {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 25px;
-  }
-  .step {
-    flex: 1;
-    text-align: center;
-    padding: 10px 0;
-    margin: 0 5px;
-    background-color: #a5d6a7;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #2e7d32;
-    transition: background-color 0.3s ease;
-  }
-  .step.active {
-    background-color: #388e3c;
-    color: #fff;
-  }
-  .step-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px #ccc;
-    display: none;
-  }
-  .step-form.active {
-    display: block;
-  }
-  label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-  }
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-  }
-  input.error,
-  select.error {
-    border-color: red;
-  }
-  .error-message {
-    color: red;
-    font-size: 13px;
-    margin-top: 4px;
-  }
-  button {
-    margin-top: 25px;
-    padding: 12px 25px;
-    font-size: 16px;
-    background-color: #388e3c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  button:disabled {
-    background-color: #a5d6a7;
-    cursor: default;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FESH Multi-step Form</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#388e3c" />
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmT1fhhlwlJ_EqqLdgNDNNEdb53MzCCR4",
+      authDomain: "fesh-project.firebaseapp.com",
+      databaseURL: "https://fesh-project-default-rtdb.firebaseio.com",
+      projectId: "fesh-project",
+      storageBucket: "fesh-project.appspot.com",
+      messagingSenderId: "775712995019",
+      appId: "1:775712995019:web:d6658af65a13bbe737cd4e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    window.feshDB = db;
+    window.feshSet = set;
+    window.feshRef = ref;
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: ltr;
+      background: #f0f2f5;
+      margin: 20px;
+    }
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      margin: 0 5px;
+      background-color: #a5d6a7;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #2e7d32;
+      transition: background-color 0.3s ease;
+    }
+    .step.active {
+      background-color: #388e3c;
+      color: #fff;
+    }
+    .step-form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+      display: none;
+    }
+    .step-form.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    input.error,
+    select.error {
+      border-color: red;
+    }
+    .error-message {
+      color: red;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #a5d6a7;
+      cursor: default;
+    }
+  </style>
 </head>
 <body>
 
-<div class="stepper" id="stepper">
-  <div class="step active" data-step="1">Step 1</div>
-  <div class="step" data-step="2">Step 2</div>
-  <div class="step" data-step="3">Step 3</div>
-  <div class="step" data-step="4">Step 4</div>
-  <div class="step" data-step="5">Step 5</div>
-  <div class="step" data-step="6">Step 6</div>
-</div>
+  <!-- Step Bar Navigation -->
+  <div class="stepper" id="stepper">
+    <div class="step active" data-step="1">Step 1</div>
+    <div class="step" data-step="2">Step 2</div>
+    <div class="step" data-step="3">Step 3</div>
+    <div class="step" data-step="4">Step 4</div>
+    <div class="step" data-step="5">Step 5</div>
+    <div class="step" data-step="6">Step 6</div>
+  </div>
 
 <!-- Step 1 -->
 <div id="step1" class="step-form active">
@@ -714,12 +738,19 @@
       earthwormCount: document.getElementById("earthwormCount").value
     };
 
-    let existingData = JSON.parse(localStorage.getItem("soilData")) || [];
-    existingData.push(data);
-    localStorage.setItem("soilData", JSON.stringify(existingData));
+const db = window.feshDB;
+const ref = window.feshRef;
+const set = window.feshSet;
 
-    alert("Final data submitted successfully!");
+set(ref(db, 'submissions/' + data.farmId), data)
+  .then(() => {
+    alert("✅ Final data submitted to Firebase!");
     window.location.href = "database.html";
+  })
+  .catch((error) => {
+    alert("❌ Error saving to Firebase: " + error.message);
+  });
+
   }
 
   // Populate earthwormCount and infiltration time options on load
