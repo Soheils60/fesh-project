@@ -1,158 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>FESH Project - Database</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #4caf50;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    tr:hover {
-      background-color: #e0f2f1;
-    }
-    /* Modal Styles */
-    #modal {
-      display: none; 
-      position: fixed; 
-      z-index: 100; 
-      left: 0; top: 0; 
-      width: 100%; height: 100%; 
-      overflow: auto; 
-      background-color: rgba(0,0,0,0.5);
-    }
-    #modalContent {
-      background-color: #fff;
-      margin: 10% auto; 
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
-      max-width: 600px;
-    }
-    #closeModal {
-      float: right;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    #modalContent h2 {
-      margin-top: 0;
-    }
-    #detailsTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    #detailsTable th, #detailsTable td {
-      padding: 8px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-  </style>
-</head>
-<body>
-  <h1>Stored Soil Health Data</h1>
-  <table id="dataTable">
-    <thead>
-      <tr id="tableHeader"></tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  <!-- Modal -->
-  <div id="modal">
-    <div id="modalContent">
-      <span id="closeModal">&times;</span>
-      <h2>Farm Data Details</h2>
-      <table id="detailsTable"></table>
-    </div>
-  </div>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCmT1fhhlwlJ_EqqLdgNDNNEdb53MzCCR4",
+    authDomain: "fesh-project.firebaseapp.com",
+    databaseURL: "https://fesh-project-default-rtdb.firebaseio.com",
+    projectId: "fesh-project",
+    storageBucket: "fesh-project.firebasestorage.app",
+    messagingSenderId: "775712995019",
+    appId: "1:775712995019:web:d6658af65a13bbe737cd4e"
+  };
 
-  <script>
-    const data = JSON.parse(localStorage.getItem('soilData')) || [];
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const dbRef = ref(db, "submissions");
 
-    const headerRow = document.getElementById('tableHeader');
-    const tbody = document.getElementById('tableBody');
-    const modal = document.getElementById('modal');
-    const modalContentTable = document.getElementById('detailsTable');
-    const closeModal = document.getElementById('closeModal');
+  const headerRow = document.getElementById('tableHeader');
+  const tbody = document.getElementById('tableBody');
+  const modal = document.getElementById('modal');
+  const modalContentTable = document.getElementById('detailsTable');
+  const closeModal = document.getElementById('closeModal');
 
-    if (data.length === 0) {
-      document.body.innerHTML += '<p>No data available.</p>';
-    } else {
-      const keys = Object.keys(data[0]);
-      // Create table header
+  onValue(dbRef, (snapshot) => {
+    const data = snapshot.val();
+    tbody.innerHTML = '';
+    headerRow.innerHTML = '';
+
+    if (!data) {
+      tbody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
+      return;
+    }
+
+    const entries = Object.values(data);
+    const keys = Object.keys(entries[0]);
+
+    // Create table header
+    keys.forEach(key => {
+      const th = document.createElement('th');
+      th.textContent = key;
+      headerRow.appendChild(th);
+    });
+
+    // Create table rows
+    entries.forEach(entry => {
+      const tr = document.createElement('tr');
       keys.forEach(key => {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-      });
-
-      // Create table rows
-      data.forEach(entry => {
-        const tr = document.createElement('tr');
-        keys.forEach(key => {
-          const td = document.createElement('td');
-          if(key === 'farmId') {
-            const link = document.createElement('a');
-            link.href = "#";
-            link.textContent = entry[key];
-            link.addEventListener('click', (e) => {
-              e.preventDefault();
-              showModal(entry);
-            });
-            td.appendChild(link);
-          } else {
-            td.textContent = entry[key];
-          }
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-    }
-
-    // Show modal with detailed info
-    function showModal(entry) {
-      modalContentTable.innerHTML = '';
-      for (const key in entry) {
-        const row = document.createElement('tr');
-        const th = document.createElement('th');
-        th.textContent = key;
         const td = document.createElement('td');
-        td.textContent = entry[key];
-        row.appendChild(th);
-        row.appendChild(td);
-        modalContentTable.appendChild(row);
-      }
-      modal.style.display = 'block';
+        if (key === 'farmID') {
+          const link = document.createElement('a');
+          link.href = "#";
+          link.textContent = entry[key];
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal(entry);
+          });
+          td.appendChild(link);
+        } else {
+          td.textContent = entry[key];
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  });
+
+  function showModal(entry) {
+    modalContentTable.innerHTML = '';
+    for (const key in entry) {
+      const row = document.createElement('tr');
+      const th = document.createElement('th');
+      th.textContent = key;
+      const td = document.createElement('td');
+      td.textContent = entry[key];
+      row.appendChild(th);
+      row.appendChild(td);
+      modalContentTable.appendChild(row);
     }
+    modal.style.display = 'block';
+  }
 
-    // Close modal on X click
-    closeModal.onclick = function() {
+  closeModal.onclick = function () {
+    modal.style.display = 'none';
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
       modal.style.display = 'none';
-    };
-
-    // Close modal on click outside modal content
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = 'none';
-      }
-    };
-  </script>
-</body>
-</html>
+    }
+  };
+</script>
