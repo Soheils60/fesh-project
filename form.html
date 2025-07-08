@@ -608,26 +608,27 @@
     document.getElementById("error-soilStrength").textContent = "Please enter valid soil strength";
   } else {
     soilStrength.classList.remove("error");
-    }
-    } else if (step === 5) {
-      const soilPh = document.getElementById("soilPh");
-      const soilColor = document.getElementById("soilColor");
+  }
 
-      if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
-        valid = false;
-        soilPh.classList.add("error");
-        document.getElementById("error-soilPh").textContent = "pH must be between 0 and 14";
-      } else {
-        soilPh.classList.remove("error");
-      }
+} else if (step === 5) {  // ← اینجا دیگه خطا نمیده چون بالا } بسته شد
+  const soilPh = document.getElementById("soilPh");
+  const soilColor = document.getElementById("soilColor");
 
-      if (!soilColor.value) {
-        valid = false;
-        soilColor.classList.add("error");
-        document.getElementById("error-soilColor").textContent = "Please select soil color";
-      } else {
-        soilColor.classList.remove("error");
-      }
+  if (!soilPh.value || soilPh.value < 0 || soilPh.value > 14) {
+    valid = false;
+    soilPh.classList.add("error");
+    document.getElementById("error-soilPh").textContent = "pH must be between 0 and 14";
+  } else {
+    soilPh.classList.remove("error");
+  }
+
+  if (!soilColor.value) {
+    valid = false;
+    soilColor.classList.add("error");
+    document.getElementById("error-soilColor").textContent = "Please select soil color";
+  } else {
+    soilColor.classList.remove("error");
+  }
     } else if (step === 6) {
       const emergenceRate = document.getElementById("emergenceRate");
       const rootDevelopment = document.getElementById("rootDevelopment");
