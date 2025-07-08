@@ -291,15 +291,18 @@
   <div class="error-message" id="error-infiltrationSubjective"></div>
 </div>
 
-  <label for="soilStructure">Soil Structure (VESS Score)</label>
-  <select id="soilStructure">
-    <option value="">-- Select --</option>
-    <option value="1">Sq1 – Very Good</option>
-    <option value="2">Sq2 – Good</option>
-    <option value="3">Sq3 – Moderate</option>
-    <option value="4">Sq4 – Poor</option>
-    <option value="5">Sq5 – Very Poor</option>
-  </select>
+ <label for="soilStructure">
+  <strong>Soil Structure (VESS Score)</strong>
+  <span onclick="showVessPopup()" style="cursor: pointer; color: blue;" title="Click to see VESS reference table">❓</span>
+</label>
+<select id="soilStructure" name="soilStructure">
+  <option value="">-- Select --</option>
+  <option value="1">1 - Very good structure</option>
+  <option value="2">2 - Good structure</option>
+  <option value="3">3 - Moderate structure</option>
+  <option value="4">4 - Poor structure</option>
+  <option value="5">5 - Very poor structure</option>
+</select>
   <div class="error-message" id="error-soilStructure"></div>
 
   <label for="tillageLayer">Tillage Layer Depth (cm)</label>
@@ -821,6 +824,23 @@ set(ref(db, 'submissions/' + data.farmId), data)
     });
   }
 </script>
+<!-- VESS Reference Table Popup -->
+<div id="vessModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); z-index:9999; background:white; border:2px solid #ccc; padding:10px; box-shadow: 0px 0px 20px rgba(0,0,0,0.3);">
+  <span onclick="hideVessPopup()" style="float:right; cursor:pointer; font-size:20px;">&times;</span>
+  <img src="vess-table.jpg" alt="VESS Table" style="max-width:90vw; max-height:80vh;">
+</div> <!-- vessModal -->
+<script>
+  function showVessPopup() {
+    document.getElementById("vessModal").style.display = "block";
+  }
+
+  function hideVessPopup() {
+    document.getElementById("vessModal").style.display = "none";
+  }
+</script>
+</body>
+</html>
+
 
 </body>
 </html>
