@@ -268,19 +268,28 @@
 <div id="step4" class="step-form">
   <h2>Step 4: Physical Soil Properties</h2>
 
-  <label for="infiltrationMinute">Infiltration Time - Minutes</label>
-  <select id="infiltrationMinute">
-    <option value="">-- Select --</option>
-    <!-- Options 0 to 59 populated by JS -->
-  </select>
-  <div class="error-message" id="error-infiltrationMinute"></div>
+  <label>Infiltration Measurement Method</label>
+<input type="radio" name="infiltrationMethod" value="measured" onclick="toggleInfiltrationInput('measured')"> Measured (mm/hr)
+<input type="radio" name="infiltrationMethod" value="subjective" onclick="toggleInfiltrationInput('subjective')"> Subjective Rating
 
-  <label for="infiltrationSecond">Infiltration Time - Seconds</label>
-  <select id="infiltrationSecond">
+<div id="measuredInfiltrationSection" style="display:none;">
+  <label for="infiltrationRate">Infiltration Rate (mm/hr)</label>
+  <input type="number" step="0.01" id="infiltrationRate" placeholder="e.g., 25.50" />
+  <div class="error-message" id="error-infiltrationRate"></div>
+</div>
+
+<div id="subjectiveInfiltrationSection" style="display:none;">
+  <label for="infiltrationSubjective">Infiltration (Qualitative)</label>
+  <select id="infiltrationSubjective">
     <option value="">-- Select --</option>
-    <!-- Options 0 to 59 populated by JS -->
+    <option value="Very Good">Very Good (&gt; 50 mm/hr)</option>
+    <option value="Good">Good (30–50 mm/hr)</option>
+    <option value="Moderate">Moderate (15–30 mm/hr)</option>
+    <option value="Poor">Poor (5–15 mm/hr)</option>
+    <option value="Very Poor">Very Poor (&lt; 5 mm/hr)</option>
   </select>
-  <div class="error-message" id="error-infiltrationSecond"></div>
+  <div class="error-message" id="error-infiltrationSubjective"></div>
+</div>
 
   <label for="soilStructure">Soil Structure (VESS Score)</label>
   <select id="soilStructure">
@@ -545,51 +554,63 @@
         surfaceForm.classList.remove("error");
       }
     } else if (step === 4) {
-      const infiltrationMinute = document.getElementById("infiltrationMinute");
-      const infiltrationSecond = document.getElementById("infiltrationSecond");
-      const soilStructure = document.getElementById("soilStructure");
-      const tillageLayer = document.getElementById("tillageLayer");
-      const soilStrength = document.getElementById("soilStrength");
+  const method = document.querySelector('input[name="infiltrationMethod"]:checked');
+  const infiltrationRate = document.getElementById("infiltrationRate");
+  const infiltrationSubjective = document.getElementById("infiltrationSubjective");
+  const soilStructure = document.getElementById("soilStructure");
+  const tillageLayer = document.getElementById("tillageLayer");
+  const soilStrength = document.getElementById("soilStrength");
 
-      if (!infiltrationMinute.value) {
-        valid = false;
-        infiltrationMinute.classList.add("error");
-        document.getElementById("error-infiltrationMinute").textContent = "Please select minutes";
-      } else {
-        infiltrationMinute.classList.remove("error");
-      }
+  if (!method) {
+    valid = false;
+    alert("Please select infiltration input method");
+  }
 
-      if (!infiltrationSecond.value) {
-        valid = false;
-        infiltrationSecond.classList.add("error");
-        document.getElementById("error-infiltrationSecond").textContent = "Please select seconds";
-      } else {
-        infiltrationSecond.classList.remove("error");
-      }
+  if (method && method.value === "measured") {
+    if (!infiltrationRate.value || parseFloat(infiltrationRate.value) <= 0) {
+      valid = false;
+      infiltrationRate.classList.add("error");
+      document.getElementById("error-infiltrationRate").textContent = "Please enter valid infiltration rate";
+    } else {
+      infiltrationRate.classList.remove("error");
+    }
+  }
 
-      if (!soilStructure.value) {
-        valid = false;
-        soilStructure.classList.add("error");
-        document.getElementById("error-soilStructure").textContent = "Please select soil structure score";
-      } else {
-        soilStructure.classList.remove("error");
-      }
+  if (method && method.value === "subjective") {
+    if (!infiltrationSubjective.value) {
+      valid = false;
+      infiltrationSubjective.classList.add("error");
+      document.getElementById("error-infiltrationSubjective").textContent = "Please select qualitative infiltration level";
+    } else {
+      infiltrationSubjective.classList.remove("error");
+    }
+  }
 
-      if (!tillageLayer.value || parseFloat(tillageLayer.value) <= 0) {
-        valid = false;
-        tillageLayer.classList.add("error");
-        document.getElementById("error-tillageLayer").textContent = "Please enter valid tillage layer depth";
-      } else {
-        tillageLayer.classList.remove("error");
-      }
+  if (!soilStructure.value) {
+    valid = false;
+    soilStructure.classList.add("error");
+    document.getElementById("error-soilStructure").textContent = "Please select soil structure score";
+  } else {
+    soilStructure.classList.remove("error");
+  }
 
-      if (!soilStrength.value || parseFloat(soilStrength.value) <= 0) {
-        valid = false;
-        soilStrength.classList.add("error");
-        document.getElementById("error-soilStrength").textContent = "Please enter valid soil strength";
-      } else {
-        soilStrength.classList.remove("error");
-      }
+  if (!tillageLayer.value || parseFloat(tillageLayer.value) <= 0) {
+    valid = false;
+    tillageLayer.classList.add("error");
+    document.getElementById("error-tillageLayer").textContent = "Please enter valid tillage layer depth";
+  } else {
+    tillageLayer.classList.remove("error");
+  }
+
+  if (!soilStrength.value || parseFloat(soilStrength.value) <= 0) {
+    valid = false;
+    soilStrength.classList.add("error");
+    document.getElementById("error-soilStrength").textContent = "Please enter valid soil strength";
+  } else {
+    soilStrength.classList.remove("error");
+  }
+}
+
     } else if (step === 5) {
       const soilPh = document.getElementById("soilPh");
       const soilColor = document.getElementById("soilColor");
@@ -723,8 +744,9 @@
       slopeDirection: document.getElementById("slopeDirection").value,
       landscapePosition: document.getElementById("landscapePosition").value,
       surfaceForm: document.getElementById("surfaceForm").value,
-      infiltrationMinute: document.getElementById("infiltrationMinute").value,
-      infiltrationSecond: document.getElementById("infiltrationSecond").value,
+      infiltrationMethod: document.querySelector('input[name="infiltrationMethod"]:checked')?.value || "",
+infiltrationRate: document.getElementById("infiltrationRate").value,
+infiltrationSubjective: document.getElementById("infiltrationSubjective").value,
       soilStructure: document.getElementById("soilStructure").value,
       tillageLayer: document.getElementById("tillageLayer").value,
       soilStrength: document.getElementById("soilStrength").value,
@@ -752,6 +774,10 @@ set(ref(db, 'submissions/' + data.farmId), data)
   });
 
   }
+  function toggleInfiltrationInput(method) {
+    document.getElementById("measuredInfiltrationSection").style.display = (method === "measured") ? "block" : "none";
+    document.getElementById("subjectiveInfiltrationSection").style.display = (method === "subjective") ? "block" : "none";
+  }
 
   // Populate earthwormCount and infiltration time options on load
   window.onload = () => {
@@ -765,12 +791,6 @@ set(ref(db, 'submissions/' + data.farmId), data)
       earthwormSelect.appendChild(option);
     }
 
-    const infiltrationMinute = document.getElementById("infiltrationMinute");
-    const infiltrationSecond = document.getElementById("infiltrationSecond");
-    for (let i = 0; i <= 59; i++) {
-      infiltrationMinute.appendChild(new Option(i, i));
-      infiltrationSecond.appendChild(new Option(i, i));
-    }
 
     document.querySelectorAll('.step').forEach(stepBtn => {
       stepBtn.addEventListener('click', () => {
