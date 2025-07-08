@@ -324,8 +324,11 @@
   <input type="number" id="soilPh" step="0.01" min="0" max="14" placeholder="e.g., 6.50" />
   <div class="error-message" id="error-soilPh"></div>
 
-  <label for="soilColor">Soil Color</label>
-  <select id="soilColor">
+  <label for="soilColor">
+  <strong>Soil Color</strong>
+  <span onclick="showColorPopup()" style="cursor: pointer; color: blue;" title="Click to see Soil Color reference table">❓</span>
+</label>
+<select id="soilColor">
     <option value="">-- Select --</option>
     <option value="Very black">Very black</option>
     <option value="Black">Black</option>
@@ -841,6 +844,20 @@ set(ref(db, 'submissions/' + data.farmId), data)
 </body>
 </html>
 
+<!-- Soil Color Reference Table Popup -->
+<div id="colorModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); z-index:9999; background:white; border:2px solid #ccc; padding:10px; box-shadow: 0px 0px 20px rgba(0,0,0,0.3);">
+  <span onclick="hideColorPopup()" style="float:right; cursor:pointer; font-size:20px;">&times;</span>
+  <img src="color-soil.jpg" alt="Soil Color Reference" style="max-width:90vw; max-height:80vh;">
+</div>
+<script>
+  function showColorPopup() {
+    document.getElementById("colorModal").style.display = "block";
+  }
+
+  function hideColorPopup() {
+    document.getElementById("colorModal").style.display = "none";
+  }
+</script>
 
 </body>
 </html>
