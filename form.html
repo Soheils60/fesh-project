@@ -275,49 +275,54 @@
 <div id="step4" class="step-form">
   <h2>Step 4: Physical Soil Properties</h2>
 
-  <label>Infiltration Measurement Method</label>
-<input type="radio" name="infiltrationMethod" value="measured" onclick="toggleInfiltrationInput('measured')"> Measured (mm/hr)
-<input type="radio" name="infiltrationMethod" value="subjective" onclick="toggleInfiltrationInput('subjective')"> Subjective Rating
+  <label>Infiltration Measurement Method</label><br />
+  <input type="radio" name="infiltrationMethod" value="measured" onclick="toggleInfiltrationInput('measured')"> Measured (mm/hr)
+  <input type="radio" name="infiltrationMethod" value="subjective" onclick="toggleInfiltrationInput('subjective')"> Subjective Rating
 
-<div id="measuredInfiltrationSection" style="display:none;">
-  <label for="infiltrationRate">Infiltration Rate (mm/hr)</label>
-  <input type="number" step="0.01" id="infiltrationRate" placeholder="e.g., 25.50" />
-  <div class="error-message" id="error-infiltrationRate"></div>
-</div>
+  <div id="measuredInfiltrationSection" style="display:none; margin-top:10px;">
+    <label for="infiltrationRate">Infiltration Rate (mm/hr)</label>
+    <input type="number" step="0.01" id="infiltrationRate" placeholder="e.g., 25.50" onchange="calculateInfiltrationRateScore()" />
+    <p id="infiltrationRateScoreDisplay"><strong>SHI Score:</strong> —</p>
+    <div class="error-message" id="error-infiltrationRate"></div>
+  </div>
 
-<div id="subjectiveInfiltrationSection" style="display:none;">
-  <label for="infiltrationSubjective">Infiltration (Qualitative)</label>
-  <select id="infiltrationSubjective">
+  <div id="subjectiveInfiltrationSection" style="display:none; margin-top:10px;">
+    <label for="infiltrationSubjective">Infiltration (Qualitative)</label>
+    <select id="infiltrationSubjective" onchange="calculateInfiltrationSubjectiveScore()">
+      <option value="">-- Select --</option>
+      <option value="Very Good">Very Good (&gt; 50 mm/hr)</option>
+      <option value="Good">Good (30–50 mm/hr)</option>
+      <option value="Moderate">Moderate (15–30 mm/hr)</option>
+      <option value="Poor">Poor (5–15 mm/hr)</option>
+      <option value="Very Poor">Very Poor (&lt; 5 mm/hr)</option>
+    </select>
+    <p id="infiltrationSubjectiveScoreDisplay"><strong>SHI Score:</strong> —</p>
+    <div class="error-message" id="error-infiltrationSubjective"></div>
+  </div>
+
+  <label for="soilStructure" style="margin-top:15px;">
+    <strong>Soil Structure (VESS Score)</strong>
+    <span onclick="showVessPopup()" style="cursor: pointer; color: blue;" title="Click to see VESS reference table">❓</span>
+  </label>
+  <select id="soilStructure" name="soilStructure" onchange="calculateSoilStructureScore()">
     <option value="">-- Select --</option>
-    <option value="Very Good">Very Good (&gt; 50 mm/hr)</option>
-    <option value="Good">Good (30–50 mm/hr)</option>
-    <option value="Moderate">Moderate (15–30 mm/hr)</option>
-    <option value="Poor">Poor (5–15 mm/hr)</option>
-    <option value="Very Poor">Very Poor (&lt; 5 mm/hr)</option>
+    <option value="1">1 - Very good structure</option>
+    <option value="2">2 - Good structure</option>
+    <option value="3">3 - Moderate structure</option>
+    <option value="4">4 - Poor structure</option>
+    <option value="5">5 - Very poor structure</option>
   </select>
-  <div class="error-message" id="error-infiltrationSubjective"></div>
-</div>
-
- <label for="soilStructure">
-  <strong>Soil Structure (VESS Score)</strong>
-  <span onclick="showVessPopup()" style="cursor: pointer; color: blue;" title="Click to see VESS reference table">❓</span>
-</label>
-<select id="soilStructure" name="soilStructure">
-  <option value="">-- Select --</option>
-  <option value="1">1 - Very good structure</option>
-  <option value="2">2 - Good structure</option>
-  <option value="3">3 - Moderate structure</option>
-  <option value="4">4 - Poor structure</option>
-  <option value="5">5 - Very poor structure</option>
-</select>
+  <p id="soilStructureScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-soilStructure"></div>
 
-  <label for="tillageLayer">Tillage Layer Depth (cm)</label>
-  <input type="number" step="0.01" id="tillageLayer" placeholder="e.g., 25.50" />
+  <label for="tillageLayer" style="margin-top:15px;">Tillage Layer Depth (cm)</label>
+  <input type="number" step="0.01" id="tillageLayer" placeholder="e.g., 25.50" onchange="calculateTillageLayerScore()" />
+  <p id="tillageLayerScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-tillageLayer"></div>
 
-  <label for="soilStrength">Soil Strength (kg/cm²)</label>
-  <input type="number" step="0.01" id="soilStrength" placeholder="e.g., 1.75" />
+  <label for="soilStrength" style="margin-top:15px;">Soil Strength (kg/cm²)</label>
+  <input type="number" step="0.01" id="soilStrength" placeholder="e.g., 1.75" onchange="calculateSoilStrengthScore()" />
+  <p id="soilStrengthScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-soilStrength"></div>
 
   <button onclick="validateStep(4)">Confirm and Continue</button>
