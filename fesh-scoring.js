@@ -85,16 +85,18 @@ function calculateTopographyScore() {
 
   return weighted;
 }
+
+// تغییر نمایش بخش نفوذپذیری بسته به روش انتخابی
 function toggleInfiltrationInput(method) {
   document.getElementById("measuredInfiltrationSection").style.display = (method === "measured") ? "block" : "none";
   document.getElementById("subjectiveInfiltrationSection").style.display = (method === "subjective") ? "block" : "none";
 
-  // پاک کردن نمایش امتیاز قبلی هنگام تغییر روش
+  // پاک کردن امتیاز قبلی هنگام تغییر روش
   document.getElementById("infiltrationRateScoreDisplay").innerHTML = "<strong>SHI Score:</strong> —";
   document.getElementById("infiltrationSubjectiveScoreDisplay").innerHTML = "<strong>SHI Score:</strong> —";
 }
 
-// 1. امتیاز نفوذپذیری (مقدار اندازه‌گیری شده)
+// 1. امتیاز سرعت نفوذ (Measured)
 function calculateInfiltrationRateScore() {
   const val = parseFloat(document.getElementById('infiltrationRate').value);
   let score = 0;
@@ -117,7 +119,7 @@ function calculateInfiltrationRateScore() {
   return score;
 }
 
-// 2. امتیاز نفوذپذیری (ارزیابی ذهنی)
+// 2. امتیاز نفوذپذیری کیفی (Subjective)
 function calculateInfiltrationSubjectiveScore() {
   const val = document.getElementById('infiltrationSubjective').value;
   let score = 0;
