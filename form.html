@@ -355,16 +355,16 @@
 <div id="step5" class="step-form">
   <h2>Step 5: Chemical Soil Properties</h2>
 
-  <!-- pH input -->
-  <label for="soilPh">Soil pH (0 to 14)</label>
-  <input type="number" id="soilPh" step="0.01" min="0" max="14" placeholder="e.g., 6.50" />
+  <!-- Soil pH -->
+  <label for="soilPh">Soil pH (0 to 14):</label>
+  <input type="number" id="soilPh" min="0" max="14" step="0.01" placeholder="e.g., 6.5" />
   <div>SHI Score (pH): <span id="phScore">—</span></div>
   <div>Weighted Score (pH): <span id="phWeighted">—</span></div>
 
-  <!-- Color dropdown -->
+  <!-- Soil Color -->
   <label for="soilColor">
-    <strong>Soil Color</strong>
-    <span onclick="showColorPopup()" style="cursor: pointer; color: blue;" title="Click to see Soil Color reference table">❓</span>
+    Soil Color
+    <span onclick="showColorPopup()" style="cursor:pointer;color:blue;" title="Click to view reference">❓</span>
   </label>
   <select id="soilColor">
     <option value="">-- Select --</option>
@@ -396,10 +396,9 @@
   <div>SHI Score (Color): <span id="colorScore">—</span></div>
   <div>Weighted Score (Color): <span id="colorWeighted">—</span></div>
 
-  <!-- Final score -->
+  <!-- Final -->
   <div><strong>Final Step 5 Score:</strong> <span id="finalChemicalScore">—</span></div>
-
-  <button onclick="calculateChemicalScore()">Confirm and Continue</button>
+  <button id="step5Btn">Confirm and Continue</button>
 </div>
 
 <!-- Step 6 -->
