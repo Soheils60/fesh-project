@@ -83,8 +83,6 @@ function calculateTopographyScore() {
   ) / 10;
 
   alert("Final Weighted SHI Score (Topography): " + weighted.toFixed(2));
-  document.getElementById('topographyFinalScoreDisplay').innerHTML =
-    `<strong>Final SHI Score (Topography):</strong> ${weighted.toFixed(2)}`;
 
   return weighted;
 }
