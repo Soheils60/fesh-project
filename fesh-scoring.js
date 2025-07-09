@@ -85,3 +85,113 @@ function calculateTopographyScore() {
 
   return weighted;
 }
+function toggleInfiltrationInput(method) {
+  document.getElementById("measuredInfiltrationSection").style.display = (method === "measured") ? "block" : "none";
+  document.getElementById("subjectiveInfiltrationSection").style.display = (method === "subjective") ? "block" : "none";
+
+  // پاک کردن نمایش امتیاز قبلی هنگام تغییر روش
+  document.getElementById("infiltrationRateScore").innerHTML = "<strong>SHI Score:</strong> —";
+  document.getElementById("infiltrationSubjectiveScore").innerHTML = "<strong>SHI Score:</strong> —";
+}
+
+// 1. Infiltration Rate (Measured)
+function calculateInfiltrationRateScore() {
+  const val = parseFloat(document.getElementById('infiltrationRate').value);
+  let score = 0;
+
+  if (isNaN(val) || val < 0) {
+    score = 0;
+  } else if (val > 50) {
+    score = 5;
+  } else if (val > 30) {
+    score = 4;
+  } else if (val > 15) {
+    score = 3;
+  } else if (val > 5) {
+    score = 2;
+  } else {
+    score = 1;
+  }
+
+  document.getElementById('infiltrationRateScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  return score;
+}
+
+// 2. Infiltration (Subjective)
+function calculateInfiltrationScore() {
+  const val = document.getElementById('infiltrationSubjective').value;
+  let score = 0;
+  switch (val) {
+    case "Very Good": score = 5; break;
+    case "Good": score = 4; break;
+    case "Moderate": score = 3; break;
+    case "Poor": score = 2; break;
+    case "Very Poor": score = 1; break;
+    default: score = 0;
+  }
+  document.getElementById('infiltrationSubjectiveScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  return score;
+}
+
+// 3. Soil Structure (VESS)
+function calculateSoilStructureScore() {
+  const val = document.getElementById('soilStructure').value;
+  let score = 0;
+  switch (val) {
+    case "1": score = 5; break;
+    case "2": score = 4; break;
+    case "3": score = 3; break;
+    case "4": score = 2; break;
+    case "5": score = 1; break;
+    default: score = 0;
+  }
+  document.getElementById('soilStructureScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  return score;
+}
+
+// 4. Tillage Layer Depth (cm)
+function calculateTillageLayerScore() {
+  const val = parseFloat(document.getElementById('tillageLayer').value);
+  let score = 0;
+
+  if (isNaN(val) || val < 0) {
+    score = 0;
+  } else if (val >= 30) {
+    score = 5;
+  } else if (val >= 20) {
+    score = 4;
+  } else if (val >= 10) {
+    score = 3;
+  } else if (val >= 5) {
+    score = 2;
+  } else {
+    score = 1;
+  }
+
+  document.getElementById('tillageLayerScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  return score;
+}
+
+// 5. Soil Strength (kg/cm²)
+function calculateSoilStrengthScore() {
+  const val = parseFloat(document.getElementById('soilStrength').value);
+  let score = 0;
+
+  if (isNaN(val) || val < 0) {
+    score = 0;
+  } else if (val <= 1.0) {
+    score = 5;
+  } else if (val <= 1.5) {
+    score = 4;
+  } else if (val <= 2.0) {
+    score = 3;
+  } else if (val <= 3.0) {
+    score = 2;
+  } else {
+    score = 1;
+  }
+
+  document.getElementById('soilStrengthScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  return score;
+}
+
