@@ -152,13 +152,13 @@ function calculateStep4TotalScore() {
   document.getElementById('finalStep4Score').textContent = finalScore;
   return finalScore;
 }
-// ✅ Weights for Step 5
+// SHI Weights
 const weightsStep5 = {
-  ph: 25,    // Accuracy × Importance = 5 × 5
-  color: 25  // Accuracy × Importance = 5 × 5
+  ph: 25,
+  color: 25
 };
 
-// ✅ Score pH
+// ✅ pH Score
 function calculatePhScore() {
   const val = parseFloat(document.getElementById('soilPh').value);
   let score = 0;
@@ -175,7 +175,7 @@ function calculatePhScore() {
   return weighted;
 }
 
-// ✅ Score Soil Color
+// ✅ Color Score
 function calculateColorScore() {
   const val = document.getElementById('soilColor').value;
   let score = 0;
@@ -214,3 +214,4 @@ function calculateChemicalScore() {
   document.getElementById('finalChemicalScore').textContent = finalScore;
   return finalScore;
 }
+
