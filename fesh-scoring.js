@@ -223,6 +223,9 @@ function calculateChemicalScore() {
   const final = (ph && color) ? ((ph + color) / totalWeight).toFixed(2) : '—';
   document.getElementById('finalChemicalScore').textContent = final;
 }
+
+// Event listener
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("step5Btn").addEventListener("click", calculateChemicalScore);
+  const btn = document.getElementById("step5Btn");
+  if (btn) btn.addEventListener("click", calculateChemicalScore);
 });
