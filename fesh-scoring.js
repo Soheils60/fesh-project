@@ -82,7 +82,6 @@ function calculateTopographyScore() {
     (surface * 2)
   ) / 10;
 
-  alert("Final Weighted SHI Score (Topography): " + weighted.toFixed(2));
 
   return weighted;
 }
