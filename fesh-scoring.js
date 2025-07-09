@@ -90,11 +90,11 @@ function toggleInfiltrationInput(method) {
   document.getElementById("subjectiveInfiltrationSection").style.display = (method === "subjective") ? "block" : "none";
 
   // پاک کردن نمایش امتیاز قبلی هنگام تغییر روش
-  document.getElementById("infiltrationRateScore").innerHTML = "<strong>SHI Score:</strong> —";
-  document.getElementById("infiltrationSubjectiveScore").innerHTML = "<strong>SHI Score:</strong> —";
+  document.getElementById("infiltrationRateScoreDisplay").innerHTML = "<strong>SHI Score:</strong> —";
+  document.getElementById("infiltrationSubjectiveScoreDisplay").innerHTML = "<strong>SHI Score:</strong> —";
 }
 
-// 1. Infiltration Rate (Measured)
+// 1. امتیاز نفوذپذیری (مقدار اندازه‌گیری شده)
 function calculateInfiltrationRateScore() {
   const val = parseFloat(document.getElementById('infiltrationRate').value);
   let score = 0;
@@ -113,12 +113,12 @@ function calculateInfiltrationRateScore() {
     score = 1;
   }
 
-  document.getElementById('infiltrationRateScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  document.getElementById('infiltrationRateScoreDisplay').innerHTML = `<strong>SHI Score:</strong> ${score}`;
   return score;
 }
 
-// 2. Infiltration (Subjective)
-function calculateInfiltrationScore() {
+// 2. امتیاز نفوذپذیری (ارزیابی ذهنی)
+function calculateInfiltrationSubjectiveScore() {
   const val = document.getElementById('infiltrationSubjective').value;
   let score = 0;
   switch (val) {
@@ -129,11 +129,11 @@ function calculateInfiltrationScore() {
     case "Very Poor": score = 1; break;
     default: score = 0;
   }
-  document.getElementById('infiltrationSubjectiveScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  document.getElementById('infiltrationSubjectiveScoreDisplay').innerHTML = `<strong>SHI Score:</strong> ${score}`;
   return score;
 }
 
-// 3. Soil Structure (VESS)
+// 3. امتیاز ساختار خاک (VESS)
 function calculateSoilStructureScore() {
   const val = document.getElementById('soilStructure').value;
   let score = 0;
@@ -145,11 +145,11 @@ function calculateSoilStructureScore() {
     case "5": score = 1; break;
     default: score = 0;
   }
-  document.getElementById('soilStructureScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  document.getElementById('soilStructureScoreDisplay').innerHTML = `<strong>SHI Score:</strong> ${score}`;
   return score;
 }
 
-// 4. Tillage Layer Depth (cm)
+// 4. امتیاز عمق لایه شخم
 function calculateTillageLayerScore() {
   const val = parseFloat(document.getElementById('tillageLayer').value);
   let score = 0;
@@ -168,11 +168,11 @@ function calculateTillageLayerScore() {
     score = 1;
   }
 
-  document.getElementById('tillageLayerScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  document.getElementById('tillageLayerScoreDisplay').innerHTML = `<strong>SHI Score:</strong> ${score}`;
   return score;
 }
 
-// 5. Soil Strength (kg/cm²)
+// 5. امتیاز سختی خاک
 function calculateSoilStrengthScore() {
   const val = parseFloat(document.getElementById('soilStrength').value);
   let score = 0;
@@ -191,7 +191,6 @@ function calculateSoilStrengthScore() {
     score = 1;
   }
 
-  document.getElementById('soilStrengthScore').innerHTML = `<strong>SHI Score:</strong> ${score}`;
+  document.getElementById('soilStrengthScoreDisplay').innerHTML = `<strong>SHI Score:</strong> ${score}`;
   return score;
 }
-
