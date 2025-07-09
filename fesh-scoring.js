@@ -152,3 +152,63 @@ function calculateStep4TotalScore() {
   document.getElementById('finalStep4Score').textContent = finalScore;
   return finalScore;
 }
+// Step 5 — SHI Weights
+const weightsStep5 = {
+  ph: 25,        // Accuracy × Importance = 5 × 5
+  color: 25      // Accuracy × Importance = 5 × 5
+};
+
+// ✅ Soil pH Score
+function calculatePhScore() {
+  const val = parseFloat(document.getElementById('soilPh').value);
+  let score = 0;
+
+  if (val >= 6.0 && val <= 7.0) score = 5;
+  else if (val >= 5.5 && val < 6.0) score = 4;
+  else if ((val >= 5.0 && val < 5.5) || (val > 7.0 && val <= 7.5)) score = 3;
+  else if ((val >= 4.5 && val < 5.0) || (val > 7.5 && val <= 8.0)) score = 2;
+  else if ((val > 0 && val < 4.5) || val > 8.0) score = 1;
+
+  const weighted = score * weightsStep5.ph;
+  document.getElementById('phScoreDisplay').innerHTML = `<strong>SHI Score (pH):</strong> ${score} × ${weightsStep5.ph} = ${weighted}`;
+  return weighted;
+}
+
+// ✅ Soil Color Score
+function calculateColorScore() {
+  const val = document.getElementById('soilColor').value;
+  let score = 0;
+
+  switch (val) {
+    case "Very black":
+    case "Black": score = 5; break;
+    case "Very dark brown":
+    case "Very dark gray": score = 4; break;
+    case "Dark brown":
+    case "Dark reddish brown":
+    case "Dark gray": score = 3; break;
+    case "Medium dark brown":
+    case "Brown":
+    case "Gray":
+    case "Reddish brown":
+    case "Medium brown": score = 2; break;
+    default: score = 1; break;
+  }
+
+  const weighted = score * weightsStep5.color;
+  document.getElementById('colorScoreDisplay').innerHTML = `<strong>SHI Score (Color):</strong> ${score} × ${weightsStep5.color} = ${weighted}`;
+  return weighted;
+}
+
+// ✅ Final Score for Step 5
+function calculateChemicalScore() {
+  const ph = calculatePhScore();
+  const color = calculateColorScore();
+
+  const totalWeight = weightsStep5.ph + weightsStep5.color;
+  const totalScore = ph + color;
+
+  const finalScore = totalWeight > 0 ? (totalScore / totalWeight).toFixed(2) : "–";
+  document.getElementById('finalChemicalScore').textContent = finalScore;
+  return finalScore;
+}
