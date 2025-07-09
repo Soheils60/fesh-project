@@ -152,13 +152,13 @@ function calculateStep4TotalScore() {
   document.getElementById('finalStep4Score').textContent = finalScore;
   return finalScore;
 }
-// Step 5 — SHI Weights
+// ✅ Weights for Step 5
 const weightsStep5 = {
-  ph: 25,        // Accuracy × Importance = 5 × 5
-  color: 25      // Accuracy × Importance = 5 × 5
+  ph: 25,    // Accuracy × Importance = 5 × 5
+  color: 25  // Accuracy × Importance = 5 × 5
 };
 
-// ✅ Soil pH Score
+// ✅ Score pH
 function calculatePhScore() {
   const val = parseFloat(document.getElementById('soilPh').value);
   let score = 0;
@@ -170,11 +170,12 @@ function calculatePhScore() {
   else if ((val > 0 && val < 4.5) || val > 8.0) score = 1;
 
   const weighted = score * weightsStep5.ph;
-  document.getElementById('phScoreDisplay').innerHTML = `<strong>SHI Score (pH):</strong> ${score} × ${weightsStep5.ph} = ${weighted}`;
+  document.getElementById('phScore').textContent = score || '—';
+  document.getElementById('phWeighted').textContent = score ? weighted : '—';
   return weighted;
 }
 
-// ✅ Soil Color Score
+// ✅ Score Soil Color
 function calculateColorScore() {
   const val = document.getElementById('soilColor').value;
   let score = 0;
@@ -192,23 +193,24 @@ function calculateColorScore() {
     case "Gray":
     case "Reddish brown":
     case "Medium brown": score = 2; break;
-    default: score = 1; break;
+    default: score = 1;
   }
 
   const weighted = score * weightsStep5.color;
-  document.getElementById('colorScoreDisplay').innerHTML = `<strong>SHI Score (Color):</strong> ${score} × ${weightsStep5.color} = ${weighted}`;
+  document.getElementById('colorScore').textContent = score || '—';
+  document.getElementById('colorWeighted').textContent = score ? weighted : '—';
   return weighted;
 }
 
-// ✅ Final Score for Step 5
+// ✅ Final Score Step 5
 function calculateChemicalScore() {
   const ph = calculatePhScore();
   const color = calculateColorScore();
 
-  const totalWeight = weightsStep5.ph + weightsStep5.color;
   const totalScore = ph + color;
+  const totalWeight = weightsStep5.ph + weightsStep5.color;
 
-  const finalScore = totalWeight > 0 ? (totalScore / totalWeight).toFixed(2) : "–";
+  const finalScore = totalWeight > 0 ? (totalScore / totalWeight).toFixed(2) : '—';
   document.getElementById('finalChemicalScore').textContent = finalScore;
   return finalScore;
 }
