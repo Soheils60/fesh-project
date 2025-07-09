@@ -212,8 +212,9 @@
 <div id="step3" class="step-form">
   <h2>Step 3: Topography</h2>
 
+  <!-- ✅ SHI Indicator 1: Slope Class (%) -->
   <label for="slopeClass">Slope Class (%)</label>
-  <select id="slopeClass" onchange="calculateSlopeScore()">
+  <select id="slopeClass" onchange="calculateSlopeScore(); calculateTopographyFinalScore();">
     <option value="">-- Select --</option>
     <option value="0-1">0–1%</option>
     <option value="1-2">1–2%</option>
@@ -225,11 +226,14 @@
     <option value="50-100">50–100%</option>
     <option value="100+">More than 100%</option>
   </select>
-  <p id="slopeScoreDisplay"><strong>SHI Score:</strong> —</p>
+  <p><strong>SHI Score:</strong> <span id="slopeScore">—</span></p>
+  <p><strong>Weight:</strong> 15</p>
+  <p><strong>Score × Weight:</strong> <span id="slopeWeighted">—</span></p>
   <div class="error-message" id="error-slopeClass"></div>
 
+  <!-- ❌ Not SHI: Slope Direction -->
   <label for="slopeDirection">Slope Direction</label>
- <select id="slopeDirection">
+  <select id="slopeDirection">
     <option value="">-- Select --</option>
     <option value="North">North</option>
     <option value="North-East">North-East</option>
@@ -243,8 +247,22 @@
   </select>
   <div class="error-message" id="error-slopeDirection"></div>
 
+  <!-- ✅ SHI Indicator 2: Surface Form -->
+  <label for="surfaceForm">Surface Form</label>
+  <select id="surfaceForm" onchange="calculateSurfaceFormScore(); calculateTopographyFinalScore();">
+    <option value="">-- Select --</option>
+    <option value="Concave">Concave</option>
+    <option value="Flat">Flat</option>
+    <option value="Convex">Convex</option>
+  </select>
+  <p><strong>SHI Score:</strong> <span id="surfaceFormScore">—</span></p>
+  <p><strong>Weight:</strong> 3</p>
+  <p><strong>Score × Weight:</strong> <span id="surfaceFormWeighted">—</span></p>
+  <div class="error-message" id="error-surfaceForm"></div>
+
+  <!-- ❌ Not SHI: Landscape Position -->
   <label for="landscapePosition">Landscape Position</label>
-  <select id="landscapePosition" onchange="calculateLandscapePositionScore()">
+  <select id="landscapePosition">
     <option value="">-- Select --</option>
     <option value="Summit">Summit</option>
     <option value="Shoulder">Shoulder</option>
@@ -252,23 +270,13 @@
     <option value="Footslope">Footslope</option>
     <option value="Toeslope">Toeslope</option>
   </select>
-  <p id="landscapeScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-landscapePosition"></div>
 
-  <label for="surfaceForm">Surface Form</label>
-  <select id="surfaceForm">
-    <option value="">-- Select --</option>
-    <option value="Flat">Flat</option>
-    <option value="Convex">Convex</option>
-    <option value="Concave">Concave</option>
-  </select>
-  <div class="error-message" id="error-surfaceForm"></div>
+  <!-- ✅ Final Weighted Average -->
+  <p><strong>Final Step 3 Score:</strong> <span id="finalTopographyScore">—</span></p>
 
- <button onclick="validateStep(3)">Confirm and Continue</button>
-
- 
+  <button onclick="validateStep(3)">Confirm and Continue</button>
 </div>
-
 <!-- Step 4 -->
 <div id="step4" class="step-form">
   <h2>Step 4: Physical Soil Properties</h2>
