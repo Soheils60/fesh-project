@@ -213,7 +213,7 @@
   <h2>Step 3: Topography</h2>
 
   <label for="slopeClass">Slope Class (%)</label>
-  <select id="slopeClass">
+  <select id="slopeClass" onchange="calculateSlopeScore()">
     <option value="">-- Select --</option>
     <option value="0-1">0–1%</option>
     <option value="1-2">1–2%</option>
@@ -225,10 +225,11 @@
     <option value="50-100">50–100%</option>
     <option value="100+">More than 100%</option>
   </select>
+  <p id="slopeScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-slopeClass"></div>
 
   <label for="slopeDirection">Slope Direction</label>
-  <select id="slopeDirection">
+  <select id="slopeDirection" onchange="calculateSlopeDirectionScore()">
     <option value="">-- Select --</option>
     <option value="North">North</option>
     <option value="North-East">North-East</option>
@@ -240,10 +241,11 @@
     <option value="North-West">North-West</option>
     <option value="Flat">Flat / No Slope</option>
   </select>
+   <p id="slopeDirScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-slopeDirection"></div>
 
   <label for="landscapePosition">Landscape Position</label>
-  <select id="landscapePosition">
+  <select id="landscapePosition" onchange="calculateLandscapePositionScore()">
     <option value="">-- Select --</option>
     <option value="Summit">Summit</option>
     <option value="Shoulder">Shoulder</option>
@@ -251,15 +253,17 @@
     <option value="Footslope">Footslope</option>
     <option value="Toeslope">Toeslope</option>
   </select>
+  <p id="landscapeScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-landscapePosition"></div>
 
   <label for="surfaceForm">Surface Form</label>
-  <select id="surfaceForm">
+  <select id="surfaceForm" onchange="calculateSurfaceFormScore()">
     <option value="">-- Select --</option>
     <option value="Flat">Flat</option>
     <option value="Convex">Convex</option>
     <option value="Concave">Concave</option>
   </select>
+   <p id="surfaceFormScoreDisplay"><strong>SHI Score:</strong> —</p>
   <div class="error-message" id="error-surfaceForm"></div>
 
   <button onclick="validateStep(3)">Confirm and Continue</button>
