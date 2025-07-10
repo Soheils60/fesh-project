@@ -229,7 +229,9 @@ function calculateChemicalScore() {
   const totalWeight = weightsStep5.ph + weightsStep5.color;
 
   if (ph && color) {
-    const final = ((ph + color) / totalWeight * 5).toFixed(2); // normalize to 1–5 scale
+const scorePH = ph / weightsStep5.ph;
+const scoreColor = color / weightsStep5.color;
+const final = ((scorePH * weightsStep5.ph + scoreColor * weightsStep5.color) / totalWeight).toFixed(2);
     document.getElementById('finalChemicalScore').textContent = final;
   } else {
     document.getElementById('finalChemicalScore').textContent = '—';
