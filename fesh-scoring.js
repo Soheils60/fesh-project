@@ -241,3 +241,35 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById('soilPh').addEventListener("input", calculateChemicalScore);
   document.getElementById('soilColor').addEventListener("change", calculateChemicalScore);
 });
+function validateStep(stepNumber) {
+  if (stepNumber === 5) {
+    const phInput = document.getElementById('soilPh');
+    const colorSelect = document.getElementById('soilColor');
+    let valid = true;
+
+    // پاک کردن رنگ قبلی
+    phInput.style.border = '';
+    colorSelect.style.border = '';
+
+    // بررسی pH
+    const phVal = phInput.value.trim();
+    if (phVal === '' || isNaN(phVal) || phVal < 0 || phVal > 14) {
+      phInput.style.border = '2px solid red';
+      valid = false;
+    }
+
+    // بررسی رنگ
+    if (!colorSelect.value) {
+      colorSelect.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // اگر همه‌چیز درست بود: اسکرول به مرحله بعد (Step 6)
+    const nextStep = document.getElementById('step6');
+    if (nextStep) {
+      nextStep.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
