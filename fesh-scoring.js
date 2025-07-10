@@ -234,8 +234,50 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById('soilPh').addEventListener("input", calculateStep5TotalScore);
   document.getElementById('soilColor').addEventListener("change", calculateStep5TotalScore);
 });
-// ✅ Biological Scores – Step 6
-function calculateEmergenceRateScore() {
+// ✅ Weights for Step 6
+const weightsStep6 = {
+  emergence: 9,
+  rootDev: 15,
+  rootCoating: 3,
+  wormActivity: 5,
+  mycelium: 3,
+  wormCount: 5
+};
+
+// ✅ Score functions
+function calculateStep6TotalScore() {
+  const emergence = getEmergenceScore();
+  const rootDev = getRootDevScore();
+  const coating = getRootCoatingScore();
+  const worms = getWormActivityScore();
+  const mycelium = getMyceliumScore();
+  const wormCount = getWormCountScore();
+
+  if (
+    emergence !== null &&
+    rootDev !== null &&
+    coating !== null &&
+    worms !== null &&
+    mycelium !== null &&
+    wormCount !== null
+  ) {
+    const totalWeighted =
+      emergence + rootDev + coating + worms + mycelium + wormCount;
+
+    const totalWeight = weightsStep6.emergence + weightsStep6.rootDev +
+      weightsStep6.rootCoating + weightsStep6.wormActivity +
+      weightsStep6.mycelium + weightsStep6.wormCount;
+
+    const final = (totalWeighted / totalWeight).toFixed(2);
+    document.getElementById('finalStep6Score').textContent = final;
+  } else {
+    document.getElementById('finalStep6Score').textContent = '—';
+  }
+}
+
+// ✅ Individual Score Functions
+
+function getEmergenceScore() {
   const val = document.getElementById('emergenceRate').value;
   let score = 0;
   switch (val) {
@@ -244,15 +286,15 @@ function calculateEmergenceRateScore() {
     case "Moderate": score = 3; break;
     case "High": score = 4; break;
     case "Very High": score = 5; break;
-    default: score = 0;
+    default: return null;
   }
   const weighted = score * weightsStep6.emergence;
-  document.getElementById('emergenceRateScore').textContent = score || '—';
-  document.getElementById('emergenceRateWeighted').textContent = score ? weighted : '—';
+  document.getElementById('emergenceScore').textContent = score;
+  document.getElementById('emergenceWeighted').textContent = weighted;
   return weighted;
 }
 
-function calculateRootDevScore() {
+function getRootDevScore() {
   const val = document.getElementById('rootDevelopment').value;
   let score = 0;
   switch (val) {
@@ -260,31 +302,31 @@ function calculateRootDevScore() {
     case "Fair": score = 2; break;
     case "Good": score = 4; break;
     case "Excellent": score = 5; break;
-    default: score = 0;
+    default: return null;
   }
   const weighted = score * weightsStep6.rootDev;
-  document.getElementById('rootDevScore').textContent = score || '—';
-  document.getElementById('rootDevWeighted').textContent = score ? weighted : '—';
+  document.getElementById('rootDevScore').textContent = score;
+  document.getElementById('rootDevWeighted').textContent = weighted;
   return weighted;
 }
 
-function calculateRootCoatingScore() {
+function getRootCoatingScore() {
   const val = document.getElementById('rootCoating').value;
   let score = 0;
   switch (val) {
     case "None": score = 1; break;
-    case "Light": score = 3; break;
-    case "Moderate": score = 4; break;
+    case "Light": score = 2; break;
+    case "Moderate": score = 3; break;
     case "Heavy": score = 5; break;
-    default: score = 0;
+    default: return null;
   }
   const weighted = score * weightsStep6.rootCoating;
-  document.getElementById('rootCoatingScore').textContent = score || '—';
-  document.getElementById('rootCoatingWeighted').textContent = score ? weighted : '—';
+  document.getElementById('rootCoatingScore').textContent = score;
+  document.getElementById('rootCoatingWeighted').textContent = weighted;
   return weighted;
 }
 
-function calculateWormActivityScore() {
+function getWormActivityScore() {
   const val = document.getElementById('earthwormActivity').value;
   let score = 0;
   switch (val) {
@@ -292,61 +334,52 @@ function calculateWormActivityScore() {
     case "Low": score = 2; break;
     case "Moderate": score = 3; break;
     case "High": score = 5; break;
-    default: score = 0;
+    default: return null;
   }
   const weighted = score * weightsStep6.wormActivity;
-  document.getElementById('wormActivityScore').textContent = score || '—';
-  document.getElementById('wormActivityWeighted').textContent = score ? weighted : '—';
+  document.getElementById('wormActivityScore').textContent = score;
+  document.getElementById('wormActivityWeighted').textContent = weighted;
   return weighted;
 }
 
-function calculateMyceliumScore() {
+function getMyceliumScore() {
   const val = document.getElementById('myceliumDevelopment').value;
   let score = 0;
   switch (val) {
     case "None": score = 1; break;
-    case "Light": score = 3; break;
-    case "Moderate": score = 4; break;
+    case "Light": score = 2; break;
+    case "Moderate": score = 3; break;
     case "Extensive": score = 5; break;
-    default: score = 0;
+    default: return null;
   }
   const weighted = score * weightsStep6.mycelium;
-  document.getElementById('myceliumScore').textContent = score || '—';
-  document.getElementById('myceliumWeighted').textContent = score ? weighted : '—';
+  document.getElementById('myceliumScore').textContent = score;
+  document.getElementById('myceliumWeighted').textContent = weighted;
   return weighted;
 }
 
-function calculateWormCountScore() {
+function getWormCountScore() {
   const val = parseInt(document.getElementById('earthwormCount').value);
+  if (isNaN(val)) return null;
   let score = 0;
-  if (!isNaN(val)) {
-    if (val >= 50) score = 5;
-    else if (val >= 30) score = 4;
-    else if (val >= 15) score = 3;
-    else if (val >= 5) score = 2;
-    else score = 1;
-  }
+  if (val >= 30) score = 5;
+  else if (val >= 20) score = 4;
+  else if (val >= 10) score = 3;
+  else if (val >= 1) score = 2;
+  else score = 1;
   const weighted = score * weightsStep6.wormCount;
-  document.getElementById('wormCountScore').textContent = score || '—';
-  document.getElementById('wormCountWeighted').textContent = score ? weighted : '—';
+  document.getElementById('wormCountScore').textContent = score;
+  document.getElementById('wormCountWeighted').textContent = weighted;
   return weighted;
 }
 
-// ✅ Final Step 6 Score
-function calculateStep6TotalScore() {
-  const e1 = calculateEmergenceRateScore();
-  const e2 = calculateRootDevScore();
-  const e3 = calculateRootCoatingScore();
-  const e4 = calculateWormActivityScore();
-  const e5 = calculateMyceliumScore();
-  const e6 = calculateWormCountScore();
-
-  const totalWeight = weightsStep6.emergence + weightsStep6.rootDev + weightsStep6.rootCoating +
-                      weightsStep6.wormActivity + weightsStep6.mycelium + weightsStep6.wormCount;
-
-  const totalScore = e1 + e2 + e3 + e4 + e5 + e6;
-  const finalScore = (totalScore / totalWeight).toFixed(2);
-
-  document.getElementById('finalStep6Score').textContent = finalScore;
-  return finalScore;
-}
+// ✅ Populate Earthworm Count dropdown on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const dropdown = document.getElementById('earthwormCount');
+  for (let i = 0; i <= 100; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    dropdown.appendChild(option);
+  }
+});
