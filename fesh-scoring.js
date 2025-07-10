@@ -174,7 +174,7 @@ function calculatePhScore() {
   const weighted = score * weightsStep5.ph;
   document.getElementById('phScore').textContent = score || '—';
   document.getElementById('phWeighted').textContent = score ? weighted : '—';
-  return score ? weighted : 0;
+  return weighted;
 }
 
 // ✅ Calculate Color Score
@@ -185,24 +185,20 @@ function calculateColorScore() {
   switch (val) {
     case "Very black":
     case "Black":
-      score = 5;
-      break;
+      score = 5; break;
     case "Very dark brown":
     case "Very dark gray":
-      score = 4;
-      break;
+      score = 4; break;
     case "Dark brown":
     case "Dark reddish brown":
     case "Dark gray":
-      score = 3;
-      break;
+      score = 3; break;
     case "Medium dark brown":
     case "Brown":
     case "Medium brown":
     case "Gray":
     case "Reddish brown":
-      score = 2;
-      break;
+      score = 2; break;
     case "Light brown":
     case "Very light brown":
     case "Yellowish brown":
@@ -215,8 +211,7 @@ function calculateColorScore() {
     case "Dark olive":
     case "Red":
     case "Orange brown":
-      score = 1;
-      break;
+      score = 1; break;
     default:
       score = 0;
   }
@@ -224,19 +219,25 @@ function calculateColorScore() {
   const weighted = score * weightsStep5.color;
   document.getElementById('colorScore').textContent = score || '—';
   document.getElementById('colorWeighted').textContent = score ? weighted : '—';
-  return score ? weighted : 0;
+  return weighted;
 }
 
-// ✅ Calculate Final Step 5 Score (automatically)
+// ✅ Final Score for Step 5
 function calculateChemicalScore() {
-  const phWeighted = calculatePhScore();
-  const colorWeighted = calculateColorScore();
+  const ph = calculatePhScore();
+  const color = calculateColorScore();
   const totalWeight = weightsStep5.ph + weightsStep5.color;
 
-  if (phWeighted > 0 && colorWeighted > 0) {
-    const finalScore = ((phWeighted + colorWeighted) / totalWeight).toFixed(2);
-    document.getElementById('finalChemicalScore').textContent = finalScore;
+  if (ph && color) {
+    const final = ((ph + color) / totalWeight * 5).toFixed(2); // normalize to 1–5 scale
+    document.getElementById('finalChemicalScore').textContent = final;
   } else {
     document.getElementById('finalChemicalScore').textContent = '—';
   }
 }
+
+// ✅ Run this function when DOM is ready
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById('soilPh').addEventListener("input", calculateChemicalScore);
+  document.getElementById('soilColor').addEventListener("change", calculateChemicalScore);
+});
