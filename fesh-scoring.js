@@ -152,13 +152,13 @@ function calculateStep4TotalScore() {
   document.getElementById('finalStep4Score').textContent = finalScore;
   return finalScore;
 }
-// SHI Weights
+// SHI Weights for Step 5 – Corrected
 const weightsStep5 = {
   ph: 25,
-  color: 25
+  color: 15  // ← اصلاح شد بر اساس Accuracy × Importance
 };
 
-// pH Score
+// ✅ pH Score Calculation
 function calculatePhScore() {
   const val = parseFloat(document.getElementById('soilPh').value);
   let score = 0;
@@ -175,38 +175,25 @@ function calculatePhScore() {
   return weighted;
 }
 
-// Color Score
+// ✅ Soil Color Score Calculation
 function calculateColorScore() {
   const val = document.getElementById('soilColor').value;
   let score = 0;
 
-  switch (val) {
-    case "Very black":
-    case "Black": score = 5; break;
-    case "Very dark brown":
-    case "Very dark gray": score = 4; break;
-    case "Dark brown":
-    case "Dark reddish brown":
-    case "Dark gray": score = 3; break;
-    case "Medium dark brown":
-    case "Brown":
-    case "Medium brown":
-    case "Gray":
-    case "Reddish brown": score = 2; break;
-    case "Light brown":
-    case "Very light brown":
-    case "Yellowish brown":
-    case "Yellow brown":
-    case "Pale brown":
-    case "Light gray":
-    case "Very light gray":
-    case "Yellowish gray":
-    case "Olive":
-    case "Dark olive":
-    case "Red":
-    case "Orange brown": score = 1; break;
-    default: score = 0;
-  }
+  const score5 = ["Very black", "Black", "Very dark brown"];
+  const score4 = ["Dark brown", "Medium dark brown", "Dark reddish brown"];
+  const score3 = ["Brown", "Medium brown", "Reddish brown", "Very dark gray"];
+  const score2 = [
+    "Light brown", "Very light brown", "Yellowish brown", "Yellow brown",
+    "Pale brown", "Dark gray", "Gray", "Red", "Orange brown"
+  ];
+  const score1 = ["Light gray", "Very light gray", "Yellowish gray", "Olive", "Dark olive"];
+
+  if (score5.includes(val)) score = 5;
+  else if (score4.includes(val)) score = 4;
+  else if (score3.includes(val)) score = 3;
+  else if (score2.includes(val)) score = 2;
+  else if (score1.includes(val)) score = 1;
 
   const weighted = score * weightsStep5.color;
   document.getElementById('colorScore').textContent = score || '—';
@@ -214,17 +201,29 @@ function calculateColorScore() {
   return weighted;
 }
 
-// Final Score Step 5
+// ✅ Final Score for Step 5
 function calculateChemicalScore() {
-  const ph = calculatePhScore();
-  const color = calculateColorScore();
-  const totalWeight = weightsStep5.ph + weightsStep5.color;
+  const phInput = document.getElementById('soilPh').value;
+  const colorInput = document.getElementById('soilColor').value;
 
-  const final = (ph && color) ? ((ph + color) / totalWeight).toFixed(2) : '—';
+  if (phInput === "" || colorInput === "") {
+    alert("Please fill in both Soil pH and Soil Color.");
+    return;
+  }
+
+  const ph = calculatePhScore();    // weighted value
+  const color = calculateColorScore();  // weighted value
+
+  if (!ph || !color) {
+    alert("Invalid score detected. Please check inputs.");
+    return;
+  }
+
+  const final = (ph + color).toFixed(2);  // ✅ No division – values already weighted
   document.getElementById('finalChemicalScore').textContent = final;
 }
 
-// Event listener
+// ✅ Event listener for button
 window.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("step5Btn");
   if (btn) btn.addEventListener("click", calculateChemicalScore);
