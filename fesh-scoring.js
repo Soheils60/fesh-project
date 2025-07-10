@@ -184,21 +184,17 @@ function calculateColorScore() {
 
   switch (val) {
     case "Very black":
-    case "Black":
-      score = 5; break;
+    case "Black": score = 5; break;
     case "Very dark brown":
-    case "Very dark gray":
-      score = 4; break;
+    case "Very dark gray": score = 4; break;
     case "Dark brown":
     case "Dark reddish brown":
-    case "Dark gray":
-      score = 3; break;
+    case "Dark gray": score = 3; break;
     case "Medium dark brown":
     case "Brown":
     case "Medium brown":
     case "Gray":
-    case "Reddish brown":
-      score = 2; break;
+    case "Reddish brown": score = 2; break;
     case "Light brown":
     case "Very light brown":
     case "Yellowish brown":
@@ -210,10 +206,8 @@ function calculateColorScore() {
     case "Olive":
     case "Dark olive":
     case "Red":
-    case "Orange brown":
-      score = 1; break;
-    default:
-      score = 0;
+    case "Orange brown": score = 1; break;
+    default: score = 0;
   }
 
   const weighted = score * weightsStep5.color;
@@ -222,45 +216,45 @@ function calculateColorScore() {
   return weighted;
 }
 
-// ✅ Final Score for Step 5
-function calculateChemicalScore() {
+// ✅ Final Step 5 Score Calculation (like Step 4)
+function calculateStep5TotalScore() {
   const ph = calculatePhScore();
   const color = calculateColorScore();
   const totalWeight = weightsStep5.ph + weightsStep5.color;
+  const totalScore = ph + color;
 
   if (ph && color) {
-const scorePH = ph / weightsStep5.ph;
-const scoreColor = color / weightsStep5.color;
-const final = ((scorePH * weightsStep5.ph + scoreColor * weightsStep5.color) / totalWeight).toFixed(2);
-    document.getElementById('finalChemicalScore').textContent = final;
+    const finalScore = (totalScore / totalWeight).toFixed(2);
+    document.getElementById('finalChemicalScore').textContent = finalScore;
+    return finalScore;
   } else {
     document.getElementById('finalChemicalScore').textContent = '—';
+    return null;
   }
 }
 
-// ✅ Run this function when DOM is ready
+// ✅ Live updates
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById('soilPh').addEventListener("input", calculateChemicalScore);
-  document.getElementById('soilColor').addEventListener("change", calculateChemicalScore);
+  document.getElementById('soilPh').addEventListener("input", calculateStep5TotalScore);
+  document.getElementById('soilColor').addEventListener("change", calculateStep5TotalScore);
 });
+
+// ✅ Validation + Scroll on Confirm Button
 function validateStep(stepNumber) {
   if (stepNumber === 5) {
     const phInput = document.getElementById('soilPh');
     const colorSelect = document.getElementById('soilColor');
     let valid = true;
 
-    // پاک کردن رنگ قبلی
     phInput.style.border = '';
     colorSelect.style.border = '';
 
-    // بررسی pH
     const phVal = phInput.value.trim();
     if (phVal === '' || isNaN(phVal) || phVal < 0 || phVal > 14) {
       phInput.style.border = '2px solid red';
       valid = false;
     }
 
-    // بررسی رنگ
     if (!colorSelect.value) {
       colorSelect.style.border = '2px solid red';
       valid = false;
@@ -268,10 +262,7 @@ function validateStep(stepNumber) {
 
     if (!valid) return;
 
-    // اگر همه‌چیز درست بود: اسکرول به مرحله بعد (Step 6)
     const nextStep = document.getElementById('step6');
-    if (nextStep) {
-      nextStep.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (nextStep) nextStep.scrollIntoView({ behavior: 'smooth' });
   }
 }
