@@ -411,8 +411,9 @@
 <div id="step6" class="step-form">
   <h2>Step 6: Biological Soil Properties</h2>
 
+  <!-- Emergence Rate -->
   <label for="emergenceRate">Emergence Rate</label>
-  <select id="emergenceRate">
+  <select id="emergenceRate" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
     <option value="Very Low">Very Low</option>
     <option value="Low">Low</option>
@@ -421,9 +422,13 @@
     <option value="Very High">Very High</option>
   </select>
   <div class="error-message" id="error-emergenceRate"></div>
+  <p><strong>SHI Score:</strong> <span id="emergenceScore">—</span></p>
+  <p><strong>Weight:</strong> 9</p>
+  <p><strong>Score × Weight:</strong> <span id="emergenceWeighted">—</span></p>
 
+  <!-- Root Development -->
   <label for="rootDevelopment">Root Development</label>
-  <select id="rootDevelopment">
+  <select id="rootDevelopment" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
     <option value="Poor">Poor</option>
     <option value="Fair">Fair</option>
@@ -431,9 +436,13 @@
     <option value="Excellent">Excellent</option>
   </select>
   <div class="error-message" id="error-rootDevelopment"></div>
+  <p><strong>SHI Score:</strong> <span id="rootDevScore">—</span></p>
+  <p><strong>Weight:</strong> 15</p>
+  <p><strong>Score × Weight:</strong> <span id="rootDevWeighted">—</span></p>
 
+  <!-- Root Coating -->
   <label for="rootCoating">Root Coating</label>
-  <select id="rootCoating">
+  <select id="rootCoating" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
     <option value="None">None</option>
     <option value="Light">Light</option>
@@ -441,9 +450,13 @@
     <option value="Heavy">Heavy</option>
   </select>
   <div class="error-message" id="error-rootCoating"></div>
+  <p><strong>SHI Score:</strong> <span id="rootCoatingScore">—</span></p>
+  <p><strong>Weight:</strong> 3</p>
+  <p><strong>Score × Weight:</strong> <span id="rootCoatingWeighted">—</span></p>
 
+  <!-- Earthworm Activity -->
   <label for="earthwormActivity">Earthworm Activity</label>
-  <select id="earthwormActivity">
+  <select id="earthwormActivity" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
     <option value="Absent">Absent</option>
     <option value="Low">Low</option>
@@ -451,9 +464,13 @@
     <option value="High">High</option>
   </select>
   <div class="error-message" id="error-earthwormActivity"></div>
+  <p><strong>SHI Score:</strong> <span id="wormActivityScore">—</span></p>
+  <p><strong>Weight:</strong> 5</p>
+  <p><strong>Score × Weight:</strong> <span id="wormActivityWeighted">—</span></p>
 
+  <!-- Mycelium -->
   <label for="myceliumDevelopment">Mycelium Development</label>
-  <select id="myceliumDevelopment">
+  <select id="myceliumDevelopment" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
     <option value="None">None</option>
     <option value="Light">Light</option>
@@ -461,13 +478,23 @@
     <option value="Extensive">Extensive</option>
   </select>
   <div class="error-message" id="error-myceliumDevelopment"></div>
+  <p><strong>SHI Score:</strong> <span id="myceliumScore">—</span></p>
+  <p><strong>Weight:</strong> 3</p>
+  <p><strong>Score × Weight:</strong> <span id="myceliumWeighted">—</span></p>
 
+  <!-- Earthworm Count -->
   <label for="earthwormCount">Earthworm Count (0 to 100)</label>
-  <select id="earthwormCount">
+  <select id="earthwormCount" onchange="calculateStep6TotalScore();">
     <option value="">-- Select --</option>
-    <!-- Options 0 to 100 populated by JS -->
+    <!-- JS will populate 0–100 -->
   </select>
   <div class="error-message" id="error-earthwormCount"></div>
+  <p><strong>SHI Score:</strong> <span id="wormCountScore">—</span></p>
+  <p><strong>Weight:</strong> 5</p>
+  <p><strong>Score × Weight:</strong> <span id="wormCountWeighted">—</span></p>
+
+  <!-- Final -->
+  <p style="margin-top:20px;"><strong>Final Step 6 Score:</strong> <span id="finalStep6Score">—</span></p>
 
   <button onclick="submitFinal()">Submit Final</button>
 </div>
