@@ -162,7 +162,6 @@ const weightsStep5 = {
 function calculatePhScore() {
   const val = parseFloat(document.getElementById('soilPh').value);
   let score = 0;
-
   if (!isNaN(val)) {
     if (val >= 6.0 && val <= 7.0) score = 5;
     else if (val >= 5.5 && val < 6.0) score = 4;
@@ -170,7 +169,6 @@ function calculatePhScore() {
     else if ((val >= 4.5 && val < 5.0) || (val > 7.5 && val <= 8.0)) score = 2;
     else if ((val > 0 && val < 4.5) || val > 8.0) score = 1;
   }
-
   const weighted = score * weightsStep5.ph;
   document.getElementById('phScore').textContent = score || '—';
   document.getElementById('phWeighted').textContent = score ? weighted : '—';
@@ -181,7 +179,6 @@ function calculatePhScore() {
 function calculateColorScore() {
   const val = document.getElementById('soilColor').value;
   let score = 0;
-
   switch (val) {
     case "Very black":
     case "Black": score = 5; break;
@@ -209,14 +206,13 @@ function calculateColorScore() {
     case "Orange brown": score = 1; break;
     default: score = 0;
   }
-
   const weighted = score * weightsStep5.color;
   document.getElementById('colorScore').textContent = score || '—';
   document.getElementById('colorWeighted').textContent = score ? weighted : '—';
   return weighted;
 }
 
-// ✅ Final Step 5 Score Calculation (like Step 4)
+// ✅ Final Score Calculation
 function calculateStep5TotalScore() {
   const ph = calculatePhScore();
   const color = calculateColorScore();
@@ -239,7 +235,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById('soilColor').addEventListener("change", calculateStep5TotalScore);
 });
 
-// ✅ Validation + Scroll on Confirm Button
+// ✅ Validation + Scroll
 function validateStep(stepNumber) {
   if (stepNumber === 5) {
     const phInput = document.getElementById('soilPh');
