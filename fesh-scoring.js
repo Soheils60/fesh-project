@@ -270,6 +270,7 @@ function calculateStep6TotalScore() {
 
     const final = (totalWeighted / totalWeight).toFixed(2);
     document.getElementById('finalStep6Score').textContent = final;
+    calculateFinalSHIScore();
   } else {
     document.getElementById('finalStep6Score').textContent = '—';
   }
@@ -383,3 +384,16 @@ window.addEventListener("DOMContentLoaded", () => {
     dropdown.appendChild(option);
   }
 });
+function calculateFinalSHIScore() {
+  const step3 = parseFloat(document.getElementById('finalTopographyScore')?.textContent) || 0;
+  const step4 = parseFloat(document.getElementById('finalStep4Score')?.textContent) || 0;
+  const step5 = parseFloat(document.getElementById('finalChemicalScore')?.textContent) || 0;
+  const step6 = parseFloat(document.getElementById('finalStep6Score')?.textContent) || 0;
+
+  const weightedTotal = (step3 * 18) + (step4 * 58) + (step5 * 40) + (step6 * 40);
+  const totalWeight = 18 + 58 + 40 + 40;
+
+  const finalScore = (weightedTotal / totalWeight).toFixed(2);
+  document.getElementById('finalOverallScore').textContent = finalScore;
+}
+
